@@ -6,8 +6,8 @@
                     <div class="text-center">
                         <span class="text-center fw-bold mt-3 d-inline-block">Shop By Category</span>
                     </div>
-                    <div class="row px-2">
-                        <div class="loading-indicator" v-if="loading" style="text-align: center;">
+                    <div class="row px-2 justify-content-center align-items-center text-center" style="position: relative;">
+                        <div class="loading-indicator" v-if="loading">
                             <div class="loader-container">
                                 <center class="loader-text">Loading...</center>
                                 <img src="/loader/loader.gif" loading="lazy" alt="Loader" />

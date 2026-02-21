@@ -26,12 +26,14 @@
                                     <div class="row" v-if="category.children && category.children.length > 0">
                                         <div class="col-4" v-for="childCategory in category.children"
                                             :key="childCategory.id">
-                                            <h6><a href="#" @click="redirectCategory(childCategory.slug)"> {{ childCategory.name }}</a></h6>
+                                            <h6><a href="#" @click="redirectCategory(childCategory.slug)"> {{
+                                                    childCategory.name }}</a></h6>
 
                                             <ul v-if="childCategory.children && childCategory.children.length > 0">
                                                 <li v-for="inSubCategory in childCategory.children"
                                                     :key="inSubCategory.id"><a href="#"
-                                                        @click="redirectCategory(inSubCategory.slug)">{{ inSubCategory.name }}</a></li>
+                                                        @click="redirectCategory(inSubCategory.slug)">{{
+                                                        inSubCategory.name }}</a></li>
 
                                             </ul>
                                         </div>
@@ -100,6 +102,22 @@
 </template>
 
 <style lang="css" scoped>
+.sub_menu {
+    position: absolute;
+    background: #fff;
+    width: 700px;
+    padding: 20px;
+    z-index: 999;
+
+    max-height: 70vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+
 .top_bannerOne .sec_One {
     max-height: 380px;
 }

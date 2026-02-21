@@ -50,7 +50,7 @@
         </div>
         <!-- mobile footer end  -->
         <!-- footer top  -->
-        <div class="footer_top desktop_view">
+        <div class="footer_top desktop_view d-none">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-4 col-md-4 col-sm-12 m-auto">

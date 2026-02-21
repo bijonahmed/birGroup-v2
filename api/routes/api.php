@@ -35,8 +35,8 @@ use App\Http\Controllers\Chat\ChatController;
 
 
 Route::post('messages', [ChatController::class, 'message']);
-Route::post('customerSendMessages', [ChatController::class, 'customerSendMessages']); 
-Route::post('sellerSendMessages', [ChatController::class, 'sellerSendMessages']); 
+Route::post('customerSendMessages', [ChatController::class, 'customerSendMessages']);
+Route::post('sellerSendMessages', [ChatController::class, 'sellerSendMessages']);
 Route::get('/messages/{community_slug}', [ChatController::class, 'getMessages']);
 Route::get('/getSellerMessages/{seller_id}', [ChatController::class, 'getSellerMessages']);
 Route::get('/getBuyListForSeller', [ChatController::class, 'getBuyerList']);
@@ -126,10 +126,10 @@ Route::group([
     Route::post('getSellerAds', [UserController::class, 'getSellerAds']);
     Route::post('saveCard', [UserController::class, 'saveCard']);
     Route::get('cardlist/{id}', [UserController::class, 'getCard']);
-    Route::get('blogs', [UserController::class,'getblogs']);
+    Route::get('blogs', [UserController::class, 'getblogs']);
 });
 Route::group([
-   // 'middleware' => 'api',
+    // 'middleware' => 'api',
     'prefix' => 'category'
 ], function () {
     Route::post('save', [CategoryController::class, 'save']);
@@ -151,8 +151,8 @@ Route::group([
     Route::get('search', [CategoryController::class, 'searchCategory']);
     Route::get('attributes', [CategoryController::class, 'getAttribute']);
     Route::get('attributes-list', [CategoryController::class, 'getAttributeList']);
-    Route::get('attributes-val-list', [CategoryController::class, 'getAttributeValList']);    
-    Route::post('speacialCatSave', [CategoryController::class, 'speacialCatSave']); 
+    Route::get('attributes-val-list', [CategoryController::class, 'getAttributeValList']);
+    Route::post('speacialCatSave', [CategoryController::class, 'speacialCatSave']);
 });
 
 Route::group([
@@ -264,6 +264,7 @@ Route::group([
     Route::get('filterCategorys', [UnauthenticatedController::class, 'filterCategory']);
     Route::get('getCategoryList', [UnauthenticatedController::class, 'allCategory']);
     Route::get('findCategorys/{slug}', [UnauthenticatedController::class, 'findCategorys']);
+    Route::get('findSubCategorys/{slug}', [UnauthenticatedController::class, 'findSubCategorys']);
     Route::get('productSlug/{slug}', [UnauthenticatedController::class, 'findProductSlug']);
     Route::get('getSeller/{slug}', [UnauthenticatedController::class, 'getSeller']);
     Route::get('getSellerCategoryFilter/{id}', [UnauthenticatedController::class, 'getSellerCategoryFilter']);
@@ -273,7 +274,7 @@ Route::group([
     Route::get('allsellers', [UnauthenticatedController::class, 'allsellers']);
     Route::get('countrylist', [UnauthenticatedController::class, 'countrylist']);
     Route::get('allbrandsList', [UnauthenticatedController::class, 'allbrandlist']);
-    
+
     Route::get('allsellerList', [UnauthenticatedController::class, 'getallsellerList']);
     Route::get('allsellerListadmin', [UnauthenticatedController::class, 'allsellerListadmin']);
 
@@ -281,8 +282,8 @@ Route::group([
     Route::get('readcoupons/{code}', [UnauthenticatedController::class, 'getCoupon']);
     Route::post('couponDiscount', [UnauthenticatedController::class, 'getcouponDiscount']);
     Route::get('alldealsads', [UnauthenticatedController::class, 'getdealsbannersads']);
-    Route::get('headerbanner', [UnauthenticatedController::class, 'getbanner']);  
-    
+    Route::get('headerbanner', [UnauthenticatedController::class, 'getbanner']);
+
     Route::get('getAdsbanner', [UnauthenticatedController::class, 'topadsbanner']);
     Route::get('brandproductList/{slug}', [UnauthenticatedController::class, 'getbrandproductList']);
     Route::get('speacialCategory', [UnauthenticatedController::class, 'getSpeacialCatList']);
@@ -293,7 +294,7 @@ Route::group([
     Route::get('blogs', [UnauthenticatedController::class, 'getblogs']);
     Route::get('blogCat', [UnauthenticatedController::class, 'blogCat']);
     Route::get('blogdetails', [UnauthenticatedController::class, 'blogdetails']);
-    
+
     Route::get('getsalaryuser', [UnauthenticatedController::class, 'getsalaryuser']);
     Route::get('getsPackUser', [UnauthenticatedController::class, 'getsPackUser']);
 });
@@ -312,13 +313,13 @@ Route::group([
     Route::post('insertPayGroup', [SettingController::class, 'insertPayGroup']);
     Route::get('getPayGroupList', [SettingController::class, 'getPayGroupList']);
     Route::get('checkrowPayGroup/{id}', [SettingController::class, 'checkrowPayGroup']);
-   //salary
-   Route::post('insertSalary', [SettingController::class, 'insertSalary']);
-   Route::post('insertPack', [SettingController::class, 'insertPack']);
-   Route::get('checkrowsallary/{id}', [SettingController::class, 'checkrowsallary']);
-   Route::get('checkrowPack/{id}', [SettingController::class, 'checkrowPack']);
-   Route::get('getsalary', [SettingController::class, 'getsalary']);
-   Route::get('getPack', [SettingController::class, 'getPack']);
+    //salary
+    Route::post('insertSalary', [SettingController::class, 'insertSalary']);
+    Route::post('insertPack', [SettingController::class, 'insertPack']);
+    Route::get('checkrowsallary/{id}', [SettingController::class, 'checkrowsallary']);
+    Route::get('checkrowPack/{id}', [SettingController::class, 'checkrowPack']);
+    Route::get('getsalary', [SettingController::class, 'getsalary']);
+    Route::get('getPack', [SettingController::class, 'getPack']);
 
     //Annual Pay 
     Route::post('insertAnnualPay', [SettingController::class, 'insertAnnualPay']);
@@ -351,10 +352,10 @@ Route::group([
     //Ads management  
     Route::get('bannerTopget', [SettingController::class, 'getbannerTop']);
     Route::post('bannerTop', [SettingController::class, 'updatebannerTop']);
-    Route::post('dealsbannner', [SettingController::class, 'updatedealsbannner']);    
+    Route::post('dealsbannner', [SettingController::class, 'updatedealsbannner']);
     Route::get('getdealsbanner', [SettingController::class, 'getdealsbanners']);
-    Route::post('sliderLeftads', [SettingController::class, 'updatesliderLeftads']);  
-    Route::get('getadsbannerreq', [SettingController::class , 'getadsbanner']);
+    Route::post('sliderLeftads', [SettingController::class, 'updatesliderLeftads']);
+    Route::get('getadsbannerreq', [SettingController::class, 'getadsbanner']);
 
     // coupons 
     Route::post('addcoupons', [SettingController::class, 'savecoupons']);
@@ -372,8 +373,6 @@ Route::group([
     Route::post('companyProfile', [SettingController::class, 'updateCompanyProfile']);
     Route::get('getCompanyData', [SettingController::class, 'getProfileData']);
     Route::get('getcoupons', [SettingController::class, 'getcoupos']);
-
-    
 });
 
 

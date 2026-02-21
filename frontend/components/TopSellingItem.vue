@@ -12,7 +12,8 @@
                     <div class="swiper mySwiper pro_slider">
                         <div class="swiper-wrapper">
                             <div class="swiper-slide" v-for="item in toproducts" :key="item.id">
-                                <div class="product_grid text-start">
+                                <div class="product_grid text-start"
+                                    style="border: 1px solid var(--color_Primary); border-radius: 8px; padding: 10px;">
                                     <div class="loading-indicator" v-if="loading"
                                         style="text-align: center;position: absolute; z-index: 2; left: 0; top: 0; background: #ffffff5c; height: 100%; width: 100%; object-fit: contain;">
                                         <div class="loader-container">
@@ -24,8 +25,9 @@
                                         <img :src="item.thumnail_img" class="img-fluid" loading="lazy">
                                         <span v-if="item.free_shopping == 1">Free Delivery</span>
                                         <!-- <strong>Official Store </strong> -->
-                                        <h1>{{ item.name }}</h1>
-                                        <div v-if="item.discount_status == 1" class="d-flex aligh-items-center d-none">
+                                        <h1 class="text-center">{{ item.name }}</h1>
+                                        <div v-if="item.discount_status == 1"
+                                            class="d-flex aligh-items-center d-none text-center">
                                             <p>BDT{{ item.last_price.toFixed(2) }}</p>
                                             <p class="ms-1" v-if="item.discount !== 0"><strike>${{ item.price.toFixed(2)
                                                     }}</strike> <span>{{ item.discount }}%</span> </p>
@@ -38,20 +40,20 @@
                                                 <span>BDT{{ item.discount.toFixed(2) }}</span>
                                             </p>
                                         </div>
-                                        <div v-else>
+                                        <div v-else class="text-center">
                                             <p>BDT{{ item.last_price.toFixed(2) }}</p>
                                         </div>
                                     </Nuxt-link>
 
-                                    <div class="d-flex align-items-center">
+                                    <div class="d-flex align-items-center justify-content-center gap-2">
                                         <div class="rating">
                                             <i class="fa fa-star checked"></i>
                                             <i class="fa fa-star checked"></i>
                                             <i class="fa fa-star checked"></i>
                                             <i class="fa fa-star checked"></i>
-                                            <i class="fa fa-star "></i>
+                                            <i class="fa fa-star"></i>
                                         </div>
-                                        <h6>(200)</h6>
+                                        <h6 class="mb-0">(200)</h6>
                                     </div>
                                     <button type="button" class="btn_cart" @click="addToCart(item.id)">Add to
                                         cart</button>

@@ -228,12 +228,12 @@ class UnauthenticatedController extends Controller
         $category_id = $commaSeparatedIds; //"25,318,26";
         $category_ids = explode(',', $category_id);
         $categorys = ProductCategory::join('product', 'product.id', '=', 'produc_categories.product_id')
-        ->join('categorys', 'categorys.id', '=', 'produc_categories.category_id')
-        ->leftJoin('users', 'users.id', '=', 'product.seller_id')
-        ->leftJoin('brands', 'brands.id', '=', 'product.brand')
-        ->select('produc_categories.product_id', 'product.name', 'product.seller_id', 'product.slug', 'product.thumnail_img', 'product.price', 'product.brand', 'product.discount', 'product.discount_status', 'product.flat_rate_status', 'product.flat_rate_price', 'product.free_shopping', 'product.vat_status', 'product.vat', 'product.stock_qty', 'product.stock_status', 'product.shipping_days', 'categorys.name as cate_name', 'categorys.slug as catslug', 'users.business_name as seller_name', 'users.business_name_slug as seller_slug', 'brands.name as brand_name')
-        ->whereIn('produc_categories.category_id', $category_ids)
-        ->orderByDesc('product.id')->limit(20)->get();
+            ->join('categorys', 'categorys.id', '=', 'produc_categories.category_id')
+            ->leftJoin('users', 'users.id', '=', 'product.seller_id')
+            ->leftJoin('brands', 'brands.id', '=', 'product.brand')
+            ->select('produc_categories.product_id', 'product.name', 'product.seller_id', 'product.slug', 'product.thumnail_img', 'product.price', 'product.brand', 'product.discount', 'product.discount_status', 'product.flat_rate_status', 'product.flat_rate_price', 'product.free_shopping', 'product.vat_status', 'product.vat', 'product.stock_qty', 'product.stock_status', 'product.shipping_days', 'categorys.name as cate_name', 'categorys.slug as catslug', 'users.business_name as seller_name', 'users.business_name_slug as seller_slug', 'brands.name as brand_name')
+            ->whereIn('produc_categories.category_id', $category_ids)
+            ->orderByDesc('product.id')->limit(20)->get();
 
         $groupedCategories = $categorys->groupBy('cate_name');
         $categories = [];
@@ -749,16 +749,44 @@ class UnauthenticatedController extends Controller
 
     public function findCategorys($slug)
     {
+
+        //  dd($slug);
         $chkCategory = Categorys::where('slug', $slug)->select('id', 'name')->first();
-        // $pro['product_']  = ProductCategory::where('category_id', $chkCategory->id)->first();
+        $categoryId  = $chkCategory ? $chkCategory->id : 0;
+        //  dd($categoryId);
+        /*
         $proCategorys = ProductCategory::where('category_id', $chkCategory->id)
             ->select('product.id', 'product.seller_id', 'product.discount', 'product.discount_status', 'produc_categories.product_id', 'product.name as pro_name', 'produc_categories.category_id', 'description', 'short_description', 'product.free_shopping', 'price', 'vat', 'product.brand', 'stock_qty', 'thumnail_img', 'product.slug as pro_slug', 'users.business_name as seller_name', 'users.business_name_slug as seller_slug', 'brands.name as brand_name')
             ->join('product', 'product.id', '=', 'produc_categories.product_id')
             ->leftJoin('users', 'users.id', '=', 'product.seller_id')
             ->leftJoin('brands', 'product.brand', '=', 'brands.id')
             ->get();
-
-        // dd($proCategorys);
+        */
+        $proCategorys = ProductCategory::whereIn('parent_id', [$categoryId])
+            ->select(
+                'product.id',
+                'product.seller_id',
+                'product.discount',
+                'product.discount_status',
+                'produc_categories.product_id',
+                'product.name as pro_name',
+                'produc_categories.category_id',
+                'description',
+                'short_description',
+                'product.free_shopping',
+                'price',
+                'vat',
+                'product.brand',
+                'stock_qty',
+                'thumnail_img',
+                'product.slug as pro_slug',
+                'brands.name as brand_name'
+            )
+            ->join('product', 'product.id', '=', 'produc_categories.product_id')
+            ->leftJoin('users', 'users.id', '=', 'product.seller_id')
+            ->leftJoin('brands', 'product.brand', '=', 'brands.id')
+            ->get();
+        //dd($proCategorys);
         // return false;
         $result = [];
         foreach ($proCategorys as $key => $v) {
@@ -794,38 +822,34 @@ class UnauthenticatedController extends Controller
             }
 
             $result[] = [
-                'id' => !empty($v->id) ? $v->id : '',
-                'product_id' => !empty($v->product_id) ? $v->product_id : '',
-                'product_name' => !empty($v->pro_name) ? $v->pro_name : '',
-                'category_id' => !empty($v->category_id) ? $v->category_id : '',
-                'discount' => !empty($v->discount) ? $v->discount : '',
-                'price' => $price,
-                'percent_discount' => $percent_discount,
-                'fixed_discount' => $fixed_discount,
-                'thumnail_img' => !empty($v->thumnail_img) ? url($v->thumnail_img) : '',
-                'pro_slug' => !empty($v->pro_slug) ? $v->pro_slug : '',
-                'discount_status' => !empty($v->discount_status) ? $v->discount_status : '',
-                'free_shopping' => !empty($v->free_shopping) ? $v->free_shopping : '',
-                'description' => !empty($v->description) ? $v->description : '',
+                'id'                => !empty($v->id) ? $v->id : '',
+                'product_id'        => !empty($v->product_id) ? $v->product_id : '',
+                'product_name'      => !empty($v->pro_name) ? $v->pro_name : '',
+                'category_id'       => !empty($v->category_id) ? $v->category_id : '',
+                'discount'          => !empty($v->discount) ? $v->discount : '',
+                'price'             => $price,
+                'percent_discount'  => $percent_discount,
+                'fixed_discount'    => $fixed_discount,
+                'thumnail_img'      => !empty($v->thumnail_img) ? url($v->thumnail_img) : '',
+                'pro_slug'          => !empty($v->pro_slug) ? $v->pro_slug : '',
+                'discount_status'   => !empty($v->discount_status) ? $v->discount_status : '',
+                'free_shopping'     => !empty($v->free_shopping) ? $v->free_shopping : '',
+                'description'       => !empty($v->description) ? $v->description : '',
                 'short_description' => !empty($v->short_description) ? $v->short_description : '',
-                'stock_qty' => !empty($v->stock_qty) ? $v->stock_qty : '',
-                'stock_status' => !empty($v->stock_status) ? $v->stock_status : '',
-                'shipping_days' => !empty($v->shipping_days) ? $v->shipping_days : '',
-                'shipping_days' => !empty($v->shipping_days) ? $v->shipping_days : '',
-                'vat_status' => !empty($v->vat_status) ? $v->vat_status : '',
-                'vat' => !empty($v->vat) ? $v->vat : '',
-                'seller_name' => !empty($v->seller_name) ? $v->seller_name : '',
-                'seller_slug' => !empty($v->seller_slug) ? $v->seller_slug : '',
-                'brand_name' => $v->brand_name,
-                'last_price' => $last_price,
-
-                'color' => !empty($processedColors) ? $processedColors : '',
-                'size' => !empty($processedSizes) ? $processedSizes : '',
+                'stock_qty'         => !empty($v->stock_qty) ? $v->stock_qty : '',
+                'stock_status'      => !empty($v->stock_status) ? $v->stock_status : '',
+                'shipping_days'     => !empty($v->shipping_days) ? $v->shipping_days : '',
+                'shipping_days'     => !empty($v->shipping_days) ? $v->shipping_days : '',
+                'vat_status'        => !empty($v->vat_status) ? $v->vat_status : '',
+                'vat'               => !empty($v->vat) ? $v->vat : '',
+                'seller_name'       => !empty($v->seller_name) ? $v->seller_name : '',
+                'seller_slug'       => !empty($v->seller_slug) ? $v->seller_slug : '',
+                'brand_name'        => !empty($v->brand_name) ? $v->brand_name : '',
+                'last_price'        => $last_price,
+                'color'             => !empty($processedColors) ? $processedColors : '',
+                'size'              => !empty($processedSizes) ? $processedSizes : '',
             ];
         }
-
-        // dd($brand_name);
-        // return false;
 
         $data['result'] = $result;
         $data['pro_count'] = count($result);
@@ -833,6 +857,118 @@ class UnauthenticatedController extends Controller
 
         return response()->json($data, 200);
     }
+
+    public function findSubCategorys($slug)
+    {
+
+        //  dd($slug);
+        $chkCategory = Categorys::where('slug', $slug)->select('id', 'name')->first();
+        $categoryId  = $chkCategory ? $chkCategory->id : 0;
+        //  dd($categoryId);
+        /*
+        $proCategorys = ProductCategory::where('category_id', $chkCategory->id)
+            ->select('product.id', 'product.seller_id', 'product.discount', 'product.discount_status', 'produc_categories.product_id', 'product.name as pro_name', 'produc_categories.category_id', 'description', 'short_description', 'product.free_shopping', 'price', 'vat', 'product.brand', 'stock_qty', 'thumnail_img', 'product.slug as pro_slug', 'users.business_name as seller_name', 'users.business_name_slug as seller_slug', 'brands.name as brand_name')
+            ->join('product', 'product.id', '=', 'produc_categories.product_id')
+            ->leftJoin('users', 'users.id', '=', 'product.seller_id')
+            ->leftJoin('brands', 'product.brand', '=', 'brands.id')
+            ->get();
+        */
+        $proCategorys = ProductCategory::where('category_id', $categoryId)
+            ->select(
+                'product.id',
+                'product.seller_id',
+                'product.discount',
+                'product.discount_status',
+                'produc_categories.product_id',
+                'product.name as pro_name',
+                'produc_categories.category_id',
+                'description',
+                'short_description',
+                'product.free_shopping',
+                'price',
+                'vat',
+                'product.brand',
+                'stock_qty',
+                'thumnail_img',
+                'product.slug as pro_slug',
+                'brands.name as brand_name'
+            )
+            ->join('product', 'product.id', '=', 'produc_categories.product_id')
+            ->leftJoin('users', 'users.id', '=', 'product.seller_id')
+            ->leftJoin('brands', 'product.brand', '=', 'brands.id')
+            ->get();
+        //dd($proCategorys);
+        // return false;
+        $result = [];
+        foreach ($proCategorys as $key => $v) {
+            $arrData = ProductVarrientHistory::where('product_id', $v->product_id)->get();
+            $groupData = ProductVarrientHistory::where('product_id', $v->product_id)
+                ->select('id', 'color')
+                ->groupBy('color')
+                ->get();
+
+            $processedColors = [];
+            $processedSizes = [];
+
+            foreach ($arrData as $Key => $value) {
+                $processedColors = $value->color;
+                $processedSizes = $value->size;
+
+                break;
+            }
+
+            $last_price = 0;
+            $vat = $v->vat ? $v->vat : '0';
+            $price = $v->price + ($v->price * $vat) / 100;
+
+            $percent_discount = $price - ($price * $v->discount) / 100;
+            $fixed_discount = $price - $v->discount;
+
+            if ($v->discount_status == 1) {
+                $last_price = $percent_discount;
+            } elseif ($v->discount_status == 2) {
+                $last_price = $fixed_discount;
+            } else {
+                $last_price = $price;
+            }
+
+            $result[] = [
+                'id'                => !empty($v->id) ? $v->id : '',
+                'product_id'        => !empty($v->product_id) ? $v->product_id : '',
+                'product_name'      => !empty($v->pro_name) ? $v->pro_name : '',
+                'category_id'       => !empty($v->category_id) ? $v->category_id : '',
+                'discount'          => !empty($v->discount) ? $v->discount : '',
+                'price'             => $price,
+                'percent_discount'  => $percent_discount,
+                'fixed_discount'    => $fixed_discount,
+                'thumnail_img'      => !empty($v->thumnail_img) ? url($v->thumnail_img) : '',
+                'pro_slug'          => !empty($v->pro_slug) ? $v->pro_slug : '',
+                'discount_status'   => !empty($v->discount_status) ? $v->discount_status : '',
+                'free_shopping'     => !empty($v->free_shopping) ? $v->free_shopping : '',
+                'description'       => !empty($v->description) ? $v->description : '',
+                'short_description' => !empty($v->short_description) ? $v->short_description : '',
+                'stock_qty'         => !empty($v->stock_qty) ? $v->stock_qty : '',
+                'stock_status'      => !empty($v->stock_status) ? $v->stock_status : '',
+                'shipping_days'     => !empty($v->shipping_days) ? $v->shipping_days : '',
+                'shipping_days'     => !empty($v->shipping_days) ? $v->shipping_days : '',
+                'vat_status'        => !empty($v->vat_status) ? $v->vat_status : '',
+                'vat'               => !empty($v->vat) ? $v->vat : '',
+                'seller_name'       => !empty($v->seller_name) ? $v->seller_name : '',
+                'seller_slug'       => !empty($v->seller_slug) ? $v->seller_slug : '',
+                'brand_name'        => !empty($v->brand_name) ? $v->brand_name : '',
+                'last_price'        => $last_price,
+                'color'             => !empty($processedColors) ? $processedColors : '',
+                'size'              => !empty($processedSizes) ? $processedSizes : '',
+            ];
+        }
+
+        $data['result'] = $result;
+        $data['pro_count'] = count($result);
+        $data['categoryname'] = $chkCategory->name;
+
+        return response()->json($data, 200);
+    }
+
     public function countrylist()
     {
         $countries = Country::all();

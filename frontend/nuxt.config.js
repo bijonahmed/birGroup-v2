@@ -121,7 +121,7 @@ export default {
     baseURL:
       process.env.NODE_ENV === "production"
         ? "https://birv2.api.futuregenit.com/api"
-        : "https://birv2.api.futuregenit.com/api",
+        : "http://127.0.0.1:8000/api/",
     //process.env.NODE_ENV === "production" ? "https://birv2.api.futuregenit.com/api" : "http://127.0.0.1:8000/api/",
 
     //baseURL: process.env.NODE_ENV === 'production' ? 'https://api.isumax.com/api/' : 'http://127.0.0.1:8000/api/',

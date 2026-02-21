@@ -9,7 +9,7 @@
                                 <h5>{{ category.name }}</h5>
                             </div>
                             <div>
-                                <nuxt-link :to="'category/category-grid?slug=' + category.slug" class="catLink">See
+                                <nuxt-link :to="'category/category-grid?sub_slug=' + category.slug" class="catLink">See
                                     All<i class="fas fa-arrow-right"></i></nuxt-link>
                             </div>
                         </div>
@@ -24,54 +24,69 @@
 
                         <div class="swiper mySwiper pro_slider">
                             <div class="swiper-wrapper">
-                                <div class="swiper-slide" v-for="(item, index) in category.products" :key="item.product_id + '-' + index">
-                                    <div class="product_grid text-start">
+                                <div class="swiper-slide" v-for="(item, index) in category.products"
+                                    :key="item.product_id + '-' + index">
+
+                                    <div class="product_grid text-start"
+                                        style="border: 1px solid var(--color_Primary); border-radius: 8px; padding: 10px;">
+
                                         <div class="loading-indicator" v-if="loading"
                                             style="text-align: center;position: absolute; z-index: 2; left: 0; top: 0; background: #ffffff5c; height: 100%; width: 100%; object-fit: contain;">
                                             <div class="loader-container">
-                                                <!-- <center class="loader-text">Loading...</center> -->
                                                 <img src="/loader/loader.gif" alt="Loader" />
                                             </div>
                                         </div>
-                                        <nuxt-link :to="`/product-details/${item.slug}`">
-                                            <img :src="item.thumnail" class="img-fluid" loading="lazy">
 
-                                            <span v-if="item.free_shopping == 1">Free Delivery</span>
-                                            <h1>{{ item.name }}</h1>
-                                            <div v-if="item.discount_status == 1" class="d-flex aligh-items-center">
-                                                <p>BDT{{ item.last_price.toFixed(2) }}</p>
-                                                <p class="ms-1" v-if="item.discount !== 0"><strike>${{
-                    item.price.toFixed(2) }}</strike> <span>{{ item.discount
-                                                        }}%</span> </p>
+                                        <nuxt-link :to="`/product-details/${item.slug}`" class="text-center d-block">
+
+                                            <img :src="item.thumnail" class="img-fluid mx-auto d-block" loading="lazy">
+
+                                            <span v-if="item.free_shopping == 1" class="d-block mt-1">
+                                                Free Delivery
+                                            </span>
+
+                                            <h1 class="mt-2 mb-1">{{ item.name }}</h1>
+
+                                            <div v-if="item.discount_status == 1"
+                                                class="d-flex justify-content-center align-items-center gap-2">
+                                                <p class="mb-0">BDT{{ item.last_price.toFixed(2) }}</p>
+                                                <p class="mb-0" v-if="item.discount !== 0">
+                                                    <strike>${{ item.price.toFixed(2) }}</strike>
+                                                    <span>{{ item.discount }}%</span>
+                                                </p>
                                             </div>
-                                            <div v-else-if="item.discount_status == 2"
-                                                class="d-flex aligh-items-center">
-                                                <p>BDT{{ item.last_price.toFixed(2) }}</p>
 
-                                                <p class="ms-1" v-if="item.discount !== 0"><strike>${{
-                    item.price.toFixed(2)
-                                                        }}</strike>
+                                            <div v-else-if="item.discount_status == 2"
+                                                class="d-flex justify-content-center align-items-center gap-2">
+                                                <p class="mb-0">BDT{{ item.last_price.toFixed(2) }}</p>
+                                                <p class="mb-0" v-if="item.discount !== 0">
+                                                    <strike>${{ item.price.toFixed(2) }}</strike>
                                                     <span>BDT{{ item.discount.toFixed(2) }}</span>
                                                 </p>
                                             </div>
+
                                             <div v-else>
-                                                <p>BDT{{ item.last_price.toFixed(2) }}</p>
+                                                <p class="mb-0">BDT{{ item.last_price.toFixed(2) }}</p>
                                             </div>
 
-                                        </Nuxt-link>
+                                        </nuxt-link>
 
-                                        <div class="d-flex align-items-center">
+                                        <div
+                                            class="d-flex align-items-center align-items-center justify-content-center">
                                             <div class="rating">
                                                 <i class="fa fa-star checked"></i>
                                                 <i class="fa fa-star checked"></i>
                                                 <i class="fa fa-star checked"></i>
                                                 <i class="fa fa-star checked"></i>
-                                                <i class="fa fa-star "></i>
+                                                <i class="fa fa-star"></i>
                                             </div>
                                             <h6>(200)</h6>
                                         </div>
-                                        <button type="button" class="btn_cart" @click="addToCart(item)">Add to cart
+
+                                        <button type="button" class="btn_cart" @click="addToCart(item)">
+                                            Add to cart
                                         </button>
+
                                     </div>
                                 </div>
                             </div>

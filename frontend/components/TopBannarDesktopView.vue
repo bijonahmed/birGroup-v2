@@ -3,7 +3,7 @@
         <div class="top_bannar desktop_view">
             <div class="container_fluid">
                 <div class="col-12">
-                    <img :src="bannerData" loading="lazy" class="img-fluid" alt="" style="height: 15px;">
+                    <img :src="bannerData" loading="lazy" class="img-fluid" alt="" style="height: 50px;">
                 </div>
             </div>
         </div>
