@@ -32,6 +32,9 @@
   "CategoryProductFilterGrid": {
     "description": "Auto imported from components/CategoryProductFilterGrid.vue"
   },
+  "CategoryProducts": {
+    "description": "Auto imported from components/CategoryProducts.vue"
+  },
   "CategoryRecentView": {
     "description": "Auto imported from components/CategoryRecentView.vue"
   },

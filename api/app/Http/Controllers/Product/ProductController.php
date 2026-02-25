@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Models\ProductAttributeValue;
 use App\Models\ProductVarrientHistory;
 use App\Models\Categorys;
+use App\Models\Brands;
 use App\Models\ProductAttributes;
 use App\Models\ProductCategory;
 use App\Models\OrderStatus;
@@ -409,19 +410,43 @@ class ProductController extends Controller
 
     public function getProductList()
     {
+        // Get all products with brand info
         $data = Product::orderBy('product.id', 'desc')
-            ->leftJoin('brands', 'brands.id', '=', 'product.brand')  // Corrected foreign key assumption
-            ->select('product.*', 'brands.name AS brand_name')  // Select all product columns and brand name with alias
+            ->leftJoin('brands', 'brands.id', '=', 'product.brand')  // join brand
+            ->select('product.*', 'brands.name AS brand_name')       // select all product columns + brand name
             ->get();
 
-
         $collection = collect($data);
+
         $modifiedCollection = $collection->map(function ($item) {
+            $chkProductCategory = ProductCategory::where('product_id', $item['id'])
+                ->orderBy('id', 'asc')  // ensure always first row
+                ->first();
+            // Get the first category of the product, ordered by ID (first inserted)
+            if ($chkProductCategory && !empty($chkProductCategory->parent_id)) {
+                // parent_id might be "1,6,45" -> take first value
+                $parentIds = explode(',', $chkProductCategory->parent_id);
+                $pcategory = trim($parentIds[0]); // first index
+            } else {
+                $pcategory = 0;
+            }
+
+            if (!empty($pcategory) && $pcategory != 0) {
+                $chkCatName = Categorys::where('id', $pcategory)->first();
+                $catName = !empty($chkCatName->name) ? $chkCatName->name : "";
+            } else {
+                $catName = "";
+            }
+
             return [
                 'id'            => $item['id'],
                 'name'          => mb_substr(mb_convert_encoding($item['name'], 'UTF-8', 'UTF-8'), 0, 20),
                 'stock_qty'     => $item['stock_qty'],
                 'status'        => $item['status'],
+                'brand_id'      => $item['brand'],
+                'category_id'   => $pcategory, // fallback 1
+                'parent_id'     => $pcategory, // first parent_id
+                'categoryName'  => !empty($catName) ? $catName : "", // first parent_id
                 'sku'           => mb_convert_encoding($item['sku'], 'UTF-8', 'UTF-8'),
                 'thumnail_img'  => url($item['thumnail_img']),
                 'brand'         => $item['brand'],
@@ -429,8 +454,15 @@ class ProductController extends Controller
             ];
         });
 
-        //dd($modifiedCollection);
-        return response()->json($modifiedCollection, 200);
+        // Get top-level categories (parent_id = 0) for filter dropdown
+        $categoryList   = Categorys::where('status', 1)->where('parent_id', 0)->get();
+        $brandsList     = Brands::where('status', 1)->get();
+
+        return response()->json([
+            'products'     => $modifiedCollection,
+            'categoryList' => $categoryList,
+            'brandsList'   => $brandsList
+        ], 200);
     }
 
     public function sellerOrderProductList(Request $request)

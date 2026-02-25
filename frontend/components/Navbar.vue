@@ -236,7 +236,7 @@
                         <ul>
                             <li v-for="(item, key) in searchloop" :key="key">
                                 <nuxt-link v-if="item.type == 'category'"
-                                    :to="`/category/category-grid?slug=${item.catslug}`">{{ item.label }}</nuxt-link>
+                                    :to="`/category/category-grid?sub_slug=${item.catslug}`">{{ item.label }}</nuxt-link>
                                 <nuxt-link v-if="item.type == 'product'" :to="`/product-details/${item.slug}`">{{
                                     item.label }}</nuxt-link>
                             </li>

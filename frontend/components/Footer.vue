@@ -1,5 +1,5 @@
 <template>
-<!-- <div> -->
+    <!-- <div> -->
     <footer>
         <!-- mobile footer  -->
         <div class="mobile_view">
@@ -48,6 +48,7 @@
                 </div>
             </div>
         </div>
+
         <!-- mobile footer end  -->
         <!-- footer top  -->
         <div class="footer_top desktop_view d-none">
@@ -112,74 +113,102 @@
             </div>
         </div>
         <!-- footer links  -->
-        <div class="footer_links desktop_view">
+        <div class="footer_links desktop_view" style="background-color: #f8f9fa; padding: 82px 0px;">
             <div class="container">
-                <div class="row">
-                    <div class="col-md-3 col-6">
-                        <h6>Pages</h6>
-                        <ul>
-                            <li>
-                                <Nuxt-link to="/">Home</Nuxt-link>
-                            </li>
-                            <li>
-                                <Nuxt-link to="/category/all-categorys">All Category</Nuxt-link>
-                            </li>
-                            <li>
-                                <Nuxt-link to="/category/category-list">Category List</Nuxt-link>
-                            </li>
-                            <li>
-                                <Nuxt-link to="/product-list">Product List</Nuxt-link>
-                            </li>
-                            <li>
-                                <Nuxt-link to="/cart">Cart</Nuxt-link>
-                            </li>
-                            <li>
-                                <Nuxt-link to="/checkout">CheckOut</Nuxt-link>
-                            </li>
-                            <li>
-                                <Nuxt-link to="/payment">Payment</Nuxt-link>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-md-3 col-6">
-                        <h6>Login and service </h6>
-                        <ul>
-                            <li>
-                                <Nuxt-link to="/login">Login & Signup </Nuxt-link>
-                            </li>
-                           
-                            <li>
-                                <Nuxt-link to="/sell-on-ecommerce">Sellon</Nuxt-link>
-                            </li>
-                            <li>
-                                <Nuxt-link to="/seller-form">Seller Register </Nuxt-link>
-                            </li>
-                            <li>
-                                <Nuxt-link to="/allshop">All Stores</Nuxt-link>
-                            </li>
-                            <!-- <li>
-                                <Nuxt-link to="/customer-review">Customer Review</Nuxt-link>
-                            </li> -->
 
-                        </ul>
+
+                <!-- Start -->
+                <!-- Site Features Section -->
+                <!-- Site Features Section -->
+                <section class="site-features-section d-none d-sm-block">
+                    <div class="container">
+                        <div class="row g-4">
+
+                            <!-- Fast Shipping -->
+                            <div class="col-lg-3 col-md-6">
+                                <div class="feature-card">
+                                    <div class="feature-icon">
+                                        <!-- Truck SVG -->
+                                        <svg width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
+                                            <path
+                                                d="M0 1a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v3h2.586a1 1 0 0 1 .707.293l1.414 1.414A1 1 0 0 1 16 6.414V11a1 1 0 0 1-1 1h-1a2 2 0 1 1-4 0H6a2 2 0 1 1-4 0H1a1 1 0 0 1-1-1V1z" />
+                                        </svg>
+                                    </div>
+                                    <div class="feature-content">
+                                        <h5>Fast Shipping</h5>
+                                        <p>Fast delivery all over the country</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Returns -->
+                            <div class="col-lg-3 col-md-6">
+                                <div class="feature-card">
+                                    <div class="feature-icon">
+                                        <!-- Arrow Repeat SVG -->
+                                        <svg width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
+                                            <path d="M2 2v4h4L4.5 4.5A5 5 0 1 1 3 8H1a7 7 0 1 0 1-6z" />
+                                        </svg>
+                                    </div>
+                                    <div class="feature-content">
+                                        <h5>30-Day Returns</h5>
+                                        <p>Easy & hassle-free returns</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Payment -->
+                            <div class="col-lg-3 col-md-6">
+                                <div class="feature-card">
+                                    <div class="feature-icon">
+                                        <!-- Credit Card SVG -->
+                                        <svg width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
+                                            <path
+                                                d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1H0V4zm0 2h16v6a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6zm3 3h4v2H3V9z" />
+                                        </svg>
+                                    </div>
+                                    <div class="feature-content">
+                                        <h5>Safe Payment</h5>
+                                        <p>100% secure payment system</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Support -->
+                            <div class="col-lg-3 col-md-6">
+                                <div class="feature-card">
+                                    <div class="feature-icon">
+                                        <!-- Headset SVG -->
+                                        <svg width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
+                                            <path
+                                                d="M8 1a5 5 0 0 0-5 5v4a2 2 0 0 0 2 2h1V8H4V6a4 4 0 1 1 8 0v2h-2v4h1a2 2 0 0 0 2-2V6a5 5 0 0 0-5-5z" />
+                                        </svg>
+                                    </div>
+                                    <div class="feature-content">
+                                        <h5>Customer Support</h5>
+                                        <p>We’re here 24/7 to help you</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
+
+                <!-- END -->
+
+
+                <div class="row mt-4">
+                    <div class="col-md-6 col-6">
+                        <h4>Contact us</h4>
+                        <small>Call us 24/7<br />
+                            01329683606<br />
+
+                            6th & 7th Floor, Navana Osman @link, 214/d Bir Uttam Mir Shawkat Sarak, Dhaka 1208<br />
+                            Email:birgh.group.digital@gmail.com</small>
                     </div>
                     <div class="col-md-3 col-6">
-                        <h6>User Profile </h6>
-                        <ul>
-                            <li>
-                                <Nuxt-link to="/user/user-profile">User Profile</Nuxt-link>
-                            </li>
-                            <li>
-                                <Nuxt-link to="/user/user-orders">User Orders</Nuxt-link>
-                            </li>
-                            <li>
-                                <Nuxt-link to="/user/user-whichlist">User Wishlist</Nuxt-link>
-                            </li>
-                            <!-- <li>
-                                <Nuxt-link to="/user/user-review">User Reviews</Nuxt-link>
-                            </li> -->
-                        </ul>
-                        <h6>Policy </h6>
+                        <h4>Quick links </h4>
                         <ul>
                             <li>
                                 <Nuxt-link to="/refund">Refund</Nuxt-link>
@@ -189,58 +218,45 @@
                             </li>
                         </ul>
                     </div>
+
                     <div class="col-md-3 col-6">
-                        <h6>Seller Dashboard</h6>
+                        <h4>Brands </h4>
                         <ul>
                             <li>
-                                <Nuxt-link to="/seller/seller-products">Seller Products</Nuxt-link>
+                                <Nuxt-link to="/brand-product/brand-grid?slug=wd-40">WD-40</Nuxt-link>
                             </li>
                             <li>
-                                <Nuxt-link to="/seller/seller-products-post">Add Products</Nuxt-link>
+                                <Nuxt-link to="/brand-product/brand-grid?slug=vikars">Vikars</Nuxt-link>
                             </li>
+
                             <li>
-                                <Nuxt-link to="/Seller/seller-orders">Seller Orders</Nuxt-link>
+                                <Nuxt-link to="/brand-product/brand-grid?slug=bir-tools">Bir Tools</Nuxt-link>
                             </li>
+
                             <li>
-                                <Nuxt-link to="/seller/seller-customer-returns">Customer Returns</Nuxt-link>
+                                <Nuxt-link to="/brand-product/brand-grid?slug=kgi-hardware">KGI Hardware</Nuxt-link>
                             </li>
+
+
                             <li>
-                                <Nuxt-link to="/seller/seller-profile">Seller Profile</Nuxt-link>
+                                <Nuxt-link to="/brand-product/brand-grid?slug=vtech">VTech</Nuxt-link>
                             </li>
+
+
                             <li>
-                                <Nuxt-link to="/seller/seller-account-setting">Account Settings</Nuxt-link>
+                                <Nuxt-link to="/brand-product/brand-grid?slug=memoir">Memoir</Nuxt-link>
                             </li>
-                            <li>
-                                <Nuxt-link to="/seller/seller-wallet">Wallet</Nuxt-link>
-                            </li>
-                            <li>
-                                <Nuxt-link to="/seller/seller-message">Seller Massage</Nuxt-link>
-                            </li>
+
+
+
                         </ul>
                     </div>
-                    <div class="col-md-3 col-6">
-                        <h6>Make Money With Us </h6>
-                        <ul>
-                            <li>
-                                <Nuxt-link to="/sell-on-ecommerce">Sell On Ecommerce</Nuxt-link>
-                            </li>
-                            <li>
-                                <Nuxt-link to="/affiliate/affiliate-programe">Affiliate Programme</Nuxt-link>
-                            </li>
-                            <li>
-                                <Nuxt-link to="/affiliate/affiliate-programe-register">Affiliate Programme Register</Nuxt-link>
-                            </li>
-                            <li>
-                                <Nuxt-link to="/affiliate/affiliate-dashboard">Affiliate Dashboard</Nuxt-link>
-                            </li>
-                            <li>
-                                <Nuxt-link to="/affiliate/affiliate-transfer">Transfer Affiliate Money</Nuxt-link>
-                            </li>
-                        </ul>
-                    </div>
+
+
                 </div>
+
                 <!-- social links  -->
-                <div class="row">
+                <div class="row mt-4">
                     <div class="col-lg-3 col-md-3 col-sm-3 col-12">
                         <div class="social_links">
                             <h6>Join us on </h6>
@@ -260,46 +276,91 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-3 col-sm-3 col-12">
-                        <div class="social_links">
-                            <h6>Payment Method & Delivery partners </h6>
-                            <ul>
-                                <li>
-                                    <a href="#"><i class="fa-brands fa-cc-mastercard"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="fa-brands fa-cc-visa"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="fa-brands fa-stripe"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="fa-brands fa-dhl"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="fa-brands fa-cc-discover"></i></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+
                 </div>
             </div>
-            <div class=" container ">
-                <div class="btm_links bg-transparent">
-                    <div class="row">
-                        <div class="col-9 m-auto text-center">
-                            <div class="payment_part">
-                                <a href="#" class="a_link active">Ecommerce</a>
-                                <a href="#" class="a_link">PaymentOption</a>
-                                <a href="#" class="a_link">PaymentOption</a>
-                                <a href="#" class="a_link">PaymentOption</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
         </div>
         <!-- footer others web links  -->
     </footer>
-<!-- </div> -->
+    <!-- </div> -->
+
 </template>
+<style>
+.site-features-section {
+    padding: 25px 10px;
+    background: linear-gradient(135deg, #f8f9fa, #eef2f7);
+}
+
+.feature-card {
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 10px 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+    height: 100%;
+}
+
+.feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.feature-icon {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 20px;
+    background: linear-gradient(135deg, #0d6efd, #00c6ff);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    transition: 0.3s;
+}
+
+.feature-icon svg {
+    width: 28px;
+    height: 28px;
+}
+
+.feature-card:hover .feature-icon {
+    transform: rotate(8deg) scale(1.1);
+}
+
+.feature-content h5 {
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.feature-content p {
+    color: #6c757d;
+    font-size: 14px;
+    margin-bottom: 0;
+}
+
+
+
+.row .col-md-4 ul li a {
+    color: #222 !important;
+    text-decoration: none !important;
+}
+
+.row .col-md-4 ul li a:hover,
+.row .col-md-4 ul li a:focus,
+.row .col-md-4 ul li a:active {
+    color: #222 !important;
+    text-decoration: none !important;
+}
+
+.footer_links a,
+.footer_links a:visited,
+.footer_links a:hover,
+.footer_links a:active,
+.footer_links a:focus {
+    color: #222 !important;
+    text-decoration: none !important;
+    outline: none !important;
+}
+</style>

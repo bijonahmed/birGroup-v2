@@ -15,11 +15,11 @@
                         <ul v-for="(category, index) in categories" :key="category.id">
                             <li :key="category.id" v-if="index < limit">
                                 <a href="#" class="d-flex justify-content-between align-items-center"
-                                    @click="redirectCategory(category.slug)">
+                                    @click="redirectMainCategory(category.slug)">
                                     <div class="d-flex align-items-center">
                                         <i class="fa-solid fa-list" style="font-size: 10px;"></i>
 
-                                        {{ category.name }}
+                                        {{ category.name }}===
                                     </div> <i class="fa-solid fa-angle-right"></i>
                                 </a>
                                 <div class="sub_menu">
@@ -27,13 +27,13 @@
                                         <div class="col-4" v-for="childCategory in category.children"
                                             :key="childCategory.id">
                                             <h6><a href="#" @click="redirectCategory(childCategory.slug)"> {{
-                                                    childCategory.name }}</a></h6>
+                                                childCategory.name }}</a></h6>
 
                                             <ul v-if="childCategory.children && childCategory.children.length > 0">
                                                 <li v-for="inSubCategory in childCategory.children"
                                                     :key="inSubCategory.id"><a href="#"
                                                         @click="redirectCategory(inSubCategory.slug)">{{
-                                                        inSubCategory.name }}</a></li>
+                                                            inSubCategory.name }}</a></li>
 
                                             </ul>
                                         </div>
@@ -167,6 +167,14 @@ export default {
                 }
             }
         },
+        redirectMainCategory(slug) {
+            this.$router.push({
+                path: '/category/categoryProducts',
+                query: {
+                    slug: slug
+                }
+            })
+        },
         redirectCategory(slug) {
             this.$router.push({
                 path: '/category/category-grid',
@@ -203,5 +211,3 @@ export default {
     },
 };
 </script>
-
-<style scoped></style>

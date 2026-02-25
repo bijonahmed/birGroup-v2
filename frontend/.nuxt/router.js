@@ -43,9 +43,11 @@ const _ecfcacda = () => interopDefault(import('..\\pages\\affiliate\\affiliate-p
 const _0bb8afcd = () => interopDefault(import('..\\pages\\affiliate\\affiliate-programe-register.vue' /* webpackChunkName: "pages/affiliate/affiliate-programe-register" */))
 const _84d84bc6 = () => interopDefault(import('..\\pages\\affiliate\\affiliate-transfer.vue' /* webpackChunkName: "pages/affiliate/affiliate-transfer" */))
 const _0f88944c = () => interopDefault(import('..\\pages\\brand-product\\brand-grid.vue' /* webpackChunkName: "pages/brand-product/brand-grid" */))
+const _507935ab = () => interopDefault(import('..\\pages\\brand-product\\brand-grid copy.vue' /* webpackChunkName: "pages/brand-product/brand-grid copy" */))
 const _c393f120 = () => interopDefault(import('..\\pages\\category\\all-categorys.vue' /* webpackChunkName: "pages/category/all-categorys" */))
 const _36a073c8 = () => interopDefault(import('..\\pages\\category\\category-grid.vue' /* webpackChunkName: "pages/category/category-grid" */))
 const _21ef7f74 = () => interopDefault(import('..\\pages\\category\\category-list.vue' /* webpackChunkName: "pages/category/category-list" */))
+const _09eb286b = () => interopDefault(import('..\\pages\\category\\categoryProducts.vue' /* webpackChunkName: "pages/category/categoryProducts" */))
 const _ad5b2c38 = () => interopDefault(import('..\\pages\\chatbox\\messages.vue' /* webpackChunkName: "pages/chatbox/messages" */))
 const _168377e1 = () => interopDefault(import('..\\pages\\chatbox\\messages copy.vue' /* webpackChunkName: "pages/chatbox/messages copy" */))
 const _374544c4 = () => interopDefault(import('..\\pages\\seller\\change-password.vue' /* webpackChunkName: "pages/seller/change-password" */))
@@ -259,6 +261,10 @@ export const routerOptions = {
     component: _0f88944c,
     name: "brand-product-brand-grid"
   }, {
+    path: "/brand-product/brand-grid%20copy",
+    component: _507935ab,
+    name: "brand-product-brand-grid copy"
+  }, {
     path: "/category/all-categorys",
     component: _c393f120,
     name: "category-all-categorys"
@@ -270,6 +276,10 @@ export const routerOptions = {
     path: "/category/category-list",
     component: _21ef7f74,
     name: "category-category-list"
+  }, {
+    path: "/category/categoryProducts",
+    component: _09eb286b,
+    name: "category-categoryProducts"
   }, {
     path: "/chatbox/messages",
     component: _ad5b2c38,

@@ -39,7 +39,7 @@
                                     </section>
 
                                     <!-- image slider end here  -->
-                                    <div class="social_share">
+                                    <div class="social_share d-none">
                                         <h5>Share This Product</h5>
                                         <ul>
                                             <li>
@@ -91,7 +91,7 @@
                                             <!-- {{ pro_row }} -->
                                             <h5 v-if="pro_row.discount_status == 1">
                                                 <div class="d-flex align-items-center">
-                                                    Now: ${{ getTotal(pro_row.last_price) }}
+                                                    Now: BDT{{ getTotal(pro_row.last_price) }}
                                                     <p style="color: gray;font-size: 12px;"> &nbsp;+Inclusing VAT.</p>
                                                 </div>
                                                 <p class="ms-0 d-block"><strike v-if="pro_row.discount !== 0">Was: ${{
@@ -100,14 +100,14 @@
                                             </h5>
                                             <h5 v-else-if="pro_row.discount_status == 2">
                                                 <div class="d-flex align-items-center">
-                                                    Now: ${{ (pro_row.last_price).toFixed(2) }}
+                                                    Now: BDT{{ (pro_row.last_price).toFixed(2) }}
                                                     <p style="color: gray;font-size: 12px;"> &nbsp;+Inclusing VAT.</p>
                                                 </div>
                                                 <p class="ms-0 d-block"><strike v-if="pro_row.discount !== 0">Was: ${{
                                                     pro_row.price.toFixed(2) }} </strike><span>${{ pro_row.discount
                                                         }}</span></p>
                                             </h5>
-                                            <h5 v-else>${{ pro_row.last_price }} </h5>
+                                            <h5 v-else>BDT{{ pro_row.last_price }} </h5>
 
                                             <p v-if="pro_row.stock_status == 1 && pro_row.stock_qty >= 1">In stock</p>
                                             <p v-else-if="pro_row.stock_status == 2 && pro_row.stock_qty >= 1">in stock
@@ -192,7 +192,7 @@
                                         <div class="shortDescPro">
 
                                         </div>
-                                        <div class="promotion">
+                                        <div class="promotion d-none">
                                             <h4>Promotions</h4>
                                             <ul>
                                                 <li>
@@ -230,7 +230,7 @@
 
                                     <!-- customer recent views  -->
 
-                                    <div class="feedback" id="feedback">
+                                    <div class="feedback d-none" id="feedback">
                                         <div class="side_title">
                                             <h5>Varified Customer Feedback</h5>
                                             <a href="customer-review.html">See All <i
@@ -993,7 +993,22 @@ export default {
         width: 100%;
         display: block;
     } */
+/* Featured main image border */
+.Slider-featuredImage {
+    border: 3px solid var(--color_Primary);
+    border-radius: 8px;
+}
 
+/* Thumbnail default border */
+.Slider-thumbnail img {
+    border: 2px solid transparent;
+    transition: 0.3s ease-in-out;
+}
+
+/* Active thumbnail border */
+.Slider-thumbnail.active img {
+    border: 2px solid var(--color_Primary);
+}
 .scrollimg {
     height: 40px;
     width: 20px;

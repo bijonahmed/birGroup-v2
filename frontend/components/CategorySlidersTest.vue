@@ -9,7 +9,7 @@
                                 <h5>{{ category.name }}</h5>
                             </div>
                             <div>
-                                <nuxt-link :to="'category/category-grid?slug=' + category.slug" class="catLink">See
+                                <nuxt-link :to="'category/category-grid?sub_slug=' + category.slug" class="catLink">See
                                     All<i class="fas fa-arrow-right"></i></nuxt-link>
                             </div>
                         </div>

@@ -17,6 +17,7 @@ You can directly use them in pages and other components without the need to impo
 - `<CategoryPart>` | `<category-part>` (components/CategoryPart.vue)
 - `<CategoryProductFilter>` | `<category-product-filter>` (components/CategoryProductFilter.vue)
 - `<CategoryProductFilterGrid>` | `<category-product-filter-grid>` (components/CategoryProductFilterGrid.vue)
+- `<CategoryProducts>` | `<category-products>` (components/CategoryProducts.vue)
 - `<CategoryRecentView>` | `<category-recent-view>` (components/CategoryRecentView.vue)
 - `<CategorySliders>` | `<category-sliders>` (components/CategorySliders.vue)
 - `<CategorySlidersTest>` | `<category-sliders-test>` (components/CategorySlidersTest.vue)

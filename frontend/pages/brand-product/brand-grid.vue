@@ -9,7 +9,7 @@
 
                 <!-- <OfficialStoreProductList /> -->
                 <brandProductGrid :receivedSlug="paramSlug" />
-                <RecentView />
+                <!-- <RecentView /> -->
 
             </div>
         </section>

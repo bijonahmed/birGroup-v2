@@ -2,7 +2,7 @@ import FriendlyErrorsWebpackPlugin from "friendly-errors-webpack-plugin";
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: "Welcome to Isumax",
+    title: "Welcome to birecommarce",
     htmlAttrs: {
       lang: "en",
     },

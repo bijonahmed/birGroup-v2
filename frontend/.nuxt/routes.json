@@ -3,516 +3,616 @@
     "name": "allbrands",
     "path": "/allbrands",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\allbrands.vue",
-    "chunkName": "pages/allbrands"
+    "chunkName": "pages/allbrands",
+    "_name": "_953f83dc"
   },
   {
     "name": "allshop",
     "path": "/allshop",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\allshop.vue",
-    "chunkName": "pages/allshop"
+    "chunkName": "pages/allshop",
+    "_name": "_4c2761bc"
   },
   {
     "name": "blog",
     "path": "/blog",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\blog.vue",
-    "chunkName": "pages/blog"
+    "chunkName": "pages/blog",
+    "_name": "_f7eac466"
   },
   {
     "name": "blog-details",
     "path": "/blog-details",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\blog-details.vue",
-    "chunkName": "pages/blog-details"
+    "chunkName": "pages/blog-details",
+    "_name": "_4606abc2"
   },
   {
     "name": "cart",
     "path": "/cart",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\cart.vue",
-    "chunkName": "pages/cart"
+    "chunkName": "pages/cart",
+    "_name": "_a8460b6a"
   },
   {
     "name": "changepassword",
     "path": "/changepassword",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\changepassword.vue",
-    "chunkName": "pages/changepassword"
+    "chunkName": "pages/changepassword",
+    "_name": "_1f869794"
   },
   {
     "name": "changepassword copy",
     "path": "/changepassword%20copy",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\changepassword copy.vue",
-    "chunkName": "pages/changepassword copy"
+    "chunkName": "pages/changepassword copy",
+    "_name": "_6464d0cf"
   },
   {
     "name": "charity",
     "path": "/charity",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\charity.vue",
-    "chunkName": "pages/charity"
+    "chunkName": "pages/charity",
+    "_name": "_1be65abd"
   },
   {
     "name": "checkout",
     "path": "/checkout",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\checkout.vue",
-    "chunkName": "pages/checkout"
+    "chunkName": "pages/checkout",
+    "_name": "_4631c7f1"
   },
   {
     "name": "coupons",
     "path": "/coupons",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\coupons.vue",
-    "chunkName": "pages/coupons"
+    "chunkName": "pages/coupons",
+    "_name": "_7b5af09c"
   },
   {
     "name": "customer-review",
     "path": "/customer-review",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\customer-review.vue",
-    "chunkName": "pages/customer-review"
+    "chunkName": "pages/customer-review",
+    "_name": "_121a4ccc"
   },
   {
     "name": "flas-sale",
     "path": "/flas-sale",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\flas-sale.vue",
-    "chunkName": "pages/flas-sale"
+    "chunkName": "pages/flas-sale",
+    "_name": "_34e02d3e"
   },
   {
     "name": "forget-password",
     "path": "/forget-password",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\forget-password.vue",
-    "chunkName": "pages/forget-password"
+    "chunkName": "pages/forget-password",
+    "_name": "_dc1965c0"
   },
   {
     "name": "login",
     "path": "/login",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\login.vue",
-    "chunkName": "pages/login"
+    "chunkName": "pages/login",
+    "_name": "_5f35fb4e"
   },
   {
     "name": "login-old1.0",
     "path": "/login-old1.0",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\login-old1.0.vue",
-    "chunkName": "pages/login-old1.0"
+    "chunkName": "pages/login-old1.0",
+    "_name": "_08e0d13b"
   },
   {
     "name": "official-store",
     "path": "/official-store",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\official-store.vue",
-    "chunkName": "pages/official-store"
+    "chunkName": "pages/official-store",
+    "_name": "_4da5676a"
   },
   {
     "name": "official-store-grid",
     "path": "/official-store-grid",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\official-store-grid.vue",
-    "chunkName": "pages/official-store-grid"
+    "chunkName": "pages/official-store-grid",
+    "_name": "_a671a70e"
   },
   {
     "name": "OfficialStoreFilter",
     "path": "/OfficialStoreFilter",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\OfficialStoreFilter.vue",
-    "chunkName": "pages/OfficialStoreFilter"
+    "chunkName": "pages/OfficialStoreFilter",
+    "_name": "_1435de53"
   },
   {
     "name": "OfficialStoreFilterGrid",
     "path": "/OfficialStoreFilterGrid",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\OfficialStoreFilterGrid.vue",
-    "chunkName": "pages/OfficialStoreFilterGrid"
+    "chunkName": "pages/OfficialStoreFilterGrid",
+    "_name": "_6b9b6539"
   },
   {
     "name": "order-confirm",
     "path": "/order-confirm",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\order-confirm.vue",
-    "chunkName": "pages/order-confirm"
+    "chunkName": "pages/order-confirm",
+    "_name": "_bb3733b4"
   },
   {
     "name": "payment",
     "path": "/payment",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\payment.vue",
-    "chunkName": "pages/payment"
+    "chunkName": "pages/payment",
+    "_name": "_032d2faa"
   },
   {
     "name": "product-grid",
     "path": "/product-grid",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\product-grid.vue",
-    "chunkName": "pages/product-grid"
+    "chunkName": "pages/product-grid",
+    "_name": "_1123d0e2"
   },
   {
     "name": "product-list",
     "path": "/product-list",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\product-list.vue",
-    "chunkName": "pages/product-list"
+    "chunkName": "pages/product-list",
+    "_name": "_34add0e7"
   },
   {
     "name": "refund",
     "path": "/refund",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\refund.vue",
-    "chunkName": "pages/refund"
+    "chunkName": "pages/refund",
+    "_name": "_e750cc3a"
   },
   {
     "name": "required",
     "path": "/required",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\required.vue",
-    "chunkName": "pages/required"
+    "chunkName": "pages/required",
+    "_name": "_e4225c6c"
   },
   {
     "name": "return-and-replacement",
     "path": "/return-and-replacement",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\return-and-replacement.vue",
-    "chunkName": "pages/return-and-replacement"
+    "chunkName": "pages/return-and-replacement",
+    "_name": "_deccf52c"
   },
   {
     "name": "sell-on-ecommerce",
     "path": "/sell-on-ecommerce",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\sell-on-ecommerce.vue",
-    "chunkName": "pages/sell-on-ecommerce"
+    "chunkName": "pages/sell-on-ecommerce",
+    "_name": "_54cb04d2"
   },
   {
     "name": "sell-on-filter",
     "path": "/sell-on-filter",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\sell-on-filter.vue",
-    "chunkName": "pages/sell-on-filter"
+    "chunkName": "pages/sell-on-filter",
+    "_name": "_65f35856"
   },
   {
     "name": "seller-form",
     "path": "/seller-form",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\seller-form.vue",
-    "chunkName": "pages/seller-form"
+    "chunkName": "pages/seller-form",
+    "_name": "_79e45012"
   },
   {
     "name": "sellerLogin",
     "path": "/sellerLogin",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\sellerLogin.vue",
-    "chunkName": "pages/sellerLogin"
+    "chunkName": "pages/sellerLogin",
+    "_name": "_b07b0662"
   },
   {
     "name": "service",
     "path": "/service",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\service.vue",
-    "chunkName": "pages/service"
+    "chunkName": "pages/service",
+    "_name": "_316de54c"
   },
   {
     "name": "signup",
     "path": "/signup",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\signup.vue",
-    "chunkName": "pages/signup"
+    "chunkName": "pages/signup",
+    "_name": "_583948fa"
   },
   {
     "name": "today-deal",
     "path": "/today-deal",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\today-deal.vue",
-    "chunkName": "pages/today-deal"
+    "chunkName": "pages/today-deal",
+    "_name": "_4dfc7863"
   },
   {
     "name": "update-password",
     "path": "/update-password",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\update-password.vue",
-    "chunkName": "pages/update-password"
+    "chunkName": "pages/update-password",
+    "_name": "_8eb00878"
   },
   {
     "name": "affiliate-affiliate-dashboard",
     "path": "/affiliate/affiliate-dashboard",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\affiliate\\\\affiliate-dashboard.vue",
-    "chunkName": "pages/affiliate/affiliate-dashboard"
+    "chunkName": "pages/affiliate/affiliate-dashboard",
+    "_name": "_45e57952"
   },
   {
     "name": "affiliate-affiliate-programe",
     "path": "/affiliate/affiliate-programe",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\affiliate\\\\affiliate-programe.vue",
-    "chunkName": "pages/affiliate/affiliate-programe"
+    "chunkName": "pages/affiliate/affiliate-programe",
+    "_name": "_ecfcacda"
   },
   {
     "name": "affiliate-affiliate-programe-register",
     "path": "/affiliate/affiliate-programe-register",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\affiliate\\\\affiliate-programe-register.vue",
-    "chunkName": "pages/affiliate/affiliate-programe-register"
+    "chunkName": "pages/affiliate/affiliate-programe-register",
+    "_name": "_0bb8afcd"
   },
   {
     "name": "affiliate-affiliate-transfer",
     "path": "/affiliate/affiliate-transfer",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\affiliate\\\\affiliate-transfer.vue",
-    "chunkName": "pages/affiliate/affiliate-transfer"
+    "chunkName": "pages/affiliate/affiliate-transfer",
+    "_name": "_84d84bc6"
   },
   {
     "name": "brand-product-brand-grid",
     "path": "/brand-product/brand-grid",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\brand-product\\\\brand-grid.vue",
-    "chunkName": "pages/brand-product/brand-grid"
+    "chunkName": "pages/brand-product/brand-grid",
+    "_name": "_0f88944c"
+  },
+  {
+    "name": "brand-product-brand-grid copy",
+    "path": "/brand-product/brand-grid%20copy",
+    "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\brand-product\\\\brand-grid copy.vue",
+    "chunkName": "pages/brand-product/brand-grid copy",
+    "_name": "_507935ab"
   },
   {
     "name": "category-all-categorys",
     "path": "/category/all-categorys",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\category\\\\all-categorys.vue",
-    "chunkName": "pages/category/all-categorys"
+    "chunkName": "pages/category/all-categorys",
+    "_name": "_c393f120"
   },
   {
     "name": "category-category-grid",
     "path": "/category/category-grid",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\category\\\\category-grid.vue",
-    "chunkName": "pages/category/category-grid"
+    "chunkName": "pages/category/category-grid",
+    "_name": "_36a073c8"
   },
   {
     "name": "category-category-list",
     "path": "/category/category-list",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\category\\\\category-list.vue",
-    "chunkName": "pages/category/category-list"
+    "chunkName": "pages/category/category-list",
+    "_name": "_21ef7f74"
+  },
+  {
+    "name": "category-categoryProducts",
+    "path": "/category/categoryProducts",
+    "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\category\\\\categoryProducts.vue",
+    "chunkName": "pages/category/categoryProducts",
+    "_name": "_09eb286b"
   },
   {
     "name": "chatbox-messages",
     "path": "/chatbox/messages",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\chatbox\\\\messages.vue",
-    "chunkName": "pages/chatbox/messages"
+    "chunkName": "pages/chatbox/messages",
+    "_name": "_ad5b2c38"
   },
   {
     "name": "chatbox-messages copy",
     "path": "/chatbox/messages%20copy",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\chatbox\\\\messages copy.vue",
-    "chunkName": "pages/chatbox/messages copy"
+    "chunkName": "pages/chatbox/messages copy",
+    "_name": "_168377e1"
   },
   {
     "name": "seller-change-password",
     "path": "/seller/change-password",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\seller\\\\change-password.vue",
-    "chunkName": "pages/seller/change-password"
+    "chunkName": "pages/seller/change-password",
+    "_name": "_374544c4"
   },
   {
     "name": "seller-order-details",
     "path": "/seller/order-details",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\seller\\\\order-details.vue",
-    "chunkName": "pages/seller/order-details"
+    "chunkName": "pages/seller/order-details",
+    "_name": "_28a5d249"
   },
   {
     "name": "seller-seller-account-setting",
     "path": "/seller/seller-account-setting",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\seller\\\\seller-account-setting.vue",
-    "chunkName": "pages/seller/seller-account-setting"
+    "chunkName": "pages/seller/seller-account-setting",
+    "_name": "_b6561968"
   },
   {
     "name": "seller-seller-comission-history",
     "path": "/seller/seller-comission-history",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\seller\\\\seller-comission-history.vue",
-    "chunkName": "pages/seller/seller-comission-history"
+    "chunkName": "pages/seller/seller-comission-history",
+    "_name": "_62c548fa"
   },
   {
     "name": "seller-seller-customer-returns",
     "path": "/seller/seller-customer-returns",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\seller\\\\seller-customer-returns.vue",
-    "chunkName": "pages/seller/seller-customer-returns"
+    "chunkName": "pages/seller/seller-customer-returns",
+    "_name": "_68039d68"
   },
   {
     "name": "seller-seller-dashboard",
     "path": "/seller/seller-dashboard",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\seller\\\\seller-dashboard.vue",
-    "chunkName": "pages/seller/seller-dashboard"
+    "chunkName": "pages/seller/seller-dashboard",
+    "_name": "_16e72030"
   },
   {
     "name": "seller-seller-leftsidebar",
     "path": "/seller/seller-leftsidebar",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\seller\\\\seller-leftsidebar.vue",
-    "chunkName": "pages/seller/seller-leftsidebar"
+    "chunkName": "pages/seller/seller-leftsidebar",
+    "_name": "_1c565191"
   },
   {
     "name": "seller-seller-message",
     "path": "/seller/seller-message",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\seller\\\\seller-message.vue",
-    "chunkName": "pages/seller/seller-message"
+    "chunkName": "pages/seller/seller-message",
+    "_name": "_0c28b523"
   },
   {
     "name": "seller-seller-orders",
     "path": "/seller/seller-orders",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\seller\\\\seller-orders.vue",
-    "chunkName": "pages/seller/seller-orders"
+    "chunkName": "pages/seller/seller-orders",
+    "_name": "_86f4270e"
   },
   {
     "name": "seller-seller-payment-history",
     "path": "/seller/seller-payment-history",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\seller\\\\seller-payment-history.vue",
-    "chunkName": "pages/seller/seller-payment-history"
+    "chunkName": "pages/seller/seller-payment-history",
+    "_name": "_5aa09c2e"
   },
   {
     "name": "seller-seller-products",
     "path": "/seller/seller-products",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\seller\\\\seller-products.vue",
-    "chunkName": "pages/seller/seller-products"
+    "chunkName": "pages/seller/seller-products",
+    "_name": "_05ba9478"
   },
   {
     "name": "seller-seller-products-post",
     "path": "/seller/seller-products-post",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\seller\\\\seller-products-post.vue",
-    "chunkName": "pages/seller/seller-products-post"
+    "chunkName": "pages/seller/seller-products-post",
+    "_name": "_94186ef6"
   },
   {
     "name": "seller-seller-profile",
     "path": "/seller/seller-profile",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\seller\\\\seller-profile.vue",
-    "chunkName": "pages/seller/seller-profile"
+    "chunkName": "pages/seller/seller-profile",
+    "_name": "_4aca9dc5"
   },
   {
     "name": "seller-seller-wallet",
     "path": "/seller/seller-wallet",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\seller\\\\seller-wallet.vue",
-    "chunkName": "pages/seller/seller-wallet"
+    "chunkName": "pages/seller/seller-wallet",
+    "_name": "_217a338d"
   },
   {
     "name": "seller-seller-wishlist",
     "path": "/seller/seller-wishlist",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\seller\\\\seller-wishlist.vue",
-    "chunkName": "pages/seller/seller-wishlist"
+    "chunkName": "pages/seller/seller-wishlist",
+    "_name": "_92d13f4e"
   },
   {
     "name": "user-account-statement",
     "path": "/user/account-statement",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\account-statement.vue",
-    "chunkName": "pages/user/account-statement"
+    "chunkName": "pages/user/account-statement",
+    "_name": "_031315c9"
   },
   {
     "name": "user-my-reviews",
     "path": "/user/my-reviews",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\my-reviews.vue",
-    "chunkName": "pages/user/my-reviews"
+    "chunkName": "pages/user/my-reviews",
+    "_name": "_60b717f0"
   },
   {
     "name": "user-myPackages",
     "path": "/user/myPackages",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\myPackages.vue",
-    "chunkName": "pages/user/myPackages"
+    "chunkName": "pages/user/myPackages",
+    "_name": "_4f59022f"
   },
   {
     "name": "user-mySalary",
     "path": "/user/mySalary",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\mySalary.vue",
-    "chunkName": "pages/user/mySalary"
+    "chunkName": "pages/user/mySalary",
+    "_name": "_c2c1f9e8"
   },
   {
     "name": "user-old_user-withdrawal copy",
     "path": "/user/old_user-withdrawal%20copy",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\old_user-withdrawal copy.vue",
-    "chunkName": "pages/user/old_user-withdrawal copy"
+    "chunkName": "pages/user/old_user-withdrawal copy",
+    "_name": "_63345ce8"
   },
   {
     "name": "user-order-details",
     "path": "/user/order-details",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\order-details.vue",
-    "chunkName": "pages/user/order-details"
+    "chunkName": "pages/user/order-details",
+    "_name": "_3eb2e9bd"
   },
   {
     "name": "user-track-order",
     "path": "/user/track-order",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\track-order.vue",
-    "chunkName": "pages/user/track-order"
+    "chunkName": "pages/user/track-order",
+    "_name": "_df2ff174"
   },
   {
     "name": "user-user-affiliate",
     "path": "/user/user-affiliate",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\user-affiliate.vue",
-    "chunkName": "pages/user/user-affiliate"
+    "chunkName": "pages/user/user-affiliate",
+    "_name": "_6bd97d7e"
   },
   {
     "name": "user-user-bloglist",
     "path": "/user/user-bloglist",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\user-bloglist.vue",
-    "chunkName": "pages/user/user-bloglist"
+    "chunkName": "pages/user/user-bloglist",
+    "_name": "_520c6e7c"
   },
   {
     "name": "user-user-blogPost",
     "path": "/user/user-blogPost",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\user-blogPost.vue",
-    "chunkName": "pages/user/user-blogPost"
+    "chunkName": "pages/user/user-blogPost",
+    "_name": "_32d0e99e"
   },
   {
     "name": "user-user-dashborad",
     "path": "/user/user-dashborad",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\user-dashborad.vue",
-    "chunkName": "pages/user/user-dashborad"
+    "chunkName": "pages/user/user-dashborad",
+    "_name": "_11e237ca"
   },
   {
     "name": "user-user-mlm",
     "path": "/user/user-mlm",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\user-mlm.vue",
-    "chunkName": "pages/user/user-mlm"
+    "chunkName": "pages/user/user-mlm",
+    "_name": "_43ffdf22"
   },
   {
     "name": "user-user-orders",
     "path": "/user/user-orders",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\user-orders.vue",
-    "chunkName": "pages/user/user-orders"
+    "chunkName": "pages/user/user-orders",
+    "_name": "_3ec210a1"
   },
   {
     "name": "user-user-profile",
     "path": "/user/user-profile",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\user-profile.vue",
-    "chunkName": "pages/user/user-profile"
+    "chunkName": "pages/user/user-profile",
+    "_name": "_1012fe9d"
   },
   {
     "name": "user-user-requireProduct",
     "path": "/user/user-requireProduct",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\user-requireProduct.vue",
-    "chunkName": "pages/user/user-requireProduct"
+    "chunkName": "pages/user/user-requireProduct",
+    "_name": "_3640c706"
   },
   {
     "name": "user-user-security",
     "path": "/user/user-security",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\user-security.vue",
-    "chunkName": "pages/user/user-security"
+    "chunkName": "pages/user/user-security",
+    "_name": "_47b2b308"
   },
   {
     "name": "user-user-whichlist",
     "path": "/user/user-whichlist",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\user-whichlist.vue",
-    "chunkName": "pages/user/user-whichlist"
+    "chunkName": "pages/user/user-whichlist",
+    "_name": "_2ade8da2"
   },
   {
     "name": "user-user-withdrawal",
     "path": "/user/user-withdrawal",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\user-withdrawal.vue",
-    "chunkName": "pages/user/user-withdrawal"
+    "chunkName": "pages/user/user-withdrawal",
+    "_name": "_99f75f1e"
   },
   {
     "name": "seller-chatbox-messages",
     "path": "/seller/chatbox/messages",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\seller\\\\chatbox\\\\messages.vue",
-    "chunkName": "pages/seller/chatbox/messages"
+    "chunkName": "pages/seller/chatbox/messages",
+    "_name": "_633da305"
   },
   {
     "name": "seller-products-product-edit",
     "path": "/seller/products/product-edit",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\seller\\\\products\\\\product-edit.vue",
-    "chunkName": "pages/seller/products/product-edit"
+    "chunkName": "pages/seller/products/product-edit",
+    "_name": "_76fe7bf6"
   },
   {
     "name": "seller-products-product-preview",
     "path": "/seller/products/product-preview",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\seller\\\\products\\\\product-preview.vue",
-    "chunkName": "pages/seller/products/product-preview"
+    "chunkName": "pages/seller/products/product-preview",
+    "_name": "_65939ce8"
   },
   {
     "name": "seller-products-product-varient",
     "path": "/seller/products/product-varient",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\seller\\\\products\\\\product-varient.vue",
-    "chunkName": "pages/seller/products/product-varient"
+    "chunkName": "pages/seller/products/product-varient",
+    "_name": "_e356b666"
   },
   {
     "name": "index",
     "path": "/",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\index.vue",
-    "chunkName": "pages/index"
+    "chunkName": "pages/index",
+    "_name": "_d4e34f92"
   },
   {
     "name": "user-invite-user-id",
     "path": "/user/invite-user/:id?",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\invite-user\\\\_id.vue",
-    "chunkName": "pages/user/invite-user/_id"
+    "chunkName": "pages/user/invite-user/_id",
+    "_name": "_358008fe"
   },
   {
     "name": "business-slug",
     "path": "/business/:slug?",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\business\\\\_slug.vue",
-    "chunkName": "pages/business/_slug"
+    "chunkName": "pages/business/_slug",
+    "_name": "_c6693122"
   },
   {
     "name": "product-details-slug",
     "path": "/product-details/:slug?",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\product-details\\\\_slug.vue",
-    "chunkName": "pages/product-details/_slug"
+    "chunkName": "pages/product-details/_slug",
+    "_name": "_05265991"
   },
   {
     "name": "resetpassword-slug",
     "path": "/resetpassword/:slug?",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\resetpassword\\\\_slug.vue",
-    "chunkName": "pages/resetpassword/_slug"
+    "chunkName": "pages/resetpassword/_slug",
+    "_name": "_c7cd65ea"
   }
 ]

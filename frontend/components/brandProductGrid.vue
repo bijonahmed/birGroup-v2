@@ -5,175 +5,30 @@
                 <div class="product_section">
                     <div class="row px-2">
                         <!-- sidebar fillter  -->
-                        <div class="col-md-4 desktop_view">
-                            <div class="left_side_product">
-                                <div class="category_list">
+                        <div class="row justify-content-center">
+                            <div class="container my-4">
+                                <div class="row g-3">
 
-                                    <!-- <p>Query parameter 'slug': {{ $route.query.slug }}</p>
-                                <hr /> -->
-                                    <h6>Category</h6>
-                                    <ul>
-                                        <li v-for="category in categories" :key="category.id">
-                                            <nuxt-link :to="`/category/category-grid?slug=${category.slug}`">{{
-                                            category.name }}</nuxt-link>
-                                        </li>
-                                    </ul>
+                                    <div class="col-12 col-sm-6 col-md-3" v-for="category in categories"
+                                        :key="category.id">
+                                        <nuxt-link class="category_item d-block text-center"
+                                            :to="`/category/category-grid?sub_slug=${category.slug}`">
+                                            {{ category.name }}
+                                        </nuxt-link>
+                                    </div>
+
                                 </div>
-
-
                             </div>
                         </div>
-
                         <!-- grid  -->
-                        <div class="col-md-8">
+                        <div class="col-md-12">
                             <div class="product_list">
                                 <div class="title_product">
                                     <div>
                                         <h6>{{ categoryname }}</h6>
                                     </div>
-                                    <div>
-                                        <label for="">Short By:</label>
-                                        <select name="" id="">
-                                            <option value="">Popularity</option>
-                                            <option value="">New arrival</option>
-                                            <option value="">Low to High</option>
-                                            <option value="">high to low</option>
-                                        </select>
-                                    </div>
                                 </div>
-                                <div class="grid_list">
-                                    <div>
-                                        <p>{{ pro_count }} product found</p>
-                                    </div>
-                                    <div class="d-flex">
-                                        <a type="button" class="filter_btn mobile_view"><i
-                                                class="fa-solid fa-sliders"></i></a>
-                                        <a href="#" @click="categoryGrid"><i class="fa-solid fa-list"></i></a>
-                                        <Nuxt-Link to="#" class="active"><i class="fa-solid fa-grip"></i></Nuxt-Link>
-                                    </div>
-                                    <div class="filter_modal">
-                                        <div class="row px-4">
-                                            <div class="col-6"></div>
-                                            <div class="col-6 text-end "><i class="fa-solid fa-x filter_close"
-                                                    style="cursor: pointer;"></i></div>
-                                        </div>
-                                        <div class="modal_fdiv">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="left_side_product">
-                                                        <div class="category_list">
-                                                            <h6>Category</h6>
-                                                            <ul>
-                                                                <li v-for="category in categories" :key="category.id">
-                                                                    <nuxt-link
-                                                                        :to="`category/category-grid?slug=${category.slug}`">{{
-                                            category.name }}</nuxt-link></li>
-                                                            </ul>
-                                                        </div>
-                                                        <div class="delivery_list">
-                                                            <h6>Express delivery</h6>
-                                                            <ul>
-                                                                <li>
-                                                                    <input type="checkbox"><label for="">DHL </label>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <div class="delivery_list">
-                                                            <h6>Shipped from </h6>
-                                                            <ul>
-                                                                <li>
-                                                                    <input type="checkbox"><label for="">From Bangladesh
-                                                                    </label>
-                                                                </li>
-                                                                <li>
-                                                                    <input type="checkbox"><label for="">From Bangladesh
-                                                                    </label>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <div class="brands_list">
-                                                            <h6>Brand</h6>
-                                                            <div class="search_side">
-                                                                <i class="fa-solid fa-magnifying-glass"></i>
-                                                                <input type="text" class="form-control"
-                                                                    placeholder="Search">
-                                                            </div>
-                                                            <ul class="brand_scroll">
-                                                                <li>
-                                                                    <input type="checkbox"><label for="">Addidas
-                                                                    </label>
-                                                                </li>
-                                                                <li>
-                                                                    <input type="checkbox"><label for="">AGM </label>
-                                                                </li>
 
-                                                            </ul>
-                                                        </div>
-                                                        <div class="price_range">
-                                                            <div class="sidebr_title">
-                                                                <h6>Price Range </h6>
-                                                                <button type="button" class="btn_apply">Apply</button>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-md-12">
-                                                                    <div id="slider-range" class="price-filter-range"
-                                                                        name="rangeInput"></div>
-
-                                                                    <div class="d-flex" style="margin:10px auto">
-                                                                        <input type="number"
-                                                                            style="width: 45%;margin: 0px 3px;" min=0
-                                                                            max="9900"
-                                                                            oninput="validity.valid||(value='0');"
-                                                                            id="min_price" class="price-range-field" />
-                                                                        <input type="number"
-                                                                            style="width: 45%;margin: 0px 3px" min=0
-                                                                            max="10000"
-                                                                            oninput="validity.valid||(value='10000');"
-                                                                            id="max_price" class="price-range-field" />
-                                                                    </div>
-
-                                                                    <!-- <button class="price-range-search" id="price-range-submit">Search</button>
-
-                                                                <div id="searchResults" class="search-results-block"></div> -->
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="brands_list">
-                                                            <h6>size</h6>
-                                                            <div class="search_side">
-                                                                <i class="fa-solid fa-magnifying-glass"></i>
-                                                                <input type="text" class="form-control"
-                                                                    placeholder="Search">
-                                                            </div>
-                                                            <ul class="brand_scroll">
-                                                                <li>
-                                                                    <input type="checkbox"><label for="">XS</label>
-                                                                </li>
-                                                                <li>
-                                                                    <input type="checkbox"><label for="">S</label>
-                                                                </li>
-
-                                                            </ul>
-                                                        </div>
-                                                        <div class="brands_list">
-                                                            <h6>Gender</h6>
-
-                                                            <ul class="brand_scroll">
-                                                                <li>
-                                                                    <input type="checkbox"><label for="">Boys</label>
-                                                                </li>
-                                                                <li>
-                                                                    <input type="checkbox"><label for="">Girls</label>
-                                                                </li>
-
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
 
                                 <div class="row">
                                     <!-- start -->
@@ -190,7 +45,7 @@
                                                     <div class="d-flex align-items-center"
                                                         v-if="item.discount_status == 1">
                                                         <p class="me-1" v-if="item.discount !== 0">${{
-                                            item.percent_discount.toFixed(2) }}</p>
+                                                            item.percent_discount.toFixed(2) }}</p>
                                                         <p v-else class="me-1">${{ (item.price).toFixed(2) }}</p>
                                                         <p v-if="item.discount !== 0 && item.discount !== ''">
                                                             <strike>${{ item.price }}</strike>
@@ -200,7 +55,7 @@
                                                     <div class="d-flex align-items-center"
                                                         v-else-if="item.discount_status == 2">
                                                         <p class="me-1" v-if="item.discount !== 0">${{
-                                            item.fixed_discount.toFixed(2) }}</p>
+                                                            item.fixed_discount.toFixed(2) }}</p>
                                                         <p v-else class="me-1">${{ (item.price).toFixed(2) }}</p>
                                                         <p v-if="item.discount !== 0 && item.discount !== ''">
                                                             <strike>${{ item.price }}</strike>
@@ -229,12 +84,7 @@
                                     </div>
                                     <!-- END -->
                                 </div>
-                                <div class="row">
-                                    <div class="col-12">
 
-
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -405,3 +255,29 @@ export default {
     }
 };
 </script>
+<style>
+.category_item {
+    position: relative;
+    padding: 14px 15px;
+    margin-bottom: 0;
+    /* remove extra gap because row g-3 already handles spacing */
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #fff;
+    transition: 0.3s ease;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.category_item:hover {
+    background: #f8f9fa;
+    border-color: var(--color_Primary);
+    color: var(--color_Primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+</style>

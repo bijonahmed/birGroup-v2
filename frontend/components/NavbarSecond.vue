@@ -62,7 +62,7 @@
                             </div>
                             <ul>
                                 <li v-for="(item, key) in searchloop" :key="key">
-                                    <nuxt-link v-if="item.type == 'category'"  :to="`/category/category-grid?slug=${item.catslug}`">{{ item.label }}</nuxt-link>
+                                    <nuxt-link v-if="item.type == 'category'"  :to="`/category/category-grid?sub_slug=${item.catslug}`">{{ item.label }}</nuxt-link>
                                     <nuxt-link v-if="item.type == 'product'"  :to="`/product-details/${item.slug}`">{{ item.label }}</nuxt-link>
                                 </li>
                             </ul>
@@ -75,6 +75,38 @@
     <!-- </div> -->
 </template>
 
+<style lang="css" scoped>
+.sub_menu {
+    position: absolute;
+    background: #fff;
+    width: 700px;
+    padding: 20px;
+    z-index: 999;
+
+    max-height: 70vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+
+.top_bannerOne .sec_One {
+    max-height: 380px;
+}
+
+.hi-50 {
+    height: 49% !important;
+    object-fit: cover;
+}
+
+.height_100 {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
+}
+</style>
 <script>
 
 // import axios from 'axios';
