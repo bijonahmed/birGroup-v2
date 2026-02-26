@@ -262,9 +262,12 @@ Route::group([
     Route::get('limitedProducts', [UnauthenticatedController::class, 'limitedProducts']);
     Route::get('pagniatedProducts', [UnauthenticatedController::class, 'pagniatedProducts']);
     Route::get('filterCategorys', [UnauthenticatedController::class, 'filterCategory']);
+    Route::get('filterMainCategorys/{slug}', [UnauthenticatedController::class, 'infilterMainCategory']);
     Route::get('getCategoryList', [UnauthenticatedController::class, 'allCategory']);
     Route::get('findCategorys/{slug}', [UnauthenticatedController::class, 'findCategorys']);
+    Route::get('filterAllSubCategorys', [UnauthenticatedController::class, 'filterAllSubCategorys']);
     Route::get('findSubCategorys/{slug}', [UnauthenticatedController::class, 'findSubCategorys']);
+    Route::get('findByMainCat/{slug}', [UnauthenticatedController::class, 'findByMainCat']);
     Route::get('productSlug/{slug}', [UnauthenticatedController::class, 'findProductSlug']);
     Route::get('getSeller/{slug}', [UnauthenticatedController::class, 'getSeller']);
     Route::get('getSellerCategoryFilter/{id}', [UnauthenticatedController::class, 'getSellerCategoryFilter']);

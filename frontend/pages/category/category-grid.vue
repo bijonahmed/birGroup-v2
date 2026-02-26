@@ -6,12 +6,6 @@
     <!-- Main section start here  -->
     <section class="main_content">
         <div class="container">
-            <!-- <PhoneTables />
-                <LimitedStokDetails />
-                <PhoneDeals /> -->
-            <!-- <TopDeals /> -->
-            <!-- <CategoryMultipleProduct />
-            <ExtraDiscount /> -->
             <CategoryProductFilter :receivedSlug="paramSlug" />
             <!-- <CategoryRecentView /> -->
         </div>

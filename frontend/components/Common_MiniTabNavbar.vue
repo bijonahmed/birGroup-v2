@@ -7,7 +7,7 @@
                     <ul v-for="(category, index) in categories" :key="category.id">
                         <li :key="category.id" v-if="index < limit">
                             <a href="#" class="d-flex justify-content-between align-items-center"
-                                @click="redirectCategory(category.slug)">
+                                @click="redirectMainCategory(category.slug)">
                                 <div class="d-flex align-items-center">
                                     <i class="fa-solid fa-list" style="font-size: 10px;"></i>
 
@@ -18,17 +18,27 @@
                                 <div class="row" v-if="category.children && category.children.length > 0">
                                     <div class="col-4" v-for="childCategory in category.children"
                                         :key="childCategory.id">
-                                        <h6><a href="#" @click="redirectCategory(childCategory.slug)"><u style="color: var(--color_Primary)">{{
-                                            childCategory.name }}</u></a></h6>
 
+                                        <!-- Clickable child category  @click.prevent="onClickSubCategory(childCategory.id, childCategory.slug)"-->
+                                        <h6>
+                                            <a href="#"
+                                                
+                                                :class="['category-link', { active_item: selectedCategory === childCategory.id }]">
+                                                <span style="color:var(--color_Primary)">{{ childCategory.name }}</span>
+                                            </a>
+                                        </h6>
+
+                                        <!-- Subcategories -->
                                         <ul v-if="childCategory.children && childCategory.children.length > 0">
                                             <li v-for="inSubCategory in childCategory.children" :key="inSubCategory.id">
-                                                <a href="#" @click="redirectCategory(inSubCategory.slug)">{{
-                                                    inSubCategory.name }}----</a></li>
-
+                                                <a href="#" @click.prevent="redirectCategory(inSubCategory.slug)"
+                                                    :class="{ active_item: selectedCategory === inSubCategory.id }">
+                                                    {{ inSubCategory.name }}
+                                                </a>
+                                            </li>
                                         </ul>
-                                    </div>
 
+                                    </div>
                                 </div>
 
                             </div>
@@ -50,11 +60,33 @@
     </div>
 </template>
 
+
 <style lang="css" scoped>
+.category-link {
+    color: var(--color_Primary);
+    text-decoration: none;
+    /* remove default underline */
+    transition: color 0.3s;
+}
+
+.category-link:hover {
+    color: darken(var(--color_Primary), 10%);
+}
+
+.category-link.active_item {
+    color: #fff;
+    /* or any color you want for active */
+    background-color: var(--color_Primary);
+    padding: 4px 8px;
+    border-radius: 4px;
+    text-decoration: underline;
+    /* optional underline */
+}
+
 .sub_menu {
     position: absolute;
     background: #fff;
-    width: 700px;
+    width: 1050px;
     padding: 20px;
     z-index: 999;
 
@@ -89,20 +121,33 @@ export default {
         return {
             limit: 12,
             categories: [],
+            selectedCategory: null, // <--- add this
         };
     },
     async mounted() {
         await this.fetchData();
     },
     methods: {
-        redirectCategory(slug) {
+        redirectMainCategory(slug) {
             this.$router.push({
-                path: '/category/category-list',
+                path: '/category/categoryProducts',
                 query: {
                     slug: slug
                 }
             })
         },
+
+        redirectCategory(slug) {
+            console.log('Redirecting to category with slug:', slug);
+            this.$router.push({
+                path: '/category/category-grid',
+                query: {
+                    sub_slug: slug
+                }
+            })
+        },
+
+
         async fetchData() {
             const response = await this.$axios.get(`/unauthenticate/getCategoryList`);
             this.categories = response.data;

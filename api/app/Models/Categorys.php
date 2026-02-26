@@ -45,6 +45,14 @@ class Categorys extends Authenticatable
       return $this->belongsTo(Categorys::class, 'parent_id')->where('status', 1);
   }
 
+  public function childrens()
+{
+    return $this->hasMany(Categorys::class, 'parent_id')
+        ->where('status', 1)
+        ->orderBy('name', 'asc')
+        ->with('children'); // recursive call
+}
+
  
  
 }

@@ -19,14 +19,14 @@
                                     <div class="d-flex align-items-center">
                                         <i class="fa-solid fa-list" style="font-size: 10px;"></i>
 
-                                        {{ category.name }}===
+                                        {{ category.name }}
                                     </div> <i class="fa-solid fa-angle-right"></i>
                                 </a>
                                 <div class="sub_menu">
                                     <div class="row" v-if="category.children && category.children.length > 0">
                                         <div class="col-4" v-for="childCategory in category.children"
                                             :key="childCategory.id">
-                                            <h6><a href="#" @click="redirectCategory(childCategory.slug)"> {{
+                                            <h6><a href="#"> {{
                                                 childCategory.name }}</a></h6>
 
                                             <ul v-if="childCategory.children && childCategory.children.length > 0">
@@ -105,7 +105,7 @@
 .sub_menu {
     position: absolute;
     background: #fff;
-    width: 700px;
+    width: 1050px;
     padding: 20px;
     z-index: 999;
 
@@ -179,7 +179,7 @@ export default {
             this.$router.push({
                 path: '/category/category-grid',
                 query: {
-                    slug: slug
+                    sub_slug: slug
                 }
             })
         },
