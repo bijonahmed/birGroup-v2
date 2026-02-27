@@ -33,7 +33,7 @@
                                                 {{ child.name }}
                                             </a>
                                             <!-- RIGHT SIDE (TOGGLE ICON) -->
-                                            <svg v-if="child.children?.length" @click.stop="toggle(child.id)"
+                                            <svg v-if="child.children && child.children.length" @click.stop="toggle(child.id)"
                                                 :class="{ rotated: isOpen(child.id) }"
                                                 xmlns="http://www.w3.org/2000/svg" width="14" height="14"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
@@ -42,7 +42,7 @@
                                             </svg>
                                         </li>
                                         <!-- Subcategories -->
-                                        <div v-if="child.children?.length && isOpen(child.id)"
+                                        <div v-if="child.children && child.children.length && isOpen(child.id)"
                                             class="sub-category-container">
                                             <li v-for="sub in child.children" :key="sub.id"
                                                 class="list-group-item sub-child-category">
@@ -84,27 +84,31 @@
                                             <!-- <strong>{{ item.seller_name || 'Admin Seller' }}</strong> -->
                                             <h1 class="mt-1">{{ item.product_name }}</h1>
                                             <!-- Price & Discount -->
-                                           <div class="text-center">
-  <div class="d-flex justify-content-center align-items-center mb-1" v-if="item.discount_status == 1">
-    <p class="me-2 mb-0" v-if="item.discount !== 0">BDT {{ item.percent_discount.toFixed(2) }}</p>
-    <p class="me-2 mb-0" v-else>BDT {{ item.price.toFixed(2) }}</p>
-    <p class="mb-0" v-if="item.discount !== 0 && item.discount !== ''">
-      <strike>BDT {{ item.price }}</strike>
-      <span>{{ item.discount }}%</span>
-    </p>
-  </div>
+                                            <div class="text-center">
+                                                <div class="d-flex justify-content-center align-items-center mb-1"
+                                                    v-if="item.discount_status == 1">
+                                                    <p class="me-2 mb-0" v-if="item.discount !== 0">BDT {{
+                                                        item.percent_discount.toFixed(2) }}</p>
+                                                    <p class="me-2 mb-0" v-else>BDT {{ item.price.toFixed(2) }}</p>
+                                                    <p class="mb-0" v-if="item.discount !== 0 && item.discount !== ''">
+                                                        <strike>BDT {{ item.price }}</strike>
+                                                        <span>{{ item.discount }}%</span>
+                                                    </p>
+                                                </div>
 
-  <div class="d-flex justify-content-center align-items-center mb-1" v-else-if="item.discount_status == 2">
-    <p class="me-2 mb-0" v-if="item.discount !== 0">BDT {{ item.fixed_discount.toFixed(2) }}</p>
-    <p class="me-2 mb-0" v-else>BDT {{ item.price.toFixed(2) }}</p>
-    <p class="mb-0" v-if="item.discount !== 0 && item.discount !== ''">
-      <strike>BDT {{ item.price }}</strike>
-      <span>{{ item.discount }}</span>
-    </p>
-  </div>
+                                                <div class="d-flex justify-content-center align-items-center mb-1"
+                                                    v-else-if="item.discount_status == 2">
+                                                    <p class="me-2 mb-0" v-if="item.discount !== 0">BDT {{
+                                                        item.fixed_discount.toFixed(2) }}</p>
+                                                    <p class="me-2 mb-0" v-else>BDT {{ item.price.toFixed(2) }}</p>
+                                                    <p class="mb-0" v-if="item.discount !== 0 && item.discount !== ''">
+                                                        <strike>BDT {{ item.price }}</strike>
+                                                        <span>{{ item.discount }}</span>
+                                                    </p>
+                                                </div>
 
-  <p v-else class="mb-0">BDT {{ item.price.toFixed(2) }}</p>
-</div>
+                                                <p v-else class="mb-0">BDT {{ item.price.toFixed(2) }}</p>
+                                            </div>
                                             <!-- Rating -->
                                             <div class="d-flex align-items-center d-none">
                                                 <div class="rating">
@@ -144,7 +148,7 @@ export default {
             loading: false,
             cart: [],
             prouducts: [],
-            categories: '',
+            categories: [],
             pro_count: 0,
             categoryname: '',
             activeSlug: null,
@@ -291,10 +295,12 @@ export default {
         max-width: 20%;
     }
 }
+
 a {
     text-decoration: none;
     color: #292929;
 }
+
 /* Product grid card */
 .product_grid {
     border: 1px solid var(--color_Primary);
@@ -304,6 +310,7 @@ a {
     background: #fff;
     transition: 0.3s ease;
 }
+
 /* Hover effect */
 .product_grid:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -311,6 +318,7 @@ a {
     border-color: var(--color_Primary);
     /* highlight border on hover */
 }
+
 /* Image styling */
 .product_img {
     width: 100%;
@@ -318,6 +326,7 @@ a {
     object-fit: cover;
     border-radius: 6px;
 }
+
 /* Free delivery badge */
 .free_delivery {
     display: inline-block;
@@ -327,6 +336,7 @@ a {
     color: var(--color_Primary);
     font-weight: bold;
 }
+
 /* CATEGORY STYLE */
 .category_item {
     position: relative;
@@ -342,17 +352,20 @@ a {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
 .category_item:hover {
     background: #f8f9fa;
     border-color: #350303;
     color: #0d6efd;
 }
+
 /* ACTIVE */
 .active_item {
     background: var(--color_Primary);
     color: #fff;
     border-color: var(--color_Primary);
 }
+
 /* TOOLTIP */
 .custom_tooltip {
     position: absolute;
@@ -370,10 +383,12 @@ a {
     transition: 0.2s ease;
     z-index: 999;
 }
+
 .category_item:hover .custom_tooltip {
     opacity: 1;
     visibility: visible;
 }
+
 /* LOADER */
 .loading-indicator {
     position: fixed;
@@ -387,6 +402,7 @@ a {
     align-items: center;
     z-index: 9999;
 }
+
 .loader-container {
     display: flex;
     flex-direction: column;

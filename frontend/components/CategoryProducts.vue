@@ -1,144 +1,163 @@
 <template>
-    <div>
-        <!-- product grid part start here  -->
-        <div class="row">
-            <div class="col-12">
-                <div class="loading-indicator" v-if="loading">
-                    <div class="loader-container">
-                        <center class="loader-text">Loading...</center>
-                        <img src="/loader/loader.gif" alt="Loader" />
-                    </div>
-                </div>
-                <div class="product_section">
-                    <div class="row">
-                        <div class="col-md-3 mt-3">
-                            <div class="category-menu">
-                                <!-- Root Category -->
-                                <ul class="list-group">
-                                    <li class="list-group-item list-group-item-primary text-center root-category">
-                                        <div @click.prevent="onClickCategory(categories.id, categories.slug, categories.name)"
-                                            :class="{ active_item: selectedCategory === categories.id }">
-                                            {{ categoryname }}
-                                        </div>
-                                    </li>
-                                    <!-- Child Categories -->
-                                    <div v-for="child in categories.childrens || []" :key="child.id">
-                                        <!-- Parent Category -->
-                                        <li
-                                            class="list-group-item d-flex justify-content-between align-items-center child-category">
-                                            <!-- LEFT SIDE (FILTER LINK) -->
-                                            <a href="#" @click.prevent="filterByCategory(child.id)"
-                                                :class="['category-link', { active_item: selectedCategory === child.id }]">
-                                                {{ child.name }}
-                                            </a>
-                                            <!-- RIGHT SIDE (TOGGLE ICON) -->
-                                            <svg v-if="child.children?.length" @click.stop="toggle(child.id)"
-                                                :class="{ rotated: isOpen(child.id) }"
-                                                xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
-                                                stroke-linecap="round" stroke-linejoin="round" class="chevron">
-                                                <polyline points="6 9 12 15 18 9"></polyline>
-                                            </svg>
-                                        </li>
-                                        <!-- Subcategories -->
-                                        <div v-if="child.children?.length && isOpen(child.id)"
-                                            class="sub-category-container">
-                                            <li v-for="sub in child.children" :key="sub.id"
-                                                class="list-group-item sub-child-category">
-                                                <a href="#" @click.prevent="filterByCategory(sub.id)"
-                                                    :class="{ active_item: selectedCategory === sub.id }">
-                                                    {{ sub.name }}
-                                                </a>
-                                            </li>
-                                        </div>
-                                    </div>
-                                </ul>
-                            </div>
+    <client-only>
+        <div>
+            <!-- product grid part start here  -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="loading-indicator" v-if="loading">
+                        <div class="loader-container">
+                            <center class="loader-text">Loading...</center>
+                            <img src="/loader/loader.gif" alt="Loader" />
                         </div>
-                        <!-- PRODUCT LIST -->
-                        <div class="col-md-9">
-                            <div class="product_list">
-                                <div class="title_product">
-                                    <div>
-                                        <h6>{{ categoryname }}</h6>
-                                    </div>
-                                </div>
-                                <div class="grid_list">
-                                    <div>
-                                        <p>{{ pro_count }} product found</p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <!-- ========== Loop ==============  -->
-                                    <!-- {{ prouducts }} -->
-                                    <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-1-5" v-for="item in prouducts"
-                                        :key="item.id">
-                                        <div class="product_grid" v-if="prouducts.length > 0">
-                                            <nuxt-link :to="`/product-details/${item.pro_slug}`">
-                                                <img :src="item.thumnail_img" class="img-fluid product_img"
-                                                    loading="lazy" />
-                                            </nuxt-link>
-                                            <span v-if="item.free_shopping == 1" class="free_delivery">Free
-                                                Delivery</span>
-                                            <!-- <strong>{{ item.seller_name || 'Admin Seller' }}</strong> -->
-                                            <h1 class="mt-1 text-center">{{ item.product_name }}</h1>
-                                            <!-- Price & Discount -->
-                                            <div class="text-center price-section">
-                                                <!-- Discount Type 1 -->
-                                                <div v-if="item.discount_status == 1">
-                                                    <p v-if="item.discount !== 0" class="mb-0 fw-bold">
-                                                        BDT {{ item.percent_discount.toFixed(2) }}
-                                                    </p>
-                                                    <p v-else class="mb-0 fw-bold">
-                                                        BDT {{ item.price.toFixed(2) }}
-                                                    </p>
-                                                    <p v-if="item.discount !== 0 && item.discount !== ''"
-                                                        class="mb-0 text-muted">
-                                                        <strike>BDT {{ item.price }}</strike>
-                                                        <span class="text-danger ms-1">{{ item.discount }}%</span>
-                                                    </p>
-                                                </div>
-                                                <!-- Discount Type 2 -->
-                                                <div v-else-if="item.discount_status == 2">
-                                                    <p v-if="item.discount !== 0" class="mb-0 fw-bold">
-                                                        BDT {{ item.fixed_discount.toFixed(2) }}
-                                                    </p>
-                                                    <p v-else class="mb-0 fw-bold">
-                                                        BDT {{ item.price.toFixed(2) }}
-                                                    </p>
-                                                    <p v-if="item.discount !== 0 && item.discount !== ''"
-                                                        class="mb-0 text-muted">
-                                                        <strike>BDT {{ item.price }}</strike>
-                                                        <span class="text-danger ms-1">{{ item.discount }}</span>
-                                                    </p>
-                                                </div>
-                                                <!-- No Discount -->
-                                                <div v-else>
-                                                    <p class="mb-0 fw-bold">
-                                                        BDT {{ item.price.toFixed(2) }}
-                                                    </p>
-                                                </div>
+                    </div>
+                    <div class="product_section">
+                        <div class="row">
+                            <div class="col-md-3 mt-3">
+                                <div class="category-menu">
+                                    <!-- Root Category -->
+                                    <ul class="list-group" v-if="categories && categories.childrens">
+
+                                        <!-- Root -->
+                                        <li v-if="categories.id"
+                                            class="list-group-item list-group-item-primary text-center root-category">
+
+                                            <span
+                                                @click="onClickCategory(categories.id, categories.slug, categories.name)"
+                                                :class="{ active_item: selectedCategory === categories.id }"
+                                                style="cursor:pointer">
+                                                {{ categoryname }}
+                                            </span>
+
+                                        </li>
+
+                                        <!-- Children -->
+                                        <li v-for="child in categories.childrens" :key="'child-' + child.id"
+                                            class="list-group-item">
+
+                                            <div
+                                                class="d-flex justify-content-between align-items-center child-category">
+
+                                                <span @click="filterByCategory(child.id)"
+                                                    :class="{ active_item: selectedCategory === child.id }"
+                                                    style="cursor:pointer">
+                                                    {{ child.name }}
+                                                </span>
+
+                                                <svg v-if="child.children && child.children.length"
+                                                    @click.stop="toggle(child.id)"
+                                                    :class="{ rotated: isOpen(child.id) }" width="14" height="14"
+                                                    viewBox="0 0 24 24" class="chevron">
+                                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                                </svg>
+
                                             </div>
-                                            <!-- Rating -->
-                                            <div class="d-flex align-items-center d-none">
-                                                <div class="rating">
-                                                    <i class="fa fa-star checked"></i>
-                                                    <i class="fa fa-star checked"></i>
-                                                    <i class="fa fa-star checked"></i>
-                                                    <i class="fa fa-star checked"></i>
-                                                    <i class="fa fa-star"></i>
-                                                </div>
-                                                <h6>(200)</h6>
-                                            </div>
-                                            <!-- Buttons -->
-                                            <button v-if="item.stock_qty >= 1" type="button" class="btn_cart"
-                                                @click="addToCart(item.id)">
-                                                Add to cart
-                                            </button>
-                                            <button v-else type="button" class="btn_sold">SoldOut</button>
+
+                                            <ul v-if="child.children && child.children.length && isOpen(child.id)"
+                                                class="sub-category-container">
+
+                                                <li v-for="sub in child.children" :key="'sub-' + sub.id"
+                                                    class="list-group-item sub-child-category">
+
+                                                    <span @click="filterByCategory(sub.id)"
+                                                        :class="{ active_item: selectedCategory === sub.id }"
+                                                        style="cursor:pointer">
+                                                        {{ sub.name }}
+                                                    </span>
+
+                                                </li>
+
+                                            </ul>
+
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- PRODUCT LIST -->
+                            <div class="col-md-9">
+                                <div class="product_list">
+                                    <div class="title_product">
+                                        <div>
+                                            <h6>{{ categoryname }}</h6>
                                         </div>
                                     </div>
-                                    <!-- ================= Loop ===================  -->
+                                    <div class="grid_list">
+                                        <div>
+                                            <p>{{ pro_count }} product found</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <!-- ========== Loop ==============  -->
+                                        <!-- {{ prouducts }} -->
+                                        <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-1-5"
+                                            v-for="item in prouducts" :key="item.id">
+                                            <div class="product_grid" v-if="prouducts.length > 0">
+                                                <nuxt-link :to="`/product-details/${item.pro_slug}`">
+                                                    <img :src="item.thumnail_img" class="img-fluid product_img"
+                                                        loading="lazy" />
+                                                </nuxt-link>
+                                                <span v-if="item.free_shopping == 1" class="free_delivery">Free
+                                                    Delivery</span>
+                                                <!-- <strong>{{ item.seller_name || 'Admin Seller' }}</strong> -->
+                                                <h1 class="mt-1 text-center">{{ item.product_name }}</h1>
+                                                <!-- Price & Discount -->
+                                                <div class="text-center price-section">
+                                                    <!-- Discount Type 1 -->
+                                                    <div v-if="item.discount_status == 1">
+                                                        <p v-if="item.discount !== 0" class="mb-0 fw-bold">
+                                                            BDT {{ item.percent_discount.toFixed(2) }}
+                                                        </p>
+                                                        <p v-else class="mb-0 fw-bold">
+                                                            BDT {{ item.price.toFixed(2) }}
+                                                        </p>
+                                                        <p v-if="item.discount !== 0 && item.discount !== ''"
+                                                            class="mb-0 text-muted">
+                                                            <strike>BDT {{ item.price }}</strike>
+                                                            <span class="text-danger ms-1">{{ item.discount }}%</span>
+                                                        </p>
+                                                    </div>
+                                                    <!-- Discount Type 2 -->
+                                                    <div v-else-if="item.discount_status == 2">
+                                                        <p v-if="item.discount !== 0" class="mb-0 fw-bold">
+                                                            BDT {{ item.fixed_discount.toFixed(2) }}
+                                                        </p>
+                                                        <p v-else class="mb-0 fw-bold">
+                                                            BDT {{ item.price.toFixed(2) }}
+                                                        </p>
+                                                        <p v-if="item.discount !== 0 && item.discount !== ''"
+                                                            class="mb-0 text-muted">
+                                                            <strike>BDT {{ item.price }}</strike>
+                                                            <span class="text-danger ms-1">{{ item.discount }}</span>
+                                                        </p>
+                                                    </div>
+                                                    <!-- No Discount -->
+                                                    <div v-else>
+                                                        <p class="mb-0 fw-bold">
+                                                            BDT {{ item.price.toFixed(2) }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <!-- Rating -->
+                                                <div class="d-flex align-items-center d-none">
+                                                    <div class="rating">
+                                                        <i class="fa fa-star checked"></i>
+                                                        <i class="fa fa-star checked"></i>
+                                                        <i class="fa fa-star checked"></i>
+                                                        <i class="fa fa-star checked"></i>
+                                                        <i class="fa fa-star"></i>
+                                                    </div>
+                                                    <h6>(200)</h6>
+                                                </div>
+                                                <!-- Buttons -->
+                                                <button v-if="item.stock_qty >= 1" type="button" class="btn_cart"
+                                                    @click="addToCart(item.id)">
+                                                    Add to cart
+                                                </button>
+                                                <button v-else type="button" class="btn_sold">SoldOut</button>
+                                            </div>
+                                        </div>
+                                        <!-- ================= Loop ===================  -->
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -146,260 +165,154 @@
                 </div>
             </div>
         </div>
-    </div>
+    </client-only>
 </template>
 <script>
 export default {
+
     props: {
-        receivedSlug: String,
-        // categories: Object
+        receivedSlug: String
     },
+
     data() {
         return {
             loading: false,
             cart: [],
-            prouducts: [],          // shown products
-            allProducts: [],        // backup copy
-            categories: [],
+            prouducts: [],
+            allProducts: [],
+            categories: {
+                childrens: []   // ✅ important fix
+            },
             openIds: [],
             selectedCategory: null,
             pro_count: 0,
             categoryname: '',
-            selectedCategory: null,
-            limit: 9,
-            activeSlug: null
+            activeSlug: null,
+            limit: 9
         };
     },
+
     async mounted() {
-        this.calculateSubtotal();
         this.loadCart();
         this.cartItemCount();
-        const paramSlug = this.$route.query.slug;
-        const paramSubSlug = this.$route.query.sub_slug;
-        this.activeSlug = paramSlug;
-        // 1 Load main category first
-        if (paramSlug) {
-            await this.fetchData(paramSlug);
-        }
-        // 2 Load category list (if needed)
-        await this.fetchDataCategory();
-        // 3 After everything ready, select sub category
-        if (paramSubSlug) {
-            this.selectCategory(paramSubSlug);
+
+        const slug = this.$route.query.slug;
+        if (slug) {
+            this.activeSlug = slug;
+            await this.initPage(slug);
         }
     },
+
     watch: {
-        '$route.query.slug': {
-            immediate: true, // run on initial load too
-            handler(newSlug) {
-                if (newSlug) {
-                    this.activeSlug = newSlug;
-                    this.selectedCategory = null; // reset selected filter
-                    this.fetchCategoryData(newSlug); // load sidebar categories
-                    this.fetchData(newSlug);        // load products
-                }
+        '$route.query.slug'(newSlug) {
+            if (newSlug) {
+                this.selectedCategory = null;
+                this.initPage(newSlug);
             }
         }
     },
+
     methods: {
-        async fetchCategoryData(slug) {
-            // fetch sidebar categories for current slug
+
+        // ✅ single init method
+        async initPage(slug) {
             this.loading = true;
             try {
-                const response = await this.$axios.get(`/unauthenticate/filterMainCategorys/${slug}`);
-                this.categories = response.data; // update sidebar
-            } catch (error) {
-                console.error(error);
+                await Promise.all([
+                    this.fetchData(slug),
+                    this.fetchCategoryData(slug)
+                ]);
             } finally {
                 this.loading = false;
             }
         },
+
+        // ✅ remove duplicate toggleCategory
         toggle(id) {
             if (this.openIds.includes(id)) {
-                this.openIds = this.openIds.filter(x => x !== id)
+                this.openIds = this.openIds.filter(x => x !== id);
             } else {
-                this.openIds.push(id)
+                this.openIds.push(id);
             }
         },
-        isOpen(id) {
-            return this.openIds.includes(id)
-        },
-        selectCategory(slug) {
-            this.activeSlug = slug;
-            //this.fetchData(slug);
-            this.fetchSubCategoryData(slug);
-        },
-        cartItemCount() {
-            let itemCount = 0;
-            this.cart.forEach((item) => {
-                itemCount += item.quantity;
-            });
-            this.itemCount = itemCount;
-            console.log('Emitting cartItemCountUpdated event with itemCount:', this.itemCount);
-            this.$eventBus.$emit('cartItemCountUpdated', this.itemCount);
-        },
-        updateQuantity(productId, newQuantity) {
-            const index = this.cart.findIndex((item) => item.product.id === productId);
-            if (index !== -1) {
-                this.cart[index].quantity = newQuantity;
-                this.saveCart();
-                this.calculateSubtotal(); // Optionally recalculate subtotal after updating quantity
-            }
-        },
-        addToCart(productId) {
-            const productToAdd = this.prouducts.find((product) => product.id === productId);
-            const existingItem = this.cart.find((item) => item.product.id === productId);
-            if (existingItem) {
-                existingItem.quantity += 1;
-            } else {
-                this.cart.push({
-                    product: productToAdd,
-                    quantity: 1
-                });
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: "top-end",
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true,
-                    didOpen: (toast) => {
-                        toast.onmouseenter = Swal.stopTimer;
-                        toast.onmouseleave = Swal.resumeTimer;
-                    }
-                });
-                Toast.fire({
-                    icon: "success",
-                    title: "Product successfully Added to cart"
-                });
-            }
-            this.saveCart();
-            this.cartItemCount();
-            this.calculateSubtotal();
-        },
-        removeFromCart(product) {
-            const index = this.cart.findIndex((item) => item.product.id === product.id);
-            if (index !== -1) {
-                if (this.cart[index].quantity > 1) {
-                    this.cart[index].quantity -= 1;
-                } else {
-                    this.cart.splice(index, 1);
-                }
-                this.saveCart();
-                this.calculateSubtotal();
-                this.cartItemCount();
-            }
-        },
-        loadCart() {
-            const savedCart = localStorage.getItem('cart');
-            if (savedCart) {
-                this.cart = JSON.parse(savedCart);
-            }
-        },
-        saveCart() {
-            this.loading = true;
-            localStorage.setItem('cart', JSON.stringify(this.cart));
-            setTimeout(() => {
-                this.loading = false;
-            }, 2000);
-        },
-        calculateSubtotal() {
-            return 0;
-        },
-        categoryGrid() {
-            const slug = this.$route.query.slug;
-            //alert(paramSlug);
-            this.$router.push({
-                path: '/category/category-list',
-                query: {
-                    slug: slug
-                }
-            })
-        },
-        redirectCategory(slug) {
-            this.$router.push({
-                path: '/category/category-list',
-                query: {
-                    slug: slug
-                }
-            })
-        },
-        toggleCategory(id) {
-            if (this.openIds.includes(id)) {
-                this.openIds = this.openIds.filter(x => x !== id)
-            } else {
-                this.openIds.push(id)
-            }
-        },
-        isOpen(id) {
-            return this.openIds.includes(id)
-        },
-        async fetchData(slug) {
 
-            this.loading = true;
-            try {
-                const response = await this.$axios.get(`/unauthenticate/findCategorys/${slug}`);
-                this.allProducts = response.data.result.reverse(); // store full products
-                this.prouducts = [...this.allProducts];           // products shown
-                this.pro_count = response.data.pro_count;
-                this.categoryname = response.data.categoryname;
-            } catch (error) {
-                console.error(error);
-            } finally {
-                this.loading = false;
-            }
+        // ✅ only ONE isOpen method
+        isOpen(id) {
+            return this.openIds.includes(id);
         },
+
+        async fetchData(slug) {
+            const response = await this.$axios.get(`/unauthenticate/findCategorys/${slug}`);
+            this.allProducts = response.data.result?.reverse() || [];
+            this.prouducts = [...this.allProducts];
+            this.pro_count = this.prouducts.length;
+            this.categoryname = response.data.categoryname || '';
+        },
+
+        async fetchCategoryData(slug) {
+            const response = await this.$axios.get(`/unauthenticate/filterMainCategorys/${slug}`);
+            this.categories = response.data || { childrens: [] };
+        },
+
         filterByCategory(categoryId) {
             this.selectedCategory = categoryId;
 
             if (!categoryId) {
                 this.prouducts = [...this.allProducts];
             } else {
-                this.prouducts = this.allProducts.filter(p => p.category_id === categoryId);
+                this.prouducts = this.allProducts.filter(
+                    p => p.category_id === categoryId
+                );
             }
 
             this.pro_count = this.prouducts.length;
-        }, showAllProducts() {
-            this.prouducts = this.allProducts;
-            this.pro_count = this.prouducts.length;
         },
-        onClickCategory(categoryId, slug, name) {
-            this.selectedCategory = categoryId
-            this.activeSlug = slug
-            this.categoryname = name
-            this.loading = true
-            // Fetch products for this category
-            this.fetchData(slug)
 
+        onClickCategory(categoryId, slug, name) {
+            this.selectedCategory = categoryId;
+            this.activeSlug = slug;
+            this.categoryname = name;
+            this.initPage(slug);
         },
-        async fetchSubCategoryData(slug) {
-            this.loading = true;
-            const response = await this.$axios.get(`/unauthenticate/findByMainCat/${slug}`)
-                .then(response => {
-                    this.prouducts = response.data.result.reverse();
-                    this.pro_count = response.data.pro_count;
-                    this.categoryname = response.data.categoryname;
-                })
-                .catch(error => {
-                    // Handle error
-                })
-                .finally(() => {
-                    this.loading = false; // Hide loader after response
+
+        addToCart(productId) {
+            const product = this.prouducts.find(p => p.id === productId);
+            if (!product) return;
+
+            const existing = this.cart.find(i => i.product.id === productId);
+
+            if (existing) {
+                existing.quantity++;
+            } else {
+                this.cart.push({
+                    product,
+                    quantity: 1
                 });
+            }
+
+            localStorage.setItem('cart', JSON.stringify(this.cart));
+            this.cartItemCount();
         },
-        async fetchDataCategory() {
-            this.loading = true;
-            const slug = this.$route.query.slug;
-            await this.$axios.get(`/unauthenticate/filterMainCategorys/${slug}`).then(response => {
-                this.categories = response.data;
-            })
-                .catch(error => {
-                    // Handle error
-                })
-                .finally(() => {
-                    this.loading = false; // Hide loader after response
-                });;
+
+        loadCart() {
+            if (process.client) {
+                const saved = localStorage.getItem('cart');
+                if (saved) {
+                    this.cart = JSON.parse(saved);
+                }
+            }
+        },
+
+        cartItemCount() {
+            let total = 0;
+            this.cart.forEach(item => {
+                total += item.quantity;
+            });
+            this.$eventBus.$emit('cartItemCountUpdated', total);
         }
-    },
+
+    }
+
 }
 </script>
 <style scoped>

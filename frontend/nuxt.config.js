@@ -129,6 +129,7 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    extractCSS: false,
     transpile: ["defu"],
     vendor: ["jquery"],
     build: {
