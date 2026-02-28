@@ -275,25 +275,6 @@ export default {
             this.initPage(slug);
         },
 
-        addToCart(productId) {
-            const product = this.prouducts.find(p => p.id === productId);
-            if (!product) return;
-
-            const existing = this.cart.find(i => i.product.id === productId);
-
-            if (existing) {
-                existing.quantity++;
-            } else {
-                this.cart.push({
-                    product,
-                    quantity: 1
-                });
-            }
-
-            localStorage.setItem('cart', JSON.stringify(this.cart));
-            this.cartItemCount();
-        },
-
         loadCart() {
             if (process.client) {
                 const saved = localStorage.getItem('cart');
@@ -303,13 +284,84 @@ export default {
             }
         },
 
+        saveCart() {
+            this.loading = true;
+            localStorage.setItem('cart', JSON.stringify(this.cart));
+            setTimeout(() => {
+                this.loading = false;
+            }, 2000);
+        },
         cartItemCount() {
-            let total = 0;
-            this.cart.forEach(item => {
-                total += item.quantity;
+            let itemCount = 0;
+            this.cart.forEach((item) => {
+                itemCount += item.quantity;
             });
-            this.$eventBus.$emit('cartItemCountUpdated', total);
-        }
+            this.itemCount = itemCount;
+            console.log('Emitting cartItemCountUpdated event with itemCount:', this.itemCount);
+            this.$eventBus.$emit('cartItemCountUpdated', this.itemCount);
+
+        },
+        calculateSubtotal() {
+            return 0;
+        },
+        updateQuantity(productId, newQuantity) {
+            const index = this.cart.findIndex((item) => item.product.id === productId);
+
+            if (index !== -1) {
+                this.cart[index].quantity = newQuantity;
+                this.saveCart();
+                this.calculateSubtotal(); // Optionally recalculate subtotal after updating quantity
+            }
+        },
+        addToCart(productId) {
+
+            const productToAdd = this.prouducts.find((product) => product.id === productId);
+            const existingItem = this.cart.find((item) => item.product.id === productId);
+
+            if (existingItem) {
+                //existingItem.quantity += 1;
+            } else {
+                this.cart.push({
+                    product: productToAdd,
+                    quantity: 1
+                });
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+                Toast.fire({
+                    icon: "success",
+                    title: "Product successfully Added to cart"
+                });
+            }
+
+            this.saveCart();
+            this.cartItemCount();
+            this.calculateSubtotal();
+        },
+
+        removeFromCart(product) {
+            const index = this.cart.findIndex((item) => item.product.id === product.id);
+
+            if (index !== -1) {
+                if (this.cart[index].quantity > 1) {
+                    this.cart[index].quantity -= 1;
+                } else {
+                    this.cart.splice(index, 1);
+                }
+
+                this.saveCart();
+                this.calculateSubtotal();
+                this.cartItemCount();
+            }
+        },
 
     }
 

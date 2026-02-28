@@ -11,6 +11,9 @@
   "BrandProductGrid": {
     "description": "Auto imported from components/brandProductGrid.vue"
   },
+  "CategoryFilter": {
+    "description": "Auto imported from components/CategoryFilter.vue"
+  },
   "CategoryFive": {
     "description": "Auto imported from components/CategoryFive.vue"
   },

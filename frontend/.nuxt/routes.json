@@ -287,6 +287,13 @@
     "_name": "_c393f120"
   },
   {
+    "name": "category-category-filter",
+    "path": "/category/category-filter",
+    "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\category\\\\category-filter.vue",
+    "chunkName": "pages/category/category-filter",
+    "_name": "_30aec5ce"
+  },
+  {
     "name": "category-category-grid",
     "path": "/category/category-grid",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\category\\\\category-grid.vue",

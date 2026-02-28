@@ -26,7 +26,7 @@
                                     <div class="row" v-if="category.children && category.children.length > 0">
                                         <div class="col-4" v-for="childCategory in category.children"
                                             :key="childCategory.id">
-                                            <h6><a href="#"> {{
+                                            <h6><a :href="`/category/category-filter?slug=${childCategory.slug}`"> {{
                                                 childCategory.name }}</a></h6>
 
                                             <ul v-if="childCategory.children && childCategory.children.length > 0">

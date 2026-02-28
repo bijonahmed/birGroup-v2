@@ -45,6 +45,7 @@ const _84d84bc6 = () => interopDefault(import('..\\pages\\affiliate\\affiliate-t
 const _0f88944c = () => interopDefault(import('..\\pages\\brand-product\\brand-grid.vue' /* webpackChunkName: "pages/brand-product/brand-grid" */))
 const _507935ab = () => interopDefault(import('..\\pages\\brand-product\\brand-grid copy.vue' /* webpackChunkName: "pages/brand-product/brand-grid copy" */))
 const _c393f120 = () => interopDefault(import('..\\pages\\category\\all-categorys.vue' /* webpackChunkName: "pages/category/all-categorys" */))
+const _30aec5ce = () => interopDefault(import('..\\pages\\category\\category-filter.vue' /* webpackChunkName: "pages/category/category-filter" */))
 const _36a073c8 = () => interopDefault(import('..\\pages\\category\\category-grid.vue' /* webpackChunkName: "pages/category/category-grid" */))
 const _21ef7f74 = () => interopDefault(import('..\\pages\\category\\category-list.vue' /* webpackChunkName: "pages/category/category-list" */))
 const _09eb286b = () => interopDefault(import('..\\pages\\category\\categoryProducts.vue' /* webpackChunkName: "pages/category/categoryProducts" */))
@@ -268,6 +269,10 @@ export const routerOptions = {
     path: "/category/all-categorys",
     component: _c393f120,
     name: "category-all-categorys"
+  }, {
+    path: "/category/category-filter",
+    component: _30aec5ce,
+    name: "category-category-filter"
   }, {
     path: "/category/category-grid",
     component: _36a073c8,

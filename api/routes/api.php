@@ -267,6 +267,7 @@ Route::group([
     Route::get('findCategorys/{slug}', [UnauthenticatedController::class, 'findCategorys']);
     Route::get('filterAllSubCategorys', [UnauthenticatedController::class, 'filterAllSubCategorys']);
     Route::get('findSubCategorys/{slug}', [UnauthenticatedController::class, 'findSubCategorys']);
+    Route::get('findOnlyCategorys/{slug}', [UnauthenticatedController::class, 'findOnlyCategorys']);
     Route::get('findByMainCat/{slug}', [UnauthenticatedController::class, 'findByMainCat']);
     Route::get('productSlug/{slug}', [UnauthenticatedController::class, 'findProductSlug']);
     Route::get('getSeller/{slug}', [UnauthenticatedController::class, 'getSeller']);

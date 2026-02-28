@@ -21,8 +21,7 @@
 
                                         <!-- Clickable child category  @click.prevent="onClickSubCategory(childCategory.id, childCategory.slug)"-->
                                         <h6>
-                                            <a href="#"
-                                                
+                                            <a :href="`/category/category-filter?slug=${childCategory.slug}`"
                                                 :class="['category-link', { active_item: selectedCategory === childCategory.id }]">
                                                 <span style="color:var(--color_Primary)">{{ childCategory.name }}</span>
                                             </a>

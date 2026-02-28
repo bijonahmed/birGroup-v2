@@ -2,6 +2,7 @@ export const AddNewCard = () => import('../..\\components\\addNewCard.vue' /* we
 export const BestPrice = () => import('../..\\components\\BestPrice.vue' /* webpackChunkName: "components/best-price" */).then(c => wrapFunctional(c.default || c))
 export const BrandiOfficialStore = () => import('../..\\components\\BrandiOfficialStore.vue' /* webpackChunkName: "components/brandi-official-store" */).then(c => wrapFunctional(c.default || c))
 export const BrandProductGrid = () => import('../..\\components\\brandProductGrid.vue' /* webpackChunkName: "components/brand-product-grid" */).then(c => wrapFunctional(c.default || c))
+export const CategoryFilter = () => import('../..\\components\\CategoryFilter.vue' /* webpackChunkName: "components/category-filter" */).then(c => wrapFunctional(c.default || c))
 export const CategoryFive = () => import('../..\\components\\CategoryFive.vue' /* webpackChunkName: "components/category-five" */).then(c => wrapFunctional(c.default || c))
 export const CategoryFour = () => import('../..\\components\\CategoryFour.vue' /* webpackChunkName: "components/category-four" */).then(c => wrapFunctional(c.default || c))
 export const CategoryMultipleProduct = () => import('../..\\components\\CategoryMultipleProduct.vue' /* webpackChunkName: "components/category-multiple-product" */).then(c => wrapFunctional(c.default || c))
