@@ -19,8 +19,8 @@ use App\Http\Controllers\Controller;
 use App\Models\PaymentCard;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Crypt;
-use App\Models\BlogModel; 
-use App\Models\blogCategory; 
+use App\Models\BlogModel;
+use App\Models\blogCategory;
 
 class UserController extends Controller
 {
@@ -361,6 +361,7 @@ class UserController extends Controller
     }
     public function saveUser(Request $request)
     {
+        //dd($request->all());
         $validator = Validator::make($request->all(), [
             'role_id'    => 'required',
             'name'       => 'required',
@@ -394,6 +395,7 @@ class UserController extends Controller
             $file_url = $uploadPath . $path;
             $data['image'] = $file_url;
         }
+      //  dd($data);
         if (empty($request->id)) {
             $userId = DB::table('users')->insertGetId($data);
         } else {
@@ -405,6 +407,9 @@ class UserController extends Controller
         ];
         return response()->json($response);
     }
+
+
+
     public function assignToUser(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -1469,7 +1474,7 @@ class UserController extends Controller
             return response()->json(['error' => 'Payment card not found'], 404);
         }
     }
-        public function getblogs(Request $request)
+    public function getblogs(Request $request)
     {
         // $categorySlug = $request->input('category_slug');
         $blogsData = BlogModel::orderBy('id', 'desc')->where('user_id', $this->userid)->get();
@@ -1480,12 +1485,12 @@ class UserController extends Controller
         // Format the data
         $formattedData = [];
         foreach ($blogsData as $blog) {
-            
+
             $category = blogCategory::where('id', $blog->category)->first();
             $categoryName = $category ? $category->name : '';
 
-            
-        $createdAtFormatted = date('d F Y', strtotime($blog->created_at));
+
+            $createdAtFormatted = date('d F Y', strtotime($blog->created_at));
 
             $formattedBlog = [
                 'id' => $blog->id,

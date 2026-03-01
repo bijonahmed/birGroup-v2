@@ -14,7 +14,7 @@
                                 <div class="form-group mb-2">
                                     <label for="" class="text-dark fs-6">Business Name <span class="text-danger">*</span>
                                     </label>
-                                    <input type="text" name="name" id="" v-model="insertdata.business_name" class="form-control"
+                                    <input type="text" name="name" id="" v-model="insertdata.name" class="form-control"
                                         ref="name">
                                     <input type="text" name="id" id="" v-model="insertdata.id"
                                         class="form-control d-none" ref="id">
@@ -29,15 +29,7 @@
                                         <option value="0">Inactive</option>
                                     </select>
                                 </div>
-                                <div class="form-group mb-2">
-                                    <label for="" class="text-dark fs-6">Top Stores Status <span
-                                            class="text-danger">*</span></label>
-                                    <select name="status" v-model="insertdata.home_status" id=""
-                                        class="form-control">
-                                        <option value="1">Active</option>
-                                        <option value="0">Inactive</option>
-                                    </select>
-                                </div>
+                            
                                 <div class="form-group mb-2">
                                     <button type="submit" class="btn-success w-100 py-1 border-0">
                                         <i class="bx bx-check-circle mr-1"></i>Submit
@@ -64,7 +56,7 @@ export default {
         return {
             insertdata: {
                 id: '',
-                business_name: '',
+                name: '',
                 status: '',
                 home_status: '',
             },
@@ -83,9 +75,8 @@ export default {
             const formData = new FormData();
             const id = this.insertdata.id
             formData.append('id', this.insertdata.id);
-            formData.append('business_name', this.insertdata.business_name);
+            formData.append('name', this.insertdata.name);
             formData.append('status', this.insertdata.status);
-            formData.append('home_status', this.insertdata.home_status);
             const headers = {
                 'Content-Type': 'multipart/form-data'
             };
@@ -119,11 +110,11 @@ export default {
             console.log(this.$route.params.id);
             let id = this.$route.params.id;
             this.$axios.get(`/setting/editseller/${id}`).then(response => {
-                // console.log(response.data.data.business_name)
+                // console.log(response.data.data.name)
                 this.insertdata.id = response.data.data.id;
-                this.insertdata.business_name = response.data.data.business_name;
+                this.insertdata.name = response.data.data.name;
                 this.insertdata.status = response.data.data.status;
-                this.insertdata.home_status = response.data.data.home_status;
+             
             });
 
         },

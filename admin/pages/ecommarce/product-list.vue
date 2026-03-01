@@ -35,7 +35,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-md-1">
                                 <div class="input-group mb-3">
                                     <input type="text" class="form-control sku" placeholder="SKU"
                                         v-model="searchQuery.sku" @input="handleSearch">
@@ -55,6 +55,9 @@
                             </div>
 
 
+
+
+
                             <div class="col-md-2">
                                 <div class="input-group mb-3">
                                     <select class="form-select form-select-solid status"
@@ -68,7 +71,17 @@
                             </div>
 
 
-
+                            <div class="col-md-2">
+                                <div class="input-group mb-3">
+                                    <select class="form-select form-select-solid status" v-model="searchQuery.seller_id"
+                                        @change="handleCategorySearch">
+                                        <option value="">All Sellers</option>
+                                        <option v-for="cat in sellersList" :key="cat.id" :value="cat.id">
+                                            {{ cat.name }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
 
 
                             <div class="col-md-1">
@@ -81,7 +94,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-1">
                                 <div class="input-group mb-3">
                                     <button class="btn btn-primary w-100" type="button"
                                         @click="fetchData">Search</button>
@@ -108,6 +121,7 @@
                                         <!-- <th class="text-center">Total Sell</th>
                                         <th class="text-center">Balance Qty</th> -->
                                         <th class="text-center">Category Name</th>
+                                        <th class="text-center">Seller</th>
                                         <th class="text-center">Status</th>
                                         <th class="text-center">Action</th>
                                     </tr>
@@ -132,10 +146,12 @@
                                         </td>
                                         <!-- <td>
                                             <center>0</center>
-                                        </td>
-                                        <td>
-                                            <center>-</center>
                                         </td> -->
+                                        <td class="text-center">
+                                            <span v-if="item.seller_name !== null" class="badge bg-light text-dark">{{
+                                                item.seller_name }}</span>
+                                            <span v-else class="badge bg-light text-dark">No Seller</span>
+                                        </td>
                                         <td class="text-center">
                                             <span v-if="(item.status == 1)" class="bg-success-light badge"> Active
                                             </span>
@@ -197,12 +213,14 @@ export default {
             errors: {},
             data: [],
             brandsList: [],
+            sellersList: [],
             mainCategory: [],
 
             searchQuery: {
                 name: '',
                 sku: '',
                 category_id: '',
+                seller_id: '',
                 brand_id: '',
                 status: 1
             },
@@ -215,7 +233,9 @@ export default {
         };
     },
     async mounted() {
+        await this.getSellerAdmin();
         await this.fetchData();
+
     },
 
     computed: {
@@ -225,6 +245,7 @@ export default {
         },
         filteredData() {
             let result = this.data;
+
             if (this.searchQuery.name) {
                 result = result.filter(item =>
                     item.name.toLowerCase().includes(this.searchQuery.name.toLowerCase())
@@ -243,11 +264,20 @@ export default {
                 );
             }
 
+
+
             if (this.searchQuery.brand_id) {
                 result = result.filter(item =>
                     item.brand_id == this.searchQuery.brand_id
                 );
             }
+
+            if (this.searchQuery.seller_id) {
+                result = result.filter(item =>
+                    item.seller_id == this.searchQuery.seller_id
+                );
+            }
+
 
             if (this.searchQuery.category_id) {
                 result = result.filter(item =>
@@ -274,6 +304,20 @@ export default {
             })
         },
 
+        async getSellerAdmin() {
+
+            try {
+                // Call API with query params
+                const response = await this.$axios.get(`/unauthenticate/allsellerListadmin`);
+              //  console.log(response.data.data);
+                this.sellersList = response.data.data;
+
+            } catch (error) {
+                console.error(error);
+
+            }
+        },
+
         async fetchData() {
             $(".customerSpinner").show();
             try {
@@ -283,6 +327,8 @@ export default {
                     sku: this.searchQuery.sku || '',
                     status: this.searchQuery.status !== '' ? this.searchQuery.status : '',
                     category_id: this.searchQuery.category_id || '',
+                    seller_id: this.searchQuery.seller_id || '',
+                    brand_id: this.searchQuery.brand_id || '',
                     page: this.currentPage,   // optional, if backend supports pagination
                     per_page: this.perPage    // optional
                 };
@@ -336,6 +382,8 @@ export default {
             this.currentPage = 1;
             this.fetchData();  // fetch filtered data by category
         },
+
+
         previousPage() {
             this.currentPage--;
         },

@@ -24,43 +24,27 @@
                                                 style="cursor:pointer">
                                                 {{ categoryname }}
                                             </span>
+
                                         </li>
+
 
                                         <!-- Child -->
-                                        <li v-for="child in categories" :key="'child-' + child.id"
-                                            class="list-group-item">
+                                        <div class="mt-2">
+                                            <div class="category-wrapper" v-for="category in categories"
+                                                :key="category.id">
+                                                <h6 class="category-title">{{ category.name }}</h6>
 
-                                            <div class="d-flex justify-content-between align-items-center">
-
-                                                <span @click="onClickSubCategory(child.id, child.slug)"
-                                                    :class="{ active_item: selectedCategory === child.id }"
-                                                    style="cursor:pointer">
-                                                    {{ child.name }}
-                                                </span>
-
-                                                <svg v-if="child.children && child.children.length"
-                                                    @click.stop="toggle(child.id)"
-                                                    :class="{ rotated: isOpen(child.id) }" width="14" height="14"
-                                                    viewBox="0 0 24 24">
-                                                    <polyline points="6 9 12 15 18 9"></polyline>
-                                                </svg>
-
+                                                <ul class="subcategory-list">
+                                                    <li v-for="childCategory in category.children"
+                                                        :key="childCategory.id">
+                                                        <a
+                                                            :href="`/category/category-filter?slug=${childCategory.slug}`">
+                                                            {{ childCategory.name }}
+                                                        </a>
+                                                    </li>
+                                                </ul>
                                             </div>
-
-                                            <!-- Subcategories -->
-                                            <ul v-if="child.children && child.children.length && isOpen(child.id)"
-                                                class="sub-category-container">
-                                                <li v-for="sub in child.children" :key="'sub-' + sub.id"
-                                                    class="list-group-item sub-child-category">
-                                                    <span @click="onClickSubCategory(sub.id, sub.slug)"
-                                                        :class="{ active_item: selectedCategory === sub.id }"
-                                                        style="cursor:pointer">
-                                                        {{ sub.name }}
-                                                    </span>
-                                                </li>
-                                            </ul>
-
-                                        </li>
+                                        </div>
 
                                     </ul>
 
@@ -259,7 +243,7 @@ export default {
         async fetchDataCategory() {
             this.loading = true;
             try {
-                const response = await this.$axios.get(`/unauthenticate/filterAllSubCategorys`);
+                const response = await this.$axios.get(`/unauthenticate/getCategoryList`);
                 this.categories = response.data;
             } catch (err) {
                 console.error(err);
@@ -302,7 +286,7 @@ export default {
                 }
             }
         },
-      
+
         saveCart() {
             this.loading = true;
             localStorage.setItem('cart', JSON.stringify(this.cart));
@@ -396,6 +380,47 @@ export default {
 a {
     text-decoration: none;
     color: #292929;
+}
+
+/* Category Container */
+.category-wrapper {
+    margin-bottom: 20px;
+}
+
+/* Main Category Title */
+.category-title {
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #f1f1f1;
+    color: #222;
+}
+
+/* Subcategory List */
+.subcategory-list {
+    list-style: none;
+    padding-left: 15px;
+    margin: 0;
+}
+
+/* Subcategory Item */
+.subcategory-list li {
+    margin-bottom: 6px;
+}
+
+/* Subcategory Link */
+.subcategory-list li a {
+    text-decoration: none;
+    font-size: 14px;
+    color: #555;
+    transition: all 0.3s ease;
+}
+
+/* Hover Effect */
+.subcategory-list li a:hover {
+    color: #0d6efd;
+    padding-left: 5px;
 }
 
 /* Product grid card */

@@ -56,6 +56,7 @@ class ProductController extends Controller
             'stock_qty'      => 'required|integer',
             'stock_mini_qty' => 'required|integer',
             'shipping_days'  => 'required',
+            'seller_id'      => 'required',
             'status'         => 'required',
             'sku'            => 'required',
             // 'files' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // max:2048 is the maximum file size in kilobytes (2MB)
@@ -96,6 +97,7 @@ class ProductController extends Controller
             'tax'                        => !empty($request->tax) ? $request->tax : 0,
             'tax_status'                 => !empty($request->tax_status) ? $request->tax_status : "",
             'status'                     => !empty($request->status) ? $request->status : "",
+            'seller_id'                  => !empty($request->seller_id) ? $request->seller_id : "",
             'entry_by'                   => $this->userid
         );
         //    dd($data);
@@ -400,6 +402,7 @@ class ProductController extends Controller
             ->select('product.*', 'brands.name as brand_name', 'manufacturers.name as manufac_name')
             ->where('product.id', $id)->first();
 
+        $responseData['seller_name'] = !empty($responseData['product']->seller_id) ? User::where('id', $responseData['product']->seller_id)->first()->name : "";
         //dd($responseData['product']);
         $responseData['product_cat']       = $resulting_string;
         $responseData['product_edit_cat']  = $show_edit_cat;
@@ -437,6 +440,7 @@ class ProductController extends Controller
             } else {
                 $catName = "";
             }
+            $chkseller = User::where('id', $item['seller_id'])->where('role_id', 3)->first();
 
             return [
                 'id'            => $item['id'],
@@ -444,6 +448,8 @@ class ProductController extends Controller
                 'stock_qty'     => $item['stock_qty'],
                 'status'        => $item['status'],
                 'brand_id'      => $item['brand'],
+                'seller_id'     => !empty($chkseller->id) ? $chkseller->id : "",
+                'seller_name'   => !empty($chkseller->name) ? $chkseller->name : "",
                 'category_id'   => $pcategory, // fallback 1
                 'parent_id'     => $pcategory, // first parent_id
                 'categoryName'  => !empty($catName) ? $catName : "", // first parent_id

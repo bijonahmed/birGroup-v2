@@ -57,7 +57,7 @@ class UnauthenticatedController extends Controller
 
     public function allCategory(Request $request)
     {
-        $categories = Categorys::with('children.children.children.children.children')->where('parent_id', 0)->get();
+        $categories = Categorys::with('children.children.children.children.children')->where('parent_id', 0)->where('status', 1)->get();
         return response()->json($categories);
     }
 
@@ -1289,8 +1289,7 @@ class UnauthenticatedController extends Controller
             $formatedData[] = [
                 'id' => $value->id,
                 'role' => $value->role_id,
-                'businessName' => $value->business_name,
-                'name' => $value->business_name,
+                'name' => $value->name,
                 'slug' => $value->business_name_slug,
                 'businessLogo' => !empty($value->business_logo) ? url($value->business_logo) : '',
                 'status' => $value->status,

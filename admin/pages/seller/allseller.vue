@@ -74,10 +74,8 @@
                                     <tr>
                                         <th class="text-center">SL.</th>
                                         <!-- <th>Role </th> -->
-                                        <th class="text-center">Store Name</th>
-                                        <th class="text-center">Logo</th>
+                                        <th class="text-center">Name</th>
                                         <th class="text-center">Status</th>
-                                        <th class="text-center">Top {{ count  }} Store status</th>
                                         <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
@@ -87,18 +85,12 @@
                                         <td class="text-center">{{ index + 1 }}</td>
                                         <!-- <td v-if="item.role == 3">Seller</td> -->
                                         <td class="text-center">{{ item.name }}</td>
-                                        <td class="text-center"><img :src="item.businessLogo" class="img-fluid rounded"
-                                                style="object-fit: cover;" height="60px" width="60px" alt=""></td>
                                         <td class="text-center">
                                             <span v-if="(item.status == 1)"> <span
                                                     class="badge bg-success">Active</span> </span>
                                             <span v-else> <span class="badge bg-danger">Inactive</span> </span>
                                         </td>
-                                        <td class="text-center">
-                                            <span v-if="(item.home_status == 1)"> <span
-                                                    class="badge bg-success-light">Active</span> </span>
-                                            <span v-else> <span class="badge bg-danger-light">Inactive</span> </span>
-                                        </td>
+                                      
                                         <td class="text-center">
                                             <nuxt-link :to="`/seller/edit/${item.id}`" class="btn btn-warning bg-history-light" variant="warning" size="sm">
                                                 <i class="bx bx-edit"></i> EDIT

@@ -30,6 +30,11 @@
 
                                         <table class="table table-bordered w-100">
                                             <tr>
+                                                <td width="21%">Seller Name</td>
+                                                <td width="1%"><strong>:</strong></td>
+                                                <td width="78%">{{ seller_name }}</td>
+                                            </tr>
+                                            <tr>
                                                 <td width="21%">Product Name</td>
                                                 <td width="1%"><strong>:</strong></td>
                                                 <td width="78%">{{ productData.name }}</td>
@@ -318,7 +323,9 @@
                                                         class="img-fluid max-width-100 img-thumbnail" />
                                                 </td>
                                                 <td>
-                                                    <nuxt-link :to='`/ecommarce/product-varient?parameter=${data.product_id}`' type="button" class="btn btn-warning" >EDIT</nuxt-link>
+                                                    <nuxt-link
+                                                        :to='`/ecommarce/product-varient?parameter=${data.product_id}`'
+                                                        type="button" class="btn btn-warning">EDIT</nuxt-link>
                                                     <!-- <button @click="deleteAttributeValue(key)" type="button">DEL</button> -->
                                                 </td>
                                             </tr>
@@ -349,6 +356,7 @@ export default {
                 id: '',
                 name: '',
                 description: '',
+                
                 meta_title: '',
                 meta_description: '',
                 meta_keyword: '',
@@ -401,6 +409,7 @@ export default {
             productImg: "",
             productAddImgs: [],
             varientList: [],
+            seller_name: '',
             notifmsg: '',
             color: '',
             errors: {},
@@ -483,6 +492,7 @@ export default {
                 this.productData.download_link = response.data.product.download_link;
                 this.productImg = response.data.productImg;
                 this.productAddImgs = response.data.product_imgs;
+                this.seller_name = response.data.seller_name;
                 $(".show_categorys").html(response.data.product_cat)
                 // = response.data.product_cat;
                 console.log(`Product category ${response.data.product_cat}`);

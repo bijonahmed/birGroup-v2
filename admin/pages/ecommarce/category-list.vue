@@ -136,7 +136,7 @@
                                         <div class="card">
                                             <div class="card-body">
                                                 <center>This configration only for home pages category sliders</center>
-                                                <p class="text-center" style="color: gray;">You can select maximum 4
+                                                <p class="text-center" style="color: gray;">You can select maximum 20
                                                     category slider</p>
                                                 <hr />
                                                 <div class="row">
@@ -192,10 +192,10 @@
                                                                 </select>
                                                                 <span class="text-danger" v-if="errors.status">{{ errors.status[0] }}</span>
                                                             </div>
-                                                            <button type="submit" :disabled="productCat.length == 4"
+                                                            <button type="submit" :disabled="productCat.length == 20"
                                                                 class="btn btn-primary w-100">Submit</button>
                                                             <p class="text-danger" style="font-size: 12px;"
-                                                                :class="{ 'd-block': productCat.length === 4, 'd-none': productCat.length !== 4 }">
+                                                                :class="{ 'd-block': productCat.length === 20, 'd-none': productCat.length !== 20 }">
                                                                 You reach maximum number of slider</p>
                                                         </form>
                                                     </div>

@@ -1095,9 +1095,9 @@ class SettingController extends Controller
         $id = $request->id;
 
         $validator = Validator::make($request->all(), [
-            'business_name'      => "required",
+            'name'      => "required",
             'status'             => "required",
-            'home_status'        => "required"
+
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -1107,9 +1107,8 @@ class SettingController extends Controller
 
         $updateCoupon = User::where('id', $id)->first();
         $updateData = [
-            'business_name'         => $request->business_name,
+            'name'         => $request->name,
             'status'                => $request->status,
-            'home_status'           => $request->home_status
         ];
         $sql = $updateCoupon->update($updateData);
 

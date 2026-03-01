@@ -273,7 +273,7 @@ class CategoryController extends Controller
     public function allCategory(Request $request)
     {
         try {
-            $categories = Categorys::with('children.children.children.children.children')->where('parent_id', 0)->get();
+            $categories = Categorys::with('children.children.children.children.children')->where('status', 1)->where('parent_id', 0)->get();
             // dd($categories);
             return response()->json(
                 $categories

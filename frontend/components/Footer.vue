@@ -114,91 +114,92 @@
         </div>
         <!-- footer links  -->
         <div class="footer_links desktop_view" style="background-color: #f8f9fa; padding: 82px 0px;">
-            <div class="container">
 
+            <section class="site-features-section d-none d-sm-block">
+                <div class="container">
+                    <div class="row g-4">
+
+                        <!-- Fast Shipping -->
+                        <div class="col-lg-3 col-md-6">
+                            <div class="feature-card">
+                                <div class="feature-icon">
+                                    <!-- Truck SVG -->
+                                    <svg width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
+                                        <path
+                                            d="M0 1a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v3h2.586a1 1 0 0 1 .707.293l1.414 1.414A1 1 0 0 1 16 6.414V11a1 1 0 0 1-1 1h-1a2 2 0 1 1-4 0H6a2 2 0 1 1-4 0H1a1 1 0 0 1-1-1V1z" />
+                                    </svg>
+                                </div>
+                                <div class="feature-content">
+                                    <h5>Fast Shipping</h5>
+                                    <p>Fast delivery all over the country</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Returns -->
+                        <div class="col-lg-3 col-md-6">
+                            <div class="feature-card">
+                                <div class="feature-icon">
+                                    <!-- Arrow Repeat SVG -->
+                                    <svg width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M2 2v4h4L4.5 4.5A5 5 0 1 1 3 8H1a7 7 0 1 0 1-6z" />
+                                    </svg>
+                                </div>
+                                <div class="feature-content">
+                                    <h5>30-Day Returns</h5>
+                                    <p>Easy & hassle-free returns</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment -->
+                        <div class="col-lg-3 col-md-6">
+                            <div class="feature-card">
+                                <div class="feature-icon">
+                                    <!-- Credit Card SVG -->
+                                    <svg width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
+                                        <path
+                                            d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1H0V4zm0 2h16v6a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6zm3 3h4v2H3V9z" />
+                                    </svg>
+                                </div>
+                                <div class="feature-content">
+                                    <h5>Safe Payment</h5>
+                                    <p>100% secure payment system</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Support -->
+                        <div class="col-lg-3 col-md-6">
+                            <div class="feature-card">
+                                <div class="feature-icon">
+                                    <!-- Headset SVG -->
+                                    <svg width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
+                                        <path
+                                            d="M8 1a5 5 0 0 0-5 5v4a2 2 0 0 0 2 2h1V8H4V6a4 4 0 1 1 8 0v2h-2v4h1a2 2 0 0 0 2-2V6a5 5 0 0 0-5-5z" />
+                                    </svg>
+                                </div>
+                                <div class="feature-content">
+                                    <h5>Customer Support</h5>
+                                    <p>We’re here 24/7 to help you</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- END -->
+            <div class="container">
 
                 <!-- Start -->
                 <!-- Site Features Section -->
                 <!-- Site Features Section -->
-                <section class="site-features-section d-none d-sm-block">
-                    <div class="container">
-                        <div class="row g-4">
-
-                            <!-- Fast Shipping -->
-                            <div class="col-lg-3 col-md-6">
-                                <div class="feature-card">
-                                    <div class="feature-icon">
-                                        <!-- Truck SVG -->
-                                        <svg width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
-                                            <path
-                                                d="M0 1a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v3h2.586a1 1 0 0 1 .707.293l1.414 1.414A1 1 0 0 1 16 6.414V11a1 1 0 0 1-1 1h-1a2 2 0 1 1-4 0H6a2 2 0 1 1-4 0H1a1 1 0 0 1-1-1V1z" />
-                                        </svg>
-                                    </div>
-                                    <div class="feature-content">
-                                        <h5>Fast Shipping</h5>
-                                        <p>Fast delivery all over the country</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Returns -->
-                            <div class="col-lg-3 col-md-6">
-                                <div class="feature-card">
-                                    <div class="feature-icon">
-                                        <!-- Arrow Repeat SVG -->
-                                        <svg width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
-                                            <path d="M2 2v4h4L4.5 4.5A5 5 0 1 1 3 8H1a7 7 0 1 0 1-6z" />
-                                        </svg>
-                                    </div>
-                                    <div class="feature-content">
-                                        <h5>30-Day Returns</h5>
-                                        <p>Easy & hassle-free returns</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Payment -->
-                            <div class="col-lg-3 col-md-6">
-                                <div class="feature-card">
-                                    <div class="feature-icon">
-                                        <!-- Credit Card SVG -->
-                                        <svg width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
-                                            <path
-                                                d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1H0V4zm0 2h16v6a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6zm3 3h4v2H3V9z" />
-                                        </svg>
-                                    </div>
-                                    <div class="feature-content">
-                                        <h5>Safe Payment</h5>
-                                        <p>100% secure payment system</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Support -->
-                            <div class="col-lg-3 col-md-6">
-                                <div class="feature-card">
-                                    <div class="feature-icon">
-                                        <!-- Headset SVG -->
-                                        <svg width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
-                                            <path
-                                                d="M8 1a5 5 0 0 0-5 5v4a2 2 0 0 0 2 2h1V8H4V6a4 4 0 1 1 8 0v2h-2v4h1a2 2 0 0 0 2-2V6a5 5 0 0 0-5-5z" />
-                                        </svg>
-                                    </div>
-                                    <div class="feature-content">
-                                        <h5>Customer Support</h5>
-                                        <p>We’re here 24/7 to help you</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </section>
-
-                <!-- END -->
 
 
-                <div class="row mt-4">
+
+                <div class="row" style="margin-top: 70px;">
                     <div class="col-md-6 col-6">
                         <h4>Contact us</h4>
                         <small>Call us 24/7<br />
@@ -287,11 +288,6 @@
 
 </template>
 <style>
-.site-features-section {
-    padding: 25px 10px;
-    background: linear-gradient(135deg, #f8f9fa, #eef2f7);
-}
-
 .feature-card {
     background: #ffffff;
     border-radius: 15px;
