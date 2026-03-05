@@ -68,17 +68,20 @@ class OrderSubmit extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $user = User::firstOrCreate(
-            [
-                'email' => $request->Cutomer_email, // check by email
-                'phone_number' => $request->Cutomer_phone_number, // or phone
-            ],
-            [
+      $user = User::where('email', $request->Cutomer_email)
+            ->orWhere('phone_number', $request->Cutomer_phone_number)
+            ->first();
+
+        if (!$user) {
+            $user = User::create([
+                'email' => $request->Cutomer_email,
+                'phone_number' => $request->Cutomer_phone_number,
                 'name' => $request->Cutomer_name,
                 'role_id' => 2,
                 'password' => bcrypt(123456),
-            ]
-        );
+            ]);
+        }
+
         $userId = $user->id;
 
         //echo $userId;exit; 

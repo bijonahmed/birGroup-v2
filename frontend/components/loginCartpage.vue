@@ -41,7 +41,7 @@
                             </div>
                             <div class="d-flex">
                                 <p style="font-size: 12px !important;  text-align: center;" class="text-center w-100 mt-2">Don't have
-                                    Account? <nuxt-link to="/login" class="btn_signup " type="button">SignUp</nuxt-link>
+                                    Account? <nuxt-link to="/signup" class="btn_signup " type="button">SignUp</nuxt-link>
                                 </p>
                             </div>
                         </form>

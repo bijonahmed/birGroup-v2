@@ -12,7 +12,7 @@
                     </span>
                     <span v-else>
                         <button class="drop_btn" type="button" @click="openLoginModal">Sign In</button>
-                        <nuxt-link to="/login" class="drop_btn text-white" type="button">Signup</nuxt-link>
+                        <nuxt-link to="/signup" class="drop_btn text-white" type="button">Signup</nuxt-link>
                     </span>
 
                     <li v-if="loggedIn">
