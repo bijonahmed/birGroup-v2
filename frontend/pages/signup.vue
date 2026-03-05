@@ -23,7 +23,7 @@
                                             errors.name[0] }}</span>
                                     </div>
                                     <div class="form-group">
-                                        <label>Name</label>
+                                        <label>Email</label>
                                         <div class="input_group">
                                             <input style="--i:0;" type="email" class="input" v-model="insertdata.email">
                                             <i class="fa-solid fa-envelope"></i>
@@ -33,7 +33,7 @@
                                     </div>
 
 
-                                    <div class="form-group">
+                                    <!-- <div class="form-group">
                                         <label>Invite Code</label>
                                         <div class="input_group">
                                             <input type="text" class="input" v-model="insertdata.invite_code">
@@ -41,7 +41,7 @@
                                         </div>
                                         <span style="font-size: 12px;" class="text-danger d-flex">{{
                                             invidecodeError }}</span>
-                                    </div>
+                                    </div> -->
 
                                     <div class="form-group">
                                         <label>Password</label>
@@ -70,8 +70,8 @@
                                     </button>
                                     <div class="social_login">
                                         <div>
-                                            <h6 class="text-center">Allready have Account?<button type="button"
-                                                    class="signIn">LogIn</button>
+                                            <h6 class="text-center">Back to Home<button type="button"
+                                                    class="signIn"><a href="/">Home</a></button>
                                             </h6>
                                         </div>
                                         <!-- <div class="">
@@ -185,7 +185,7 @@ export default {
             formData.append('name', this.insertdata.name);
             formData.append('email', this.insertdata.email);
             formData.append('password', this.insertdata.password);
-            formData.append('invite_code', this.insertdata.invite_code);
+          //  formData.append('invite_code', this.insertdata.invite_code);
             formData.append('password_confirmation', this.insertdata.password_confirmation);
             const headers = {
                 'Content-Type': 'multipart/form-data'

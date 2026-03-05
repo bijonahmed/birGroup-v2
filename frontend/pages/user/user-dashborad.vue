@@ -2,7 +2,7 @@
     <div>
         <LogoAndPayment />
         <!-- navbar section start here  -->
-        <NavbarSecond/>
+        <NavbarSecond />
         <!-- navbar section end here  -->
 
 
@@ -11,163 +11,100 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-3">
-                        <userSidebar/>
+                        <userSidebar />
                     </div>
                     <div class="col-md-9 ps-md-0">
-                        <!-- <div class="main_profile"> -->
-                        <div class="dash_count_container">
-                            <div class="box_c">
-                                <h3>Available balance</h3>
-                                <h6>$25.50</h6>
-                            </div>
-                            <div class="box_c">
-                                <h3>Total Orders</h3>
-                                <h6>50</h6>
-                            </div>
-                            <div class="box_c">
-                                <h3>Total Purchase</h3>
-                                <h6>$700.25</h6>
-                            </div>
-                            <div class="box_c">
-                                <h3>Total Team: <span>5325</span></h3>
-                                <h3>Total Profit: <span>$254.50</span></h3>
-                            </div>
-                            <div class="box_c">
-                                <h3>My Salary</h3>
-                                <h6>$500.00</h6>
-                            </div>
-                            <div class="box_c">
-                                <h3>Withdrawal Amount</h3>
-                                <h6>$425.50</h6>
-                            </div>
-                        </div>
-                        <!-- </div> -->
-                        <!-- recent view part start here  -->
-                        <!-- max 15 product in slider  -->
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="top_selling">
-                                    <div class="row mb-2 bg_appliance "
-                                        style="border-top-right-radius: 5px; border-top-left-radius: 5px;">
-                                        <div class="col-6">
-                                            <div class="sell_title">
-                                                <h5>Recent Views</h5>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="">
-                                        <div class="owl-carousel product_slider">
-                                            <div class="swiper-slide">
-                                                <a href="product-details.html">
-                                                    <div class="sell_itm">
-                                                        <img src="/images/product(2).jpg" class=" img-fluid" alt="">
-                                                        <span>-10%</span>
-                                                        <h5>Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis,
-                                                            nam nostrum! Qui ad quos provident doloremque nostrum maiores a
-                                                            vitae.</h5>
-                                                        <h6>Price: 2,000TK</h6>
-                                                        <h6><strike>Price: 2,000TK</strike></h6>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                            
 
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <!-- recent view part end here  -->
                         <div class="main_profile mt-3">
-                            <div class="table_sec">
-                                <div class="table_one">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <h1>Today's Invited</h1>
-                                        <nuxt-link to="/user/user-mlm" class="btn_edit">View All</nuxt-link>
-                                    </div>
-                                    <hr>
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th>SL.</th>
-                                                <th>User Name</th>
-                                                <th>Reg. Date/Time</th>
+
+                            <div class="recent_orders">
+
+                                <!-- {{ orders }} -->
+                                <div class="recent_orders"
+                                    style="background:#fff;padding:20px;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.08);font-size:14px;">
+
+                                    <h4 style="font-size:18px;font-weight:600;margin-bottom:15px;color:#333;">
+                                        My Orders Lists
+                                    </h4>
+
+                                    <table class="table" style="width:100%;border-collapse:collapse;font-size:14px;">
+
+                                        <thead style="background:#f7f7f7;">
+                                            <tr style="border-bottom:1px solid #eaeaea;">
+                                                <th style="padding:10px;font-weight:600;">Order ID</th>
+                                                <th class="text-center" style="padding:10px;font-weight:600;">Place On
+                                                </th>
+                                                <th class="text-center" style="padding:10px;font-weight:600;">Quantity
+                                                </th>
+                                                <th class="text-center" style="padding:10px;font-weight:600;">Total</th>
+                                                <th class="text-center" style="padding:10px;font-weight:600;">Status
+                                                </th>
+                                                <th style="padding:10px;"></th>
                                             </tr>
                                         </thead>
+
                                         <tbody>
-                                            <tr>
-                                                <td>#1</td>
-                                                <td>Jhon Due</td>
-                                                <td>2024-02-09 12:00:00</td>
-                                            </tr>
-                                            <tr>
-                                                <td>#2</td>
-                                                <td>Jhon Due</td>
-                                                <td>2024-02-09 12:00:00</td>
-                                            </tr>
-                                            <tr>
-                                                <td>#3</td>
-                                                <td>Jhon Due</td>
-                                                <td>2024-02-09 12:00:00</td>
-                                            </tr>
-                                            <tr>
-                                                <td>#4</td>
-                                                <td>Jhon Due</td>
-                                                <td>2024-02-09 12:00:00</td>
-                                            </tr>
-                                            <tr>
-                                                <td>#5</td>
-                                                <td>Jhon Due</td>
-                                                <td>2024-02-09 12:00:00</td>
+                                            <tr v-for="order in orders" :key="order.id"
+                                                style="border-bottom:1px solid #f1f1f1;transition:0.3s;">
+
+                                                <td style="padding:12px;font-weight:500;color:#333;">
+                                                    {{ order.orderId }}
+                                                </td>
+
+                                                <td class="text-center" style="padding:12px;color:#555;">
+                                                    {{ order.placeOn }}
+                                                </td>
+
+                                                <td class="text-center" style="padding:12px;">
+                                                    {{ order.qty }}
+                                                </td>
+
+                                                <td class="text-center"
+                                                    style="padding:12px;font-weight:600;color:#0C356A;">
+                                                    ৳ {{ order.total }}
+                                                </td>
+
+                                                <td class="text-center" style="padding:12px;">
+
+                                                    <span v-if="order.name == 'Cancelled or Returned'"
+                                                        style="background:#ffe5e5;color:#c00;padding:4px 10px;border-radius:20px;font-size:12px;">
+                                                        {{ order.name }}
+                                                    </span>
+
+                                                    <span v-else-if="order.name == 'Delivered'"
+                                                        style="background:#e6f7ed;color:#0a8a3a;padding:4px 10px;border-radius:20px;font-size:12px;">
+                                                        {{ order.name }}
+                                                    </span>
+
+                                                    <span v-else
+                                                        style="background:#e7f1ff;color:#0C356A;padding:4px 10px;border-radius:20px;font-size:12px;">
+                                                        {{ order.name }}
+                                                    </span>
+
+                                                </td>
+
+                                                <td style="padding:10px;">
+                                                    <button
+                                                        style="border:none;background:#0C356A;color:#fff;width:36px;height:36px;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:0.3s;"
+                                                        @click="trackOrder(order.orderId)">
+
+                                                        <i class="fa-regular fa-eye"></i>
+
+                                                    </button>
+                                                </td>
+
                                             </tr>
                                         </tbody>
+
                                     </table>
                                 </div>
-                                <div class="table_two">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <h1>Today's Comission</h1>
-                                        <nuxt-link to="/user/user-mlm" class="btn_edit">View All</nuxt-link>
-                                    </div>
-                                    <hr>
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th>SL.</th>
-                                                <th>User Name</th>
-                                                <th>Pruchase commission</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>#1</td>
-                                                <td>Jhon Due</td>
-                                                <td>2024-02-09 12:00:00</td>
-                                            </tr>
-                                            <tr>
-                                                <td>#2</td>
-                                                <td>Jhon Due</td>
-                                                <td>2024-02-09 12:00:00</td>
-                                            </tr>
-                                            <tr>
-                                                <td>#3</td>
-                                                <td>Jhon Due</td>
-                                                <td>2024-02-09 12:00:00</td>
-                                            </tr>
-                                            <tr>
-                                                <td>#4</td>
-                                                <td>Jhon Due</td>
-                                                <td>2024-02-09 12:00:00</td>
-                                            </tr>
-                                            <tr>
-                                                <td>#5</td>
-                                                <td>Jhon Due</td>
-                                                <td>2024-02-09 12:00:00</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+
                             </div>
+
+
+
+
                         </div>
                     </div>
                 </div>
@@ -205,9 +142,39 @@ export default {
     },
     mounted() {
         this.setupEventHandlers();
+        this.loadingOrders();
+    },
+    data() {
+        return {
+            loading: false,
+            orders: [],
+            errors: {},
+        }
     },
     methods: {
+        async loadingOrders() {
+            this.loading = true;
+            await this.$axios.get(`/order/allOrders`).then(response => {
+                this.orders = response.data.orderdata;
+            })
+                .catch(error => {
+                    // Handle error
+                })
+                .finally(() => {
+                    this.loading = false; // Hide loader after response
+                });;
 
+        },
+        trackOrder(orderId) {
+
+            this.$router.push({
+                path: '/user/order-details',
+                query: {
+                    orderId: orderId
+                }
+            })
+
+        },
         setupEventHandlers() {
             // Ensure DOM elements exist before executing jQuery functions
             $(".post_mdal_open").click(function () {

@@ -75,66 +75,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row mt-4">
-                                    <!-- address line 1  -->
-                                    <h5>Address line 1</h5>
-                                    <div class="col-md-4">
-                                        <div class="form_group mb-3">
-                                            <label for="area">Country</label>
-                                            <select v-model="userdata.country_1" class="form-control">
-                                                <option value="" disabled>Select Country</option>
-                                                <option v-for="country in countries" :key="country.id"
-                                                    :value="country.countryname"
-                                                    :selected="country.countryname === userdata.country_1">
-                                                    {{ country.countryname }} - {{ country.countrycode }}
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form_group mb-3">
-                                            <label for="area">City</label>
-                                            <input type="text" v-model="userdata.city_1" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form_group mb-3">
-                                            <label>Land Mark </label>
-                                            <input type="text" v-model="userdata.landmark_1" class="form-control">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mt-4">
-                                    <!-- address line 2  -->
-                                    <h5>Address line 2</h5>
-                                    <div class="col-md-4">
-                                        <div class="form_group mb-3">
-                                            <label for="area">Country</label>
-                                            <select v-model="userdata.country_2" class="form-control">
-                                                <option value="" disabled>Select Country</option>
-                                                <option v-for="country in countries" :key="country.id"
-                                                    :value="country.countryname"
-                                                    :selected="country.countryname === userdata.country_2">
-                                                    {{ country.countryname }} - {{ country.countrycode }}
-                                                </option>
-                                            </select>
-
-
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form_group mb-3">
-                                            <label for="area">City</label>
-                                            <input type="text" v-model="userdata.city_2" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form_group mb-3">
-                                            <label>Land Mark </label>
-                                            <input type="text" v-model="userdata.landmark_2" class="form-control">
-                                        </div>
-                                    </div>
-                                </div>
+                                
+                                
                                 <div class="form_group">
                                     <button type="submit" class="btn_confirm"  >Save & Update</button>
                                 </div>

@@ -25,19 +25,21 @@
                         <input type="password" placeholder="Password" v-model="login.password">
                         <i class="toggle-password fa-solid fa-eye"></i>
                     </div>
-                    <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex justify-content-between align-items-center d-none">
                         <div class="d-flex align-items-center d-none">
                             <input type="checkbox" id="remeber"><label for="remeber">Remember me</label>
                         </div>
-                        <nuxt-link to="/forget-password">Forget Password</nuxt-link>
+                        <nuxt-link to="/forget-password" class="d-none">Forget Password</nuxt-link>
                     </div>
                     <div>
                         <button class="btn_logins" type="submit">Login</button>
                     </div>
-                    <div class="d-flex">
-                        <p style="font-size: 12px !important;">Don't have Account? <nuxt-link to="/login" class="btn_signup " type="button">SignUp</nuxt-link>
-                        </p>
-                    </div>
+                   <div class="text-center">
+    <p style="font-size:12px;">
+        Don't have Account?
+        <nuxt-link to="/signup" class="btn_signup">SignUp</nuxt-link>
+    </p>
+</div>
                 </form>
             </div>
         </div>

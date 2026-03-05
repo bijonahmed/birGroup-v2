@@ -1465,6 +1465,7 @@ class UnauthenticatedController extends Controller
     {
         // $getbrands = $request->slug;
         $getbrands = Brands::where('slug', $slug)->first();
+        $brands = Brands::where('status', 1)->get();
 
         $id = $getbrands->id;
 
@@ -1522,6 +1523,9 @@ class UnauthenticatedController extends Controller
         }
 
         $data['products'] = !empty($products) ? $products : '';
+
+        $data['allbrands'] = $brands;
+        $data['brandName'] = $getbrands ? $getbrands->name : "";
 
         // dd($data['products']);
         return response()->json($data);

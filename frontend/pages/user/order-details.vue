@@ -19,15 +19,15 @@
                             </div>
                         </div>
                         <div class="main_profile">
-                            
+
                             <div class="">
 
                                 <div>
                                     <div class="d-flex justify-content-start">
-                                        <nuxt-link :to='`/user/track-order?orderId=${orderData.orderId}`' class="btn_edit"> <i
+                                        <nuxt-link :to='`/user/user-orders`' class="btn_edit"> <i
                                                 class="fa-solid fa-arrow-left"></i> </nuxt-link>
                                     </div>
-                                    
+
 
                                     <div class="text-center" style="text-transform: uppercase;">Invoice </div>
                                     <br />
@@ -91,7 +91,7 @@
                                             <div align="center">{{ order.last_price.toFixed(2) }}</div>
                                         </td>
                                         <td>
-                                            <div align="center">{{ (order.qty*order.last_price).toFixed(2) }}</div>
+                                            <div align="center">{{ (order.qty * order.last_price).toFixed(2) }}</div>
                                         </td>
                                     </tr>
                                 </table>
@@ -102,7 +102,7 @@
                                             <strong style="min-width: 100px;">{{ totalQuantity }}</strong>
                                         </li>
                                         <li class="d-flex justify-content-end">
-                                            <strong>Total Ammount:</strong>
+                                            <strong>Total Amount:</strong>
                                             <strong style="min-width: 100px;">{{ totalAmount.toFixed(2) }}</strong>
                                         </li>
                                     </ul>
@@ -179,12 +179,12 @@ export default {
                 this.orderData = response.data.orderData;
                 this.products = response.data.products;
             })
-            .catch(error => {
-                // Handle error
-            })
-            .finally(() => {
-                this.loading = false; // Hide loader after response
-            });
+                .catch(error => {
+                    // Handle error
+                })
+                .finally(() => {
+                    this.loading = false; // Hide loader after response
+                });
 
         },
         logout() {

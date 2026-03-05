@@ -1,122 +1,296 @@
 <template>
-    <div>
-        <div class="row">
-            <div class="col-12">
-                <div class="product_section">
-                    <div class="row px-2">
-                        <!-- sidebar fillter  -->
-                        <div class="row justify-content-center">
-                            <div class="container my-4">
-                                <div class="row g-3">
+    <client-only>
+        <div>
+            <!-- product grid part start here  -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="loading-indicator" v-if="loading">
+                        <div class="loader-container">
+                            <center class="loader-text">Loading...</center>
+                            <img src="/loader/loader.gif" alt="Loader" />
+                        </div>
+                    </div>
+                    <div class="product_section">
+                        <div class="row px-2">
+                            <div class="col-md-3 mt-3">
+                                <div class="category-menu">
 
-                                    <div class="col-12 col-sm-6 col-md-3" v-for="category in categories"
-                                        :key="category.id">
-                                        <nuxt-link class="category_item d-block text-center"
-                                            :to="`/category/category-grid?sub_slug=${category.slug}`">
-                                            {{ category.name }}
-                                        </nuxt-link>
-                                    </div>
+                                    <ul class="list-group">
+
+                                        <!-- Root -->
+                                        <li v-if="brandName"
+                                            class="list-group-item list-group-item-primary text-center root-category">
+                                            <span style="cursor:pointer">
+                                                {{ brandName }}
+                                            </span>
+
+                                        </li>
+
+
+                                        <!-- Child -->
+                                        <div class="mt-2">
+                                            <div class="category-wrapper">
+                                                <u>All Brands </u>
+                                                <ul class="subcategory-list">
+                                                    <li v-for="childCategory in allbrands" :key="childCategory.id">
+                                                        <a
+                                                            :href="`/brand-product/brand-grid?slug=${childCategory.slug}`">
+                                                            {{ childCategory.name }}
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                    </ul>
 
                                 </div>
                             </div>
-                        </div>
-                        <!-- grid  -->
-                        <div class="col-md-12">
-                            <div class="product_list">
-                                <div class="title_product">
-                                    <div>
-                                        <h6>{{ categoryname }}</h6>
+                            <!-- PRODUCT LIST -->
+                            <div class="col-md-9">
+                                <div class="product_list">
+
+                                    <div class="grid_list">
+                                        <div>
+                                            {{ products.length }} Product founds
+                                        </div>
                                     </div>
-                                </div>
-
-
-                                <div class="row">
-                                    <!-- start -->
-                                    <div v-for="item in products" :key="product.id"
-                                        class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-6">
-                                        <div class="product_grid">
-                                            <nuxt-link :to="`/product-details/${item.slug}`">
-                                                <img :src="item.image" class="img-fluid" :alt="item.name">
-                                                <span v-if="item.free_shopping == 1">Free Delivery</span>
-                                                <strong v-if="item.seller_name">{{ item.seller_name }} </strong>
-                                                <strong v-else>Admin Seller</strong>
-                                                <h1>{{ item.name }}</h1>
-                                                <div>
-                                                    <div class="d-flex align-items-center"
+                                    <div class="row">
+                                        <!-- ========== Loop ==============  -->
+                                        <!-- {{ prouducts }} -->
+                                        <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-1-5"
+                                            v-for="item in products" :key="item.id">
+                                            <div class="product_grid text-center" v-if="products.length > 0">
+                                                <nuxt-link :to="`/product-details/${item.pro_slug}`">
+                                                    <img :src="item.thumnail_img" class="img-fluid product_img"
+                                                        loading="lazy" />
+                                                </nuxt-link>
+                                                <span v-if="item.free_shopping == 1" class="free_delivery">Free
+                                                    Delivery</span>
+                                                <!-- <strong>{{ item.seller_name || 'Admin Seller' }}</strong> -->
+                                                <h1 class="mt-1">{{ item.product_name }}</h1>
+                                                <!-- Price & Discount -->
+                                                <div class="text-center">
+                                                    <div class="d-flex justify-content-center align-items-center mb-1"
                                                         v-if="item.discount_status == 1">
-                                                        <p class="me-1" v-if="item.discount !== 0">${{
+                                                        <p class="me-2 mb-0" v-if="item.discount !== 0">BDT {{
                                                             item.percent_discount.toFixed(2) }}</p>
-                                                        <p v-else class="me-1">${{ (item.price).toFixed(2) }}</p>
-                                                        <p v-if="item.discount !== 0 && item.discount !== ''">
-                                                            <strike>${{ item.price }}</strike>
+                                                        <p class="me-2 mb-0" v-else>BDT {{ item.price.toFixed(2) }}</p>
+                                                        <p class="mb-0"
+                                                            v-if="item.discount !== 0 && item.discount !== ''">
+                                                            <strike>BDT {{ item.price }}</strike>
                                                             <span>{{ item.discount }}%</span>
                                                         </p>
                                                     </div>
-                                                    <div class="d-flex align-items-center"
+
+                                                    <div class="d-flex justify-content-center align-items-center mb-1"
                                                         v-else-if="item.discount_status == 2">
-                                                        <p class="me-1" v-if="item.discount !== 0">${{
+                                                        <p class="me-2 mb-0" v-if="item.discount !== 0">BDT {{
                                                             item.fixed_discount.toFixed(2) }}</p>
-                                                        <p v-else class="me-1">${{ (item.price).toFixed(2) }}</p>
-                                                        <p v-if="item.discount !== 0 && item.discount !== ''">
-                                                            <strike>${{ item.price }}</strike>
-                                                            <span>${{ item.discount }}</span>
+                                                        <p class="me-2 mb-0" v-else>BDT {{ item.price.toFixed(2) }}</p>
+                                                        <p class="mb-0"
+                                                            v-if="item.discount !== 0 && item.discount !== ''">
+                                                            <strike>BDT {{ item.price }}</strike>
+                                                            <span>{{ item.discount }}</span>
                                                         </p>
                                                     </div>
-                                                    <p v-else>${{ (item.price).toFixed(2) }}</p>
-                                                </div>
-                                            </nuxt-link>
 
-                                            <div class="d-flex align-items-center">
-                                                <div class="rating">
-                                                    <i class="fa fa-star checked"></i>
-                                                    <i class="fa fa-star checked"></i>
-                                                    <i class="fa fa-star checked"></i>
-                                                    <i class="fa fa-star checked"></i>
-                                                    <i class="fa fa-star "></i>
+                                                    <p v-else class="mb-0">BDT {{ item.price.toFixed(2) }}</p>
                                                 </div>
-                                                <h6>(200)</h6>
+                                                <!-- Rating -->
+                                                <div class="d-flex align-items-center d-none">
+                                                    <div class="rating">
+                                                        <i class="fa fa-star checked"></i>
+                                                        <i class="fa fa-star checked"></i>
+                                                        <i class="fa fa-star checked"></i>
+                                                        <i class="fa fa-star checked"></i>
+                                                        <i class="fa fa-star"></i>
+                                                    </div>
+                                                    <h6>(200)</h6>
+                                                </div>
+                                                <!-- Buttons -->
+                                                <button v-if="item.stock_qty >= 1" type="button" class="btn_cart"
+                                                    @click="addToCart(item.id)">
+                                                    Add to cart
+                                                </button>
+                                                <button v-else type="button" class="btn_sold">SoldOut</button>
                                             </div>
-                                            <!-- <button type="button"  class="btn_cart" @click="addToCart(item.id)">Add to Cart</button> -->
-                                            <button type="button" class="btn_cart" @click="addToCart(item.id)">Add to
-                                                cart</button>
-
                                         </div>
+                                        <!-- ================= Loop ===================  -->
                                     </div>
-                                    <!-- END -->
                                 </div>
-
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </client-only>
 </template>
-
 <script>
 export default {
+    props: {
+        receivedSlug: String,
+    },
     data() {
         return {
             loading: false,
             cart: [],
             products: [],
-            product: [],
             categories: [],
-            pro_count: 0,
+            allbrands: [],
+            brandName: "",
+            //   products: 0,
             categoryname: '',
+            activeSlug: null,
+            selectedCategory: null, // <-- added this
+            limit: 9,
         };
     },
-
-    mounted() {
+    watch: {
+        // Watch URL query change for sub_slug
+        '$route.query.sub_slug': {
+            immediate: true,
+            handler(newSubSlug) {
+                if (newSubSlug) {
+                    this.activeSlug = newSubSlug;
+                    this.selectedCategory = null;
+                    this.loadSidebarAndProducts(newSubSlug);
+                }
+            }
+        }
+    },
+    async mounted() {
         this.calculateSubtotal();
         this.loadCart();
         this.cartItemCount();
-        this.fetchData();
+        const paramSlug = this.$route.query.slug;
+        const paramSubSlug = this.$route.query.sub_slug;
+        this.activeSlug = paramSlug;
         this.fetchDataCategory();
+        // 1 Load products for main category
+        await this.fetchData(paramSubSlug);
     },
     methods: {
+        // Click subcategory from sidebar
+        async onClickSubCategory(categoryId, slug) {
 
+            this.selectedCategory = categoryId
+            this.activeSlug = slug
+
+            if (this.$route.query.sub_slug !== slug) {
+                this.$router.push({
+                    path: this.$route.path,
+                    query: { sub_slug: slug }
+                })
+            }
+
+            await this.loadSidebarAndProducts(slug)
+        },
+        // Fetch both sidebar categories and products dynamically
+        async loadSidebarAndProducts(slug) {
+            this.loading = true;
+            try {
+                // Products
+                const productResp = await this.$axios.get(`/unauthenticate/findSubCategorys/${slug}`);
+                this.products = response.data.products;
+                this.product = response.data.products;
+            } catch (err) {
+                console.error(err);
+            } finally {
+                this.loading = false;
+            }
+        },
+        async filterByCategory(slug) {
+            this.selectedCategory = slug;
+            console.log("Filtering by category slug:", slug);
+            this.loading = true;
+            try {
+                const response = await this.$axios.get(`/unauthenticate/findSubCategorys/${slug}`);
+                //        console.log("Products for main category:", response.data);
+                this.proudcts = response.data.result;
+                this.pro_count = response.data.pro_count;
+                this.categoryname = response.data.categoryname;
+            } catch (err) {
+                console.error(err);
+            } finally {
+                this.loading = false;
+            }
+        },
+        // Original product fetch (for main category)
+        async fetchData() {
+            this.loading = true;
+            const slug = this.$route.query.slug;
+            try {
+                const response = await this.$axios.get(`/unauthenticate/brandproductList/${slug}`).then(response => {
+                    console.log("=-===" + response.data.products);
+                    this.products = response.data.products;
+                    this.allbrands = response.data.allbrands;
+                    this.brandName = response.data.brandName;
+
+                    // console.log(response.data.products);
+                })
+            } catch (error) {
+                // Handle error
+            } finally {
+                this.loading = false; // Hide loader after response
+            }
+        },
+        // Fetch sidebar categories
+        async fetchDataCategory() {
+            this.loading = true;
+            try {
+                const response = await this.$axios.get(`/unauthenticate/getCategoryList`);
+                this.categories = response.data;
+            } catch (err) {
+                console.error(err);
+            } finally {
+                this.loading = false;
+            }
+        },
+        // Other helper methods
+        selectCategory(slug) {
+            this.activeSlug = slug;
+            this.fetchSubCategoryData(slug);
+        },
+        async fetchSubCategoryData(slug) {
+            this.loading = true;
+            try {
+                const response = await this.$axios.get(`/unauthenticate/findSubCategorys/${slug}`);
+                this.products = response.data.result.reverse();
+                this.pro_count = response.data.pro_count;
+                this.categoryname = response.data.categoryname;
+            } catch (err) {
+                console.error(err);
+            } finally {
+                this.loading = false;
+            }
+        },
+        onClickCategory(categoryId, slug, name) {
+            this.selectedCategory = categoryId
+            this.activeSlug = slug
+            this.categoryname = name
+            this.loading = true
+            // Fetch products for this category
+            this.fetchData(slug)
+        },
+        // Cart methods (unchanged)
+        loadCart() {
+            if (process.client) {
+                const saved = localStorage.getItem('cart');
+                if (saved) {
+                    this.cart = JSON.parse(saved);
+                }
+            }
+        },
+
+        saveCart() {
+            this.loading = true;
+            localStorage.setItem('cart', JSON.stringify(this.cart));
+            setTimeout(() => {
+                this.loading = false;
+            }, 2000);
+        },
         cartItemCount() {
             let itemCount = 0;
             this.cart.forEach((item) => {
@@ -126,6 +300,9 @@ export default {
             console.log('Emitting cartItemCountUpdated event with itemCount:', this.itemCount);
             this.$eventBus.$emit('cartItemCountUpdated', this.itemCount);
 
+        },
+        calculateSubtotal() {
+            return 0;
         },
         updateQuantity(productId, newQuantity) {
             const index = this.cart.findIndex((item) => item.product.id === productId);
@@ -137,11 +314,12 @@ export default {
             }
         },
         addToCart(productId) {
+
             const productToAdd = this.products.find((product) => product.id === productId);
             const existingItem = this.cart.find((item) => item.product.id === productId);
 
             if (existingItem) {
-                existingItem.quantity += 1;
+                //existingItem.quantity += 1;
             } else {
                 this.cart.push({
                     product: productToAdd,
@@ -184,90 +362,111 @@ export default {
                 this.cartItemCount();
             }
         },
-        loadCart() {
-            const savedCart = localStorage.getItem('cart');
 
-            if (savedCart) {
-                this.cart = JSON.parse(savedCart);
-            }
-        },
-        saveCart() {
-            this.loading = true;
-            localStorage.setItem('cart', JSON.stringify(this.cart));
-            setTimeout(() => {
-                this.loading = false;
-            }, 2000);
-
-        },
-
-        calculateSubtotal() {
-            return 0;
-        },
-        async fetchData() {
-            this.loading = true;
-            const slug = this.$route.query.slug;
-            try {
-                const response = await this.$axios.get(`/unauthenticate/brandproductList/${slug}`).then(response => {
-                    // console.log("=-===" + response.data.products);
-                    this.products = response.data.products;
-                    this.product = response.data.products;
-                    // console.log(response.data.products);
-                })
-            } catch (error) {
-                // Handle error
-            } finally {
-                this.loading = false; // Hide loader after response
-            }
-        },
-
-        categoryGrid() {
-            const slug = this.$route.query.slug;
-            //alert(paramSlug);
-            this.$router.push({
-                path: '/category/category-list',
-                query: {
-                    slug: slug
-                }
-            })
-
-        },
-        redirectCategory(slug) {
-            this.$router.push({
-                path: '/category/category-list',
-                query: {
-                    slug: slug
-                }
-            })
-        },
-        async fetchDataCategory() {
-            this.loading = true;
-            await this.$axios.get(`/unauthenticate/filterCategorys`).then(response => {
-                this.categories = response.data;
-            })
-                .catch(error => {
-                    // Handle error
-                })
-                .finally(() => {
-                    this.loading = false; // Hide loader after response
-                });;
-
-        }
-    }
-};
+    },
+}
 </script>
-<style>
+<style scoped>
+@media (min-width: 1200px) {
+    .col-xl-1-5 {
+        flex: 0 0 20%;
+        max-width: 20%;
+    }
+}
+
+a {
+    text-decoration: none;
+    color: #292929;
+}
+
+/* Category Container */
+.category-wrapper {
+    margin-bottom: 20px;
+}
+
+/* Main Category Title */
+.category-title {
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #f1f1f1;
+    color: #222;
+}
+
+/* Subcategory List */
+.subcategory-list {
+    list-style: none;
+    padding-left: 15px;
+    margin: 0;
+}
+
+/* Subcategory Item */
+.subcategory-list li {
+    margin-bottom: 6px;
+}
+
+/* Subcategory Link */
+.subcategory-list li a {
+    text-decoration: none;
+    font-size: 14px;
+    color: #555;
+    transition: all 0.3s ease;
+}
+
+/* Hover Effect */
+.subcategory-list li a:hover {
+    color: #0d6efd;
+    padding-left: 5px;
+}
+
+/* Product grid card */
+.product_grid {
+    border: 1px solid var(--color_Primary);
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 15px;
+    background: #fff;
+    transition: 0.3s ease;
+}
+
+/* Hover effect */
+.product_grid:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-3px);
+    border-color: var(--color_Primary);
+    /* highlight border on hover */
+}
+
+/* Image styling */
+.product_img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+/* Free delivery badge */
+.free_delivery {
+    display: inline-block;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-size: 12px;
+    color: var(--color_Primary);
+    font-weight: bold;
+}
+
+/* CATEGORY STYLE */
 .category_item {
     position: relative;
-    padding: 14px 15px;
-    margin-bottom: 0;
-    /* remove extra gap because row g-3 already handles spacing */
+    padding: 12px 15px;
+    margin-bottom: 10px;
     border: 1px solid #e5e5e5;
-    border-radius: 8px;
+    border-radius: 6px;
     cursor: pointer;
     background: #fff;
     transition: 0.3s ease;
     font-size: 14px;
-    font-weight: 500;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -275,9 +474,57 @@ export default {
 
 .category_item:hover {
     background: #f8f9fa;
+    border-color: #350303;
+    color: #0d6efd;
+}
+
+/* ACTIVE */
+.active_item {
+    background: var(--color_Primary);
+    color: #fff;
     border-color: var(--color_Primary);
-    color: var(--color_Primary);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* TOOLTIP */
+.custom_tooltip {
+    position: absolute;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #000;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.2s ease;
+    z-index: 999;
+}
+
+.category_item:hover .custom_tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* LOADER */
+.loading-indicator {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loader-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 </style>

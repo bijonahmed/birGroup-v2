@@ -15,8 +15,8 @@
                                 Shop By Brands
                             </nuxt-link>
 
-                            <nuxt-link to="/allbrands" :class="{ active: $route.path === '/allbrands' }" class="a_link">
-                                All Products
+                            <nuxt-link to="/category/all-categorys" :class="{ active: $route.path === '/category/all-categorys' }" class="a_link">
+                                Shop by Category
                             </nuxt-link>
 
 
@@ -27,7 +27,7 @@
                         <div class="payment_part d-flex justify-content-center">
 
 
-                            <nuxt-link to="/track-orders" :class="{ active: $route.path === '/track-orders' }"
+                            <nuxt-link to="#" :class="{ active: $route.path === '#' }"
                                 class="a_link">
                                 Track Your Orders
                             </nuxt-link>

@@ -80,7 +80,7 @@
                                                 <i class="fa fa-star checked"></i>
                                                 <i class="fa fa-star"></i>
                                             </div>
-                                            <h6>(200)</h6>
+                                            <!-- <h6>(200)</h6> -->
                                         </div>
 
                                         <button type="button" class="btn_cart" @click="addToCart(item)">

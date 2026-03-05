@@ -28,7 +28,7 @@
                                         <tr>
                                             <th>Order ID</th>
                                             <th class="text-center">Place On </th>
-                                            <th class="text-center">Item </th>
+                                            <!-- <th class="text-center">Item </th> -->
                                             <th class="text-center">Quantity </th>
                                             <th class="text-center">Total </th>
                                             <th class="text-center">Status </th>
@@ -40,12 +40,12 @@
                                             <!-- {{ order.name }} -->
                                             <td>{{ order.orderId }}</td>
                                             <td class="text-center">{{ order.placeOn }}</td>
-                                            <td class="order_item text-center">
+                                            <!-- <td class="order_item text-center">
                                                 <nuxt-link :to="`../product-details/${order.pro_slug}`">
                                                     <img :src="order.pro_img" class="img-fluid"
                                                         :alt="order.pro_name">
                                                 </nuxt-link>
-                                            </td>
+                                            </td> -->
                                             <td class="text-center">{{ order.qty }}</td>
                                             <td class="text-center">{{ order.total }}</td>
                                             <td class="text-center">
@@ -85,29 +85,7 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                                <div class="row d-none">
-                                    <div class="col-12">
-                                        <div class="pagination">
-                                            <ul>
-                                                <li>
-                                                    <a href="#"> prv </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" class="active"> 1 </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#"> 2 </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#"> 3 </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#"> next </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -178,7 +156,7 @@ export default {
         trackOrder(orderId) {
 
             this.$router.push({
-                path: '/user/track-order',
+                path: '/user/order-details',
                 query: {
                     orderId: orderId
                 }

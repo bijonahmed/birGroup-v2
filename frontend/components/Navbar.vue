@@ -197,12 +197,12 @@
                             </button>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="#">Help Center </a></li>
-                                <li><a class="dropdown-item" href="#">Place An Order</a></li>
+                                <!-- <li><a class="dropdown-item" href="#">Place An Order</a></li>
                                 <li><a class="dropdown-item" href="#">Payment Option </a></li>
                                 <li><a class="dropdown-item" href="#">Truck an order </a></li>
                                 <li><a class="dropdown-item" href="#">Cancel an order </a></li>
                                 <li><a class="dropdown-item" href="#">Return & Refund </a></li>
-                                <button class="drop_btn" type="button">live Chart </button>
+                                <button class="drop_btn" type="button">live Chart </button> -->
                             </ul>
                         </div>
                         <!-- cart  -->

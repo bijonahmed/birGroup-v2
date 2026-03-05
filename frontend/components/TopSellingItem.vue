@@ -53,7 +53,7 @@
                                             <i class="fa fa-star checked"></i>
                                             <i class="fa fa-star"></i>
                                         </div>
-                                        <h6 class="mb-0">(200)</h6>
+                                        <!-- <h6 class="mb-0">(200)</h6> -->
                                     </div>
                                     <button type="button" class="btn_cart" @click="addToCart(item.id)">Add to
                                         cart</button>

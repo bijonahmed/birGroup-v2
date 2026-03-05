@@ -4,117 +4,329 @@
     <!-- navbar section start here  -->
     <NavbarSecond />
     <!-- Main section start here  -->
+
     <section class="main_content">
       <div class="container">
         <form @submit.prevent="placeOrder()" id="formrest" class="forms-sample" enctype="multipart/form-data">
           <div class="row">
             <div class="col-md-8">
-              <div class="mt-2">
-                <div class="checkout-billing">
-                  <h6 class="section-title">Billing Details</h6>
-                  <div class="row g-3 mb-4">
-                    <div class="col-md-12">
-                      <input type="text" class="form-control custom-input" v-model="insertdata.name"
-                        placeholder="Enter your full name">
-                    </div>
-                    <div class="col-md-6">
-                      <input type="email" class="form-control custom-input" v-model="insertdata.email"
-                        placeholder="Enter your email">
-                    </div>
-                    <div class="col-md-6">
-                      <input type="text" class="form-control custom-input" maxlength="11"
-                        v-model="insertdata.phone_number" placeholder="Enter your phone number">
-                    </div>
+              <div class="delivery_addreess">
+                <h6>Delivery To : {{ insertdata.name }}</h6>
+                <div class="address">
+                  <div>
+                    <p v-if="address !== null">{{ shipp_address }}</p>
+                    <p v-else>Please add your address</p>
                   </div>
-                  <h6 class="section-title">Shipping Address</h6>
-                  <div class="row g-3">
-                    <div class="col-md-6">
-                      <input type="text" class="form-control custom-input" maxlength="11" v-model="shipp_phoneNumber"
-                        placeholder="Enter your shipping phone number">
-                    </div>
-                    <div class="col-md-6">
-                      <input type="text" class="form-control custom-input" placeholder="Enter your shipping address"
-                        v-model="shipp_address">
-                    </div>
+                  <div>
+                    <select v-model="shipp_address">
+                      <option v-for="(address, index) in address" :key="index" :value="address" :selected="index === 0">
+                        Address {{ index + 1 }}</option>
+                    </select>
+                    <nuxt-link to="/user/user-profile" class="add_address" type="button"><i
+                        class="fa-solid fa-plus"></i>Add New</nuxt-link>
                   </div>
                 </div>
+                <div class="pickUp_address d-none">
+                </div>
+                <p> Bill to same address : <a class="billing_address btn_edit" style="cursor: pointer;">Edit</a>
+
+                  <!-- modal  -->
+                <div class="modal_checkoutpage bill_address">
+                  <div class="modal_box">
+                    <div class="row">
+                      <div class="col-8 text-end">
+                        <h6 class="m-0">Select billing address</h6>
+                      </div>
+                      <div class="col-4 ms-auto text-end">
+                        <a class="btn_edit modal_close"><i class="fa-solid fa-x"></i></a>
+                      </div>
+                    </div>
+                    <form action="">
+                      <select v-model="shipp_address" class="form-control mb-2">
+                        <option v-for="(address, index) in address" :key="index" :value="address"
+                          :selected="index === 0">Address {{ index + 1 }}</option>
+                      </select>
+                      <a style="cursor: pointer;" class="btn_confirm modal_close mt-2">Submit</a>
+                    </form>
+                  </div>
+                </div>
+                </p>
               </div>
+
               <div class="items_details">
                 <h5>Items</h5>
                 <div class="checkItem" v-for="item in cart" :key="item.product.id">
-                  <div class="row align-items-center">
-                    <!-- Product Info -->
+                  <div class="row">
                     <div class="col-md-8">
-                      <div class="item d-flex align-items-center">
+                      <div class="item">
                         <nuxt-link :to="`/product-details/${item.product.pro_slug}`"
                           class="d-flex align-items-center text-dark checkIProtem">
-                          <div style="margin-right:12px;">
-                            <img :src="item.product.thumnail_img" class="img-fluid" alt=""
-                              style="height:80px;width:80px;border:1px solid #e5e5e5;padding:5px;border-radius:8px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,0.08);" />
+                          <div>
+                            <img :src="item.product.thumnail_img" class="img-fluid" alt="" />
                           </div>
-                          <div style="width:45%">
-                            <b style="font-size:12px;color:#222;">
-                              {{ item.product.name }}
-                            </b>
+                          <div class="" style="width: 45%">
+                            <h5>
+                              <b>{{ item.product.product_name }} </b>
+                            </h5>
+                            <p class="mb-0">
+                              <span v-if="item.product.brand_name" class="p-0 m-0">{{
+                                item.product.brand_name
+                                }}</span>
+                              <span v-else class="p-0 m-0">No Brand</span>
+                              <span v-if="item.product.color !== null &&
+                                item.product.color !== '' &&
+                                item.product.color !== undefined
+                              " class="p-0 m-0">, Color: <b>{{ item.product.color }}</b></span>
+                              <span v-if="item.product.size !== null &&
+                                item.product.size !== '' &&
+                                item.product.size !== undefined
+                              " class="p-0 m-0">, Size:<b>{{ item.product.size }}</b>
+                              </span>
+                            </p>
+
+                            <span v-if="item.product.warranty_id" class="p-0 m-0">Warranty:
+                              {{ item.product.warranty_name }} ${{ item.product.warrantyamt }}</span>
                           </div>
                         </nuxt-link>
-                        <div style="margin-left:20px;">
-                          <span style="font-size:13px;">QTY: {{ item.quantity }}</span>
+                        <div class="">
+                          <span class="d-flex align-items-center" style="min-width: 80px">QTY: {{ item.quantity
+                            }}</span>
                         </div>
-                        <div style="margin-left:15px;">
+                        <div>
                           <button type="button" @click="removeFromCart(item.product)">
                             <i class="fa-solid fa-trash-can"></i>
                           </button>
                         </div>
                       </div>
                     </div>
-                    <!-- Price Section -->
-                    <div class="col-md-4 d-flex justify-content-center align-items-center">
-                      <div style="text-align:center;font-size:13px;">
-                        <div class="d-none">
-                          <span class="badges px-1"
-                            v-if="item.product.discount_status == 1 && item.product.discount !== 0">
-                            {{ item.product.discount }}%
-                          </span>
-                          <span class="badges px-1"
-                            v-if="item.product.discount_status == 2 && item.product.discount !== 0">
-                            BDT {{ item.product.discount.toFixed(2) }}
-                          </span>
-                        </div>
-                        <p style="margin:0;font-size:13px;">
-                          <!-- <del class="me-1" v-if="item.product.discount !== 0" style="color:#999;">
-                            BDT {{ item.product.price.toFixed(2) }}
-                          </del> -->
-                          <b style="color:#0C356A;font-size:13px;">
-                            BDT {{ item.product.last_price.toFixed(2) }}
-                          </b>
+                    <div class="col-md-4">
+                      <div class="d-flex justify-content-end align-items-center">
+                        <span class="badges px-1"
+                          v-if="item.product.discount_status == 1 && item.product.discount !== 0">{{
+                            item.product.discount }}%</span>
+                        <span class="badges px-1"
+                          v-if="item.product.discount_status == 2 && item.product.discount !== 0">${{
+                            item.product.discount.toFixed(2) }}</span>
+                        <p>
+                          <del class="me-1" v-if="item.product.discount !== 0">${{ item.product.price.toFixed(2)
+                            }}</del>${{ item.product.last_price.toFixed(2) }}
                         </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sub_total">
+                    <div class="row">
+                      <div class="col-8">
+                        <div class="delivery_section">
+                          <h5>
+                            Standard delivery |
+                            <span v-if="item.product.flat_rate_price">${{ item.product.flat_rate_price.toFixed(2)
+                              }}</span>
+                            <span v-else>Free Delivery</span>
+                          </h5>
+                          <p>
+                            Receive by
+                            {{ calculateShippingDate(item.product.shipping_days) }}
+                          </p>
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <div class="s_item_sub">
+                          <p>
+                            {{ item.quantity }} item(s). Subtotal: ${{ getPrice(item).toFixed(2) }}
+                          </p>
+                          <span class="text-success">Save: ${{ getSave(item).toFixed(2) }}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="col-md-4">
-              <div class="cart_summary d-none">
-                <div class="side_title">
-                  <h5>Delivery Charge</h5>
-                </div>
-                <div class="d-flex justify-content-between">
-                  <div class="payment-buttons d-flex gap-3 mb-3">
-                    <div class="checkout__total--amount d-flex gap-2">
-                      <label v-for="option in shippingOptions" :key="option.id" class="delivery-option inline-option"
-                        :class="{ active: selectedShipping === option.price }">
-                        <input type="radio" name="shippingOption" :value="option.price" v-model="selectedShipping">
-                        <div class="label-content">
-                          {{ option.name }} ({{ option.price }})
+              <div class="delivery_addreess paymentMethod_tabs">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                  <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="Card-tab" data-bs-toggle="tab" data-bs-target="#Card-tab-pane"
+                      type="button" role="tab" aria-controls="Card-tab-pane" aria-selected="true">
+                      Card
+                    </button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="profile-tab" data-bs-toggle="tab"
+                      data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane"
+                      aria-selected="false">
+                      Cash On Delivery
+                    </button>
+                  </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                  <div class="tab-pane fade py-1" id="Card-tab-pane" role="tabpanel" aria-labelledby="Card-tab"
+                    tabindex="0">
+                    <div class="d-flex flex-column mb-3">
+                      <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                        <div class="cardPay w-100">
+                          <!-- {{ cardList }} -->
+                          <div v-if="cardList !== ''" v-for="(card, index) in cardList.paymentCard" :key="index"
+                            class="mb-2 w-100">
+                            <input type="radio" @change="handlePaymentSelection()" class="btn-check" :value="card.id"
+                              v-model="selectedPayment" name="paymentMethod" :id="'option' + index"
+                              autocomplete="off" />
+                            <label :for="'option' + index"
+                              class="btn btn-outline-primary border-0 px-2 py-1 w-100 btn-lg" style="max-width: 350px">
+                              <div class="mt-0 d-flex justify-content-between align-items-center">
+                                <div class="d-flex flex-row align-items-center">
+                                  <img src="/images/qHX7vY1.webp" class="rounded" width="50px" />
+                                  <div class="d-flex flex-column ms-3">
+                                    <span class="h5 mb-1 text-start" style="font-size: 14px">{{ card.holder_name
+                                      }}</span>
+                                    <span class="small text-muted" style="font-size: 12px"> **** {{ card.card_number
+                                      }}</span>
+                                  </div>
+                                </div>
+                                <div>
+                                  <input type="text" class="form-control" placeholder="CVV"
+                                    style="width: 70px; font-size: 12px" />
+                                </div>
+                              </div>
+                            </label>
+                          </div>
+
+                          <a type="button" class="btn addNewCardBT p-0" style="width: fit-content; color: #900c3f">Add
+                            new card</a>
+                        </div>
+                        <!-- add card section -->
+                        <div class="addNewCard w-100">
+                          <a type="button" class="btn backBT btn-edit p-0"><i class="fa-solid fa-arrow-left"></i></a>
+                          <form action="" @submit.prevent="saveCard()" id="cardInput">
+                            <div class="row mb-4">
+                              <div class="col-md-12">
+                                <input type="text" v-model="user_id" hidden class="form-control">
+                                <div class="form-group mb-2">
+                                  <label for="">Card holder name</label>
+                                  <input type="text" v-model="cardData.holder_name" placeholder="Jhon Due"
+                                    autocomplete="off" class="form-control" />
+                                </div>
+                              </div>
+                              <div class="col-8">
+                                <div class="form-group mb-2">
+                                  <label for="">Card Number</label>
+                                  <input type="text" v-model="cardData.card_number" placeholder="**** **** ****"
+                                    autocomplete="off" class="form-control" />
+                                </div>
+                              </div>
+                              <div class="col-4">
+                                <div class="form-group mb-2">
+                                  <label for="">Expire</label>
+                                  <input type="text" v-model="cardData.expiry_date" placeholder="MM/YY"
+                                    autocomplete="off" class="form-control" />
+                                </div>
+                              </div>
+                              <div class="col-12">
+                                <button type="submit" class="btn btn_edit"
+                                  style="border: 1px solid; width: fit-content">Add
+                                  Card</button>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="tab-pane fade show active py-1" id="profile-tab-pane" role="tabpanel"
+                    aria-labelledby="profile-tab" tabindex="0">
+                    <div class="my-2 w-100">
+                      <input type="radio" class="btn-check" name="paymentMethod" id="COD" value="COD" autocomplete="off"
+                        v-model="selectedPayment" @change="handlePaymentSelection" />
+                      <label class="btn btn-outline-primary border-0 w-100 px-2 py-1 btn-lg" style="max-width: 350px"
+                        for="COD">
+                        <div class="d-flex align-items-center justify-content-between w-100">
+                          <div>
+                            <h6 class="mb-0">Cash on delivery</h6>
+                            <p>Extra charge: ${{ companyData.transaction_fee }}</p>
+                          </div>
+                          <div>
+                            <p class="badge bg-success" style="color: #fff !important">
+                              Cash
+                            </p>
+                          </div>
                         </div>
                       </label>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
+            <div class="col-md-4">
               <div class="cart_sidebar">
+                <div class="d-flex align-items-center justify-content-between">
+                  <p>Ecommerce Voucher</p>
+                  <!-- <strong>{{ coupon.name }}</strong> -->
+                </div>
+
+                <form @submit.prevent="getCouponData()" id="coupon" action="">
+                  <div class="d-flex align-items-center">
+                    <input type="text" v-model="insertdata.id" hidden />
+                    <input type="text" v-model="coupons.price" hidden />
+                    <input type="text" style="
+                        font-size: 12px;
+                        border: none !important;
+                        border-bottom: 1px solid #900c3f !important;
+                      " v-model="coupons.couponCode" class="form-control me-2 rounded-0"
+                      placeholder="Enter Your Promo Code " />
+                    <button class="btn_confirm h-100 rounded-0" style="border: 1px solid">
+                      Submit
+                    </button>
+                  </div>
+                </form>
+                <div class="price_summery">
+                  <a class="btn_edit w-100 badge bg-success-light mt-2 text-start" @click="opendiscount()">
+                    view available offers
+                  </a>
+                  <!-- modal  -->
+                  <div class="modal_checkoutpage couponModal">
+                    <div class="modal_box">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">Coupon discounts </h6>
+                        <a class="btn_edit modal_close pe-0" @click="closediscount()"><i class="fa-solid fa-x"></i></a>
+                      </div>
+                      <hr>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="discountList" v-for="couponItem in Dcouponlist">
+                            <!-- <div class="loading-indicator" 
+                              style="text-align: center;position: absolute; z-index: 2; left: 0; top: 0; background: #ffffff5c; height: 100%; width: 100%; object-fit: contain;">
+                              <div class="loader-container">
+                                <img src="/loader/loader.gif" alt="Loader" />
+                              </div>
+                            </div> -->
+                            <div class="coupon">
+                              <div class="cbottom">
+                                <p>
+                                  Min Spend <strong>${{ couponItem.min_shopping }}</strong> to get
+                                  <span
+                                    v-if="couponItem.d_percent !== null && couponItem.d_percent !== undefined && couponItem.d_percent !== 0">
+                                    ${{ couponItem.d_percent }}.00
+                                  </span>
+                                  <span
+                                    v-if="couponItem.d_fvalue !== null && couponItem.d_fvalue !== undefined && couponItem.d_fvalue !== 0">
+                                    {{ couponItem.d_fvalue }}%
+                                  </span>
+                                  OFF on total orders
+                                </p>
+                                <div class="copyCode">
+                                  <p>Code: <strong>{{ couponItem.promocode }}</strong></p>
+                                  <a @click="copyCode(couponItem.promocode)" class="btn_copy text-dark"
+                                    style="cursor: pointer;"><i class="fa-regular fa-copy"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <nuxt-link to="/coupons" class="btn_edit d-flex justify-content-end">See all </nuxt-link>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <div class="pirce_summary">
                   <table class="table">
                     <tbody>
@@ -126,24 +338,26 @@
                       </tr>
                       <tr>
                         <td><strong>Items Total</strong></td>
-                        <td class="text-end">BDT {{ sumOfLastPrices.toFixed(2) }}</td>
+                        <td class="text-end">${{ sumOfLastPrices.toFixed(2) }}</td>
+
                       </tr>
                       <tr v-if="COD_fee !== 0 && selectedPayment == 'COD'">
                         <td><strong>Cash on delivery Fee </strong></td>
-                        <td class="text-end">BDT {{ COD_fee }}</td>
+                        <td class="text-end">${{ COD_fee }}</td>
                       </tr>
                       <tr>
                         <td><strong>Delivery Fee </strong></td>
-                        <td class="text-end">BDT {{ sumOfFlatRatePrices.toFixed(2) }}</td>
+                        <td class="text-end">${{ sumOfFlatRatePrices.toFixed(2) }}</td>
                       </tr>
                       <tr id="discount">
                         <td><strong class="text-success">Coupon Discount</strong></td>
                         <td class="text-end text-success">-${{ typeof discount === 'number' ? discount.toFixed(2) : ''
-                        }}</td>
+                          }}</td>
+
                       </tr>
                       <tr>
                         <td><strong>Total Payment</strong></td>
-                        <td class="text-end">BDT {{ totalSum.toFixed(2) }}</td>
+                        <td class="text-end">${{ totalSum.toFixed(2) }}</td>
                       </tr>
                       <tr class="border-0" id="#Paymethod" v-if="this.selectedPayment == 'COD'">
                         <td class="border-0"><strong>Payment method</strong></td>
@@ -160,44 +374,15 @@
                       </tr>
                     </tbody>
                   </table>
-                  <div class="cart_summary">
-                    <div class="side_title">
-                      <h5>Payment method</h5>
-                    </div>
-                    <div class="payment-buttons d-flex flex-wrap gap-3 mb-3" style="justify-content:flex-start;">
 
-                      <!-- Cash on Delivery -->
-                      <div class="payment-option-inline" :class="{ active: paymentMethod === 'cod' }"
-                        @click="selectPayment('cod')"
-                        style="cursor:pointer; border:1px solid #e4e6eb; border-radius:12px; padding:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; width:120px; height:120px; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,0.08); transition:0.3s; position:relative; flex:1 1 100px;">
-                        <img
-                          src="https://t3.ftcdn.net/jpg/06/04/86/68/360_F_604866832_5i9b2mnlQV1Ocgn6OQes0NsANhEEGW95.jpg"
-                          style="width:60px;height:60px;object-fit:contain;" alt="Cash">
-                        <span style="margin-top:8px; font-size:14px; font-weight:500;">Cash on Delivery</span>
-
-                        <!-- Check mark -->
-                        <span v-if="paymentMethod === 'cod'"
-                          style="position:absolute; top:5px; right:5px; color:#0C356A; font-size:20px;">✔</span>
-                      </div>
-
-                      <!-- Online Payment -->
-                      <div class="payment-option-inline" :class="{ active: paymentMethod === 'online' }"
-                        @click="selectPayment('online')"
-                        style="cursor:pointer; border:1px solid #e4e6eb; border-radius:12px; padding:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; width:120px; height:120px; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,0.08); transition:0.3s; position:relative; flex:1 1 100px;">
-                        <img src="https://www.csinow.edu/wp-content/uploads/2022/01/online-payment-registration.jpg"
-                          style="width:60px;height:60px;object-fit:contain;" alt="Online">
-                        <span style="margin-top:8px; font-size:14px; font-weight:500;">Online Payment</span>
-
-                        <!-- Check mark -->
-                        <span v-if="paymentMethod === 'online'"
-                          style="position:absolute; top:5px; right:5px; color:#0C356A; font-size:20px;">✔</span>
-                      </div>
-
-                    </div>
-
-                    <!-- Hidden input to capture value if needed -->
-                    <input type="hidden" v-model="paymentMethod">
+                  <div class="">
+                    <p class="text-start badge bg-danger-light" style="width: fit-content;" id="errorDiscount">Wrong
+                      coupon code </p>
+                    <p class="text-start badge bg-success-light" style="width: fit-content;" id="discount_msg">Checkout
+                      with Coupon Cashback</p>
+                    <p class="text-end">VAT included, Where applicable </p>
                   </div>
+
                   <span v-if="cart.length > 0">
                     <button type="submit" class="btn_cart text-center" style="
                         visibility: unset;
@@ -219,6 +404,7 @@
         </form>
       </div>
     </section>
+
     <!-- END Main Section here -->
     <!-- back to top button  -->
     <div class="back_top">
@@ -226,8 +412,10 @@
     </div>
     <!-- {{ companyData.transaction_fee }} -->
     <Footer />
+
   </div>
 </template>
+
 <script>
 import $ from "jquery";
 import axios from "axios";
@@ -236,6 +424,7 @@ import Common_MiniTabNavbar from "~/components/Common_MiniTabNavbar.vue";
 import Common_MobileSearchProduct from "~/components/Common_MobileSearchProduct.vue";
 import RecentView from "~/components/RecentView.vue";
 import NavbarSecond from "../components/NavbarSecond.vue";
+
 export default {
   //middleware: "auth",
   components: {
@@ -256,15 +445,8 @@ export default {
         card_number: '',
         expiry_date: '',
       },
-      selectedShipping: 60, // default active
-      shippingOptions: [
-        { id: 1, name: "Inside Dhaka", price: 60 },
-        { id: 2, name: "Outside Dhaka", price: 130 }
-      ],
       billAddress: "",
       shipp_address: "",
-      shipp_phoneNumber: "",
-      paymentMethod: '',
       user_id: 0,
       userdata: {
         name: "",
@@ -301,14 +483,17 @@ export default {
         shipper_address: "",
         shipper_country: "",
         shipper_city: "",
+
         address_1: "",
         country_1: "",
         city_1: "",
         landmark_1: "",
+
         address_2: "",
         country_2: "",
         city_2: "",
         landmark_2: "",
+
         addresses: [],
       },
       coupons: {
@@ -341,6 +526,7 @@ export default {
       address: [],
     };
   },
+
   computed: {
     loggedIn() {
       if (!$auth.loggedIn) {
@@ -356,6 +542,7 @@ export default {
     this.cart.forEach((item) => {
       item.shippingDate = this.calculateShippingDate(item.product.shipping_days);
     });
+
     if (process.client) {
       this.addCard();
       this.defaultLoadingData();
@@ -363,6 +550,7 @@ export default {
       this.loadCart();
       this.cartItemCount();
       this.subtotal = this.calculateSubtotal();
+
       $(document).ready(function () {
         $(".filter_btn").on("click", function () {
           $(".filter_modal").show();
@@ -379,9 +567,6 @@ export default {
     this.calculateSumOfLastPrices();
   },
   methods: {
-    selectPayment(method) {
-      this.paymentMethod = method;
-    },
     opendiscount() {
       $(".couponModal").fadeIn();
     },
@@ -395,6 +580,7 @@ export default {
       tempInput.select();
       document.execCommand('copy');
       document.body.removeChild(tempInput);
+
       const Toast = Swal.mixin({
         toast: true,
         position: "top-end",
@@ -410,6 +596,7 @@ export default {
         icon: "success",
         title: "Code Copied successfully!",
       });
+
     },
     handlePaymentSelection() {
       if (this.selectedPayment === 'COD') {
@@ -457,6 +644,7 @@ export default {
           if (error.response.status === 422) {
             this.errors = error.response.data.errors;
             const errorMessages = Object.values(this.errors).flat();
+
             // Concatenate error messages into a single string
             const errorMessage = errorMessages.join("<br>");
             const Toast = Swal.mixin({
@@ -495,6 +683,7 @@ export default {
         let sumOfLastPrices = 0;
         let sumOfFlatRatePrices = 0;
         let totalPrice = 0;
+
         cart.forEach((item) => {
           if (item.product.warrantyamt) {
             totalPrice += parseFloat(item.product.last_price) * item.quantity;
@@ -509,26 +698,32 @@ export default {
         let allsum;
         let allsum_warranty = 0;
         let subsum = sumOfLastPrices + sumOfFlatRatePrices;
+
         // console.log(subsum);
+
         if (selectedPayment == "COD") {
           allsum = parseFloat(subsum) + parseFloat(COD_fee);
           // console.log(allsum);
         } else {
           allsum = subsum;
         }
+
         this.coupons.price = allsum;
         this.sumOfLastPrices = sumOfLastPrices;
         this.sumOfFlatRatePrices = sumOfFlatRatePrices;
         this.totalSum = allsum;
       }
     },
+
     updateSelectedData() {
       // console.log("Selected data:", this.shipp_address, "BilTo:", this.billAddress);
     },
+
     getPrice(item) {
       let final_price = 0;
       const price = item.quantity * item.product.last_price;
       // console.log(item.product.warrantyamt);
+
       if (item.product.warrantyamt) {
         final_price = price + item.quantity * item.product.warrantyamt;
       } else {
@@ -546,15 +741,19 @@ export default {
       const currentDate = new Date();
       const currentHour = currentDate.getHours();
       const nextDay = currentHour >= 17 ? 1 : 0;
+
       const shippingDate = new Date();
       shippingDate.setDate(currentDate.getDate() + (shippingDays ? shippingDays : nextDay));
+
       const options = {
         weekday: "short",
         month: "short",
         day: "numeric",
         year: "numeric",
       };
+
       const formattedDate = shippingDate.toLocaleDateString("en-US", options);
+
       return formattedDate;
     },
     async getCouponData() {
@@ -579,8 +778,10 @@ export default {
         .catch((error) => {
           // console.error("Error fetching coupon data:", error);
           $("#errorDiscount").fadeIn();
+
           this.errors = error.response.data.errors;
           const errorMessages = Object.values(this.errors).flat();
+
           const Toast = Swal.mixin({
             toast: true,
             position: "top-end",
@@ -623,14 +824,18 @@ export default {
         this.getDatas = response.data.data;
         this.insertdata.email = response.data.data.email;
         this.insertdata.phone_number = response.data.data.phone_number;
+
         this.address = response.data.address;
         if (this.address.length > 0) {
-          this.shipp_address = "";//this.address[0];
-          this.billAddress = "";//this.address[0];
+          this.shipp_address = this.address[0];
+          this.billAddress = this.address[0];
         }
+
+
+
         this.user_id = response.data.data.id;
-        //this.defaultLoading();
-       // this.getQuponList();
+        this.defaultLoading();
+        this.getQuponList();
       });
     },
     getcompanyData() {
@@ -640,7 +845,6 @@ export default {
           this.COD_fee = response.data.transaction_fee;
         });
     },
-
     defaultLoading() {
       // console.log(this.insertdata.id);
       const id = this.insertdata.id;
@@ -651,8 +855,6 @@ export default {
         // console.error('Error fetching card list:', error);
       });
     },
-
-
     clearCart() {
       this.loading = true;
       localStorage.removeItem("cart");
@@ -663,67 +865,44 @@ export default {
       }, 2000);
     },
     placeOrder() {
-      // 1️⃣ Validate payment method
-      if (!this.paymentMethod) {
-        Swal.fire({
-          icon: "error",
-          title: "Please select a payment method.",
-        });
-        return;
-      }
-
-      // 2️⃣ Validate required billing/shipping fields
-      if (!this.insertdata.name || !this.insertdata.email || !this.insertdata.phone_number) {
-        Swal.fire({
-          icon: "error",
-          title: "Please fill in all billing details.",
-        });
-        return;
-      }
-
-      if (!this.shipp_phoneNumber || !this.shipp_address) {
-        Swal.fire({
-          icon: "error",
-          title: "Please fill in all shipping details.",
-        });
-        return;
-      }
-
-      // Assign selectedPayment before sending
-      this.selectedPayment = this.paymentMethod;
-
-      // Prepare FormData
       const formData = new FormData();
       formData.append("cart", JSON.stringify(this.cart));
       formData.append("subTotal", this.totalSum);
       formData.append("item_total", this.sumOfLastPrices);
-      formData.append("delivery_fee", this.sumOfFlatRatePrices);
-
-      //Shipping Address
-      formData.append("shipp_phoneNumber", this.shipp_phoneNumber);
       formData.append("shipp_address", this.shipp_address);
-      //Billing Details
+      formData.append("billAddress", this.billAddress);
       formData.append("Cutomer_name", this.insertdata.name);
       formData.append("Cutomer_email", this.insertdata.email);
       formData.append("Cutomer_phone_number", this.insertdata.phone_number);
-      // formData.append("coupon_id", this.coupon_id ? this.coupon_id : '');
-      // formData.append("user_id", this.insertdata.id);
-      //Payment method
+      formData.append("coupon_id", this.coupon_id ? this.coupon_id : '');
+      formData.append("user_id", this.insertdata.id);
       formData.append("payment_staus", this.selectedPayment);
-
-      // 5️⃣ Submit form via Axios
-      const headers = { "Content-Type": "multipart/form-data" };
+      // console.log(formData);
+      // return false;
+      const headers = {
+        "Content-Type": "multipart/form-data",
+      };
       this.$axios
-        .post("/order/submitOrder", formData, { headers })
+        .post("/order/submitOrder", formData, {
+          headers,
+        })
         .then((response) => {
-          Swal.fire({
-            icon: "success",
-            title: "Order submitted successfully!",
+          // const token = response.data.access_token;
+          // this.$auth.setUserToken(token);
+          const Toast = Swal.mixin({
             toast: true,
             position: "top-end",
             showConfirmButton: false,
             timer: 3000,
             timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            },
+          });
+          Toast.fire({
+            icon: "success",
+            title: "Order submitted successfully!",
           });
           this.clearCart();
           this.$router.push("/");
@@ -732,18 +911,27 @@ export default {
           if (error.response.status === 422) {
             this.errors = error.response.data.errors;
             const errorMessages = Object.values(this.errors).flat();
+
+            // Concatenate error messages into a single string
             const errorMessage = errorMessages.join("<br>");
-            Swal.fire({
-              icon: "error",
-              title: errorMessage,
+            const Toast = Swal.mixin({
               toast: true,
               position: "top-end",
               showConfirmButton: false,
               timer: 3000,
               timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              },
+            });
+            Toast.fire({
+              icon: "error",
+              title: errorMessage,
             });
           }
         });
+
     },
     clearCart() {
       this.loading = true;
@@ -769,9 +957,12 @@ export default {
     loadCart() {
       this.loading = true;
       const savedCart = localStorage.getItem('cart');
+
       if (savedCart) {
         this.cart = JSON.parse(savedCart);
+
       }
+
       let itemCount = 0;
       this.cart.forEach((item) => {
         if (item.product) { // Add a check to ensure item.product is defined
@@ -792,12 +983,14 @@ export default {
     removeFromCart(product) {
       this.loading = true;
       const index = this.cart.findIndex((item) => item.product.id === product.id);
+
       if (index !== -1) {
         if (this.cart[index].quantity > 1) {
           this.cart[index].quantity -= 1;
         } else {
           this.cart.splice(index, 1);
         }
+
         this.saveCart();
         this.calculateSubtotal();
         this.cartItemCount();
@@ -813,6 +1006,7 @@ export default {
     addToCart(productId) {
       const productToAdd = this.prouducts.find((product) => product.id === productId);
       const existingItem = this.cart.find((item) => item.product.id === productId);
+
       if (existingItem) {
         // existingItem.quantity += 1;
       } else {
@@ -821,6 +1015,7 @@ export default {
           quantity: 1,
         });
       }
+
       this.saveCart();
       this.cartItemCount();
       this.calculateSubtotal();
@@ -851,6 +1046,7 @@ export default {
         }
         // console.log(`Intermediate Subtotal: ${subtotal}`);
       });
+
       //console.log(`Final Subtotal: ${subtotal}`);
       return (this.subtotal = subtotal);
       //return subtotal;
@@ -863,6 +1059,7 @@ export default {
         minShop: minShop,
         user_id: user_id
       };
+
       this.$axios.get('/setting/getcoupons', { params: queryParams })
         .then(response => {
           this.Dcouponlist = response.data.couponList;
@@ -918,67 +1115,5 @@ export default {
 #errorDiscount,
 #discount_msg {
   display: none;
-}
-
-.checkout-billing {
-  background: #fff;
-  padding: 25px;
-  border-radius: 10px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-}
-
-.section-title {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 15px;
-  color: #222;
-}
-
-.custom-input {
-  height: 45px;
-  border-radius: 6px;
-  border: 1px solid #e4e6eb;
-  font-size: 14px;
-  padding-left: 12px;
-  transition: all .3s ease;
-}
-
-.custom-input:focus {
-  border-color: #0C356A;
-  box-shadow: 0 0 0 0.15rem rgba(12, 53, 106, .15);
-}
-
-.custom-input::placeholder {
-  color: #9aa1a9;
-  font-size: 13px;
-}
-
-.delivery-option {
-  border: 1px solid #ddd;
-  padding: 8px 15px;
-  border-radius: 6px;
-  font-size: 13px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-}
-
-.delivery-option input {
-  margin-right: 6px;
-}
-
-.delivery-option.active {
-  border-color: #0C356A;
-  background: #f4f7fb;
-}
-
-.payment-option-inline.active {
-  border: 2px solid #0C356A;
-  background: #f4f7fb;
-}
-
-.payment-option-inline.active {
-  border: 2px solid #0C356A;
-  background: #f4f7fb;
 }
 </style>

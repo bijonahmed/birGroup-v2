@@ -23,56 +23,59 @@
                                         </div>
                                     </div>
                                     <section class="Slider">
-                                        <div>
-                                            <img id="featuredImage" class="Slider-featuredImage sliderimg"
-                                                loading="lazy" :src="featuresimgs">
-                                        </div>
+                                        <div class="zoom-container" @mousedown="startDrag" @mousemove="onDrag"
+                                            @mouseup="endDrag" @mouseleave="endDrag" @touchstart="startDrag"
+                                            @touchmove="onDrag" @touchend="endDrag">
 
+                                            <!-- Control Buttons -->
+                                            <div class="zoom-buttons">
+                                                <button @click="zoomIn" class="zoom-btn">+</button>
+                                                <button @click="zoomOut" class="zoom-btn">-</button>
+                                                <button @click="rotateLeft" class="zoom-btn">⟲</button>
+                                                <button @click="rotateRight" class="zoom-btn">⟳</button>
+                                            </div>
+
+                                            <img :src="featuresimgs" class="sliderimg" :style="{
+                                                transform: `
+                translate(${positionX}px, ${positionY}px)
+                scale(${zoomLevel})
+                rotate(${rotation}deg)
+            `
+                                            }">
+                                        </div>
                                         <div class="Slider-thumbnails">
                                             <a v-for="(image, index) in slider_img" :key="index" :href="image.thumnail"
                                                 :class="{ 'Slider-thumbnail': true, 'active': index === 0 }"
                                                 @click.prevent="changeSlide(index)">
                                                 <img :src="image.thumnail" :alt="image.alt"
-                                                    style="height: 80px; width: 70px;" class="border border-1 rounded">
+                                                    style="height:80px; width:70px; border-color: var(--color_Primary);"
+                                                    class="border border-1 rounded">
                                             </a>
                                         </div>
                                     </section>
 
                                     <!-- image slider end here  -->
-                                    <div class="social_share d-none">
-                                        <h5>Share This Product</h5>
-                                        <ul>
-                                            <li>
-                                                <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
-                                            </li>
-                                            <li>
-                                                <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                                            </li>
-                                            <li>
-                                                <a href="#"><i class="fa-brands fa-twitter"></i></a>
-                                            </li>
-                                        </ul>
-                                    </div>
+
                                 </div>
                                 <!-- right part  -->
                                 <div class="col-md-7">
                                     <div class="pro_info">
                                         <div class="badgeses">
                                             <div>
-                                                <span v-if="seller !== ''">{{ seller.business_name
-                                                    }}</span>
+                                                <span v-if="seller !== ''">{{ seller.name
+                                                }}</span>
                                                 <strong v-if="pro_row.free_shopping == 1">free delivery</strong>
                                                 <!-- <span style="background-color: red;"><a href="affiliate.html" style="color: #fff;">Click to Get Your affiliate link</a></span> -->
                                             </div>
 
-                                            <div v-if="loggedIn">
+                                            <!-- <div v-if="loggedIn">
                                                 <a href="#" @click="addtowishlist"><i
                                                         class="fa-regular fa-heart"></i></a>
 
                                             </div>
                                             <div v-else>
                                                 <a href="#" @click="login"><i class="fa-regular fa-heart"></i></a>
-                                            </div>
+                                            </div> -->
 
                                         </div>
                                         <div class="details_title">
@@ -94,19 +97,22 @@
                                                     Now: BDT{{ getTotal(pro_row.last_price) }}
                                                     <p style="color: gray;font-size: 12px;"> &nbsp;+Inclusing VAT.</p>
                                                 </div>
-                                                <p class="ms-0 d-block"><strike v-if="pro_row.discount !== 0">Was: ${{
+                                                <!-- <p class="ms-0 d-block"><strike v-if="pro_row.discount !== 0">Was: ${{
                                                     pro_row.price.toFixed(2) }} </strike><span>{{ pro_row.discount
-                                                        }}%</span></p>
+                                                        }}%</span></p> -->
                                             </h5>
                                             <h5 v-else-if="pro_row.discount_status == 2">
                                                 <div class="d-flex align-items-center">
                                                     Now: BDT{{ (pro_row.last_price).toFixed(2) }}
                                                     <p style="color: gray;font-size: 12px;"> &nbsp;+Inclusing VAT.</p>
                                                 </div>
-                                                <p class="ms-0 d-block"><strike v-if="pro_row.discount !== 0">Was: ${{
+                                                <!-- <p class="ms-0 d-block"><strike v-if="pro_row.discount !== 0">Was: ${{
                                                     pro_row.price.toFixed(2) }} </strike><span>${{ pro_row.discount
-                                                        }}</span></p>
+                                                        }}</span></p> -->
                                             </h5>
+
+
+
                                             <h5 v-else>BDT{{ pro_row.last_price }} </h5>
 
                                             <p v-if="pro_row.stock_status == 1 && pro_row.stock_qty >= 1">In stock</p>
@@ -118,9 +124,9 @@
                                             <p v-else>Out Of stock</p>
                                         </div>
                                         <div class="ratings_pro">
-                                            <p v-if="pro_row.free_shopping == 0">+shipping (${{ pro_row.flat_rate_price
+                                            <!-- <p v-if="pro_row.free_shopping == 0">+shipping (${{ pro_row.flat_rate_price
                                                 }} in per {{ pro_row.unit }})</p>
-                                            <div class="d-flex align-items-center">
+                                            <div class="d-flex align-items-center d-none">
                                                 <div class="d-flex align-items-center ">
                                                     <i class="fa-solid fa-star active"></i>
                                                     <i class="fa-solid fa-star active"></i>
@@ -130,7 +136,7 @@
                                                 </div>
                                                 <h6 class="mb-0 ms-2">( <a href="#feedback">188 verified ratings</a>)
                                                 </h6>
-                                            </div>
+                                            </div> -->
                                             <div class="d-flex align-items-end mb-2">
                                                 <div class="size_attr"
                                                     v-if="colorGroup !== null && colorGroup.length > 0">
@@ -388,27 +394,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-12">
-                        <!-- more items for this seller  -->
-                        <!-- <div class="row">
-                            <div class="col-12">
-                                <div class="top_selling">
-                                    <div class="row mb-2">
-                                        <div class="col-6">
-                                            <div class="sell_title">
-                                                <h5>More items from this seller </h5>
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                </div>
-                            </div>
-                        </div> -->
-
-                        <!-- <RecentView /> -->
-                    </div>
-                </div>
             </div>
         </section>
         <Footer />
@@ -465,6 +451,13 @@ export default {
                 file: ''
             }],
             color: '',
+            zoomLevel: 1,
+            positionX: 0,
+            positionY: 0,
+            startX: 0,
+            startY: 0,
+            isDragging: false,
+            rotation: 0,
             brands_details: [],
             currentDateTime: null,
             futureDate: null,
@@ -498,16 +491,75 @@ export default {
         loggedIn() {
             return this.$auth.loggedIn;
         },
-        
+
     },
     methods: {
         scrollToTop() {
             setTimeout(() => {
                 window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
+                    top: 0,
+                    behavior: 'smooth'
+                });
             }, 100);
+        },
+        zoomIn() {
+            if (this.zoomLevel < 3) {
+                this.zoomLevel += 0.2
+            }
+        },
+
+        zoomOut() {
+            if (this.zoomLevel > 1) {
+                this.zoomLevel -= 0.2
+                if (this.zoomLevel === 1) {
+                    this.positionX = 0
+                    this.positionY = 0
+                }
+            }
+        },
+
+        rotateLeft() {
+            this.rotation -= 90
+        },
+
+        rotateRight() {
+            this.rotation += 90
+        },
+
+        startDrag(e) {
+            if (this.zoomLevel === 1) return
+
+            this.isDragging = true
+
+            const clientX = e.type.includes('mouse')
+                ? e.clientX
+                : e.touches[0].clientX
+
+            const clientY = e.type.includes('mouse')
+                ? e.clientY
+                : e.touches[0].clientY
+
+            this.startX = clientX - this.positionX
+            this.startY = clientY - this.positionY
+        },
+
+        onDrag(e) {
+            if (!this.isDragging) return
+
+            const clientX = e.type.includes('mouse')
+                ? e.clientX
+                : e.touches[0].clientX
+
+            const clientY = e.type.includes('mouse')
+                ? e.clientY
+                : e.touches[0].clientY
+
+            this.positionX = clientX - this.startX
+            this.positionY = clientY - this.startY
+        },
+
+        endDrag() {
+            this.isDragging = false
         },
         getTotal(price) {
 
@@ -1009,6 +1061,7 @@ export default {
 .Slider-thumbnail.active img {
     border: 2px solid var(--color_Primary);
 }
+
 .scrollimg {
     height: 40px;
     width: 20px;
@@ -1035,15 +1088,18 @@ export default {
     margin-top: 4px;
     padding: 4px;
     margin-right: 16px;
+
 }
 
 .Slider-thumbnail {
     opacity: 0.7;
     cursor: pointer;
+
 }
 
 .Slider-thumbnail img {
     width: 200px;
+    border: 3px solid var(--color_Primary);
 }
 
 .Slider-thumbnail .active {
@@ -1060,5 +1116,81 @@ export default {
 
 .Slider-thumbnail:not(:first-of-type) {
     margin-left: 10px;
+}
+
+/* zoom in out  */
+.Slider {
+    max-width: 500px;
+}
+
+.zoom-container {
+    position: relative;
+    /* IMPORTANT */
+        border: 3px solid var(--color_Primary);
+    overflow: hidden;
+}
+
+
+.sliderimg {
+    width: 100%;
+    transition: transform 0.3s ease;
+    /* ADD BORDER */
+
+    border-radius: 6px;
+    /* optional - সুন্দর look এর জন্য */
+}
+
+/* Buttons Top Left */
+.zoom-buttons {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.zoom-btn {
+    width: 35px;
+    height: 35px;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.zoom-btn:hover {
+    background: black;
+}
+
+.zoom-container {
+    position: relative;
+    overflow: hidden;
+    cursor: grab;
+}
+
+.zoom-container:active {
+    cursor: grabbing;
+}
+
+.sliderimg {
+    width: 100%;
+    transition: transform 0.2s ease;
+    user-select: none;
+    pointer-events: none;
+}
+
+.zoom-buttons {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 </style>

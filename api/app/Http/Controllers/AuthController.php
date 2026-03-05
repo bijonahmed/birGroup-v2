@@ -47,7 +47,7 @@ class AuthController extends Controller
             'name' => 'required',
             'email' => 'required|unique:users,email',
             'password' => 'required|min:2|confirmed', // Add the 'confirmed' rule
-        ],[
+        ], [
             'password' => "Password dosen't match",
         ]);
 
@@ -250,7 +250,7 @@ class AuthController extends Controller
         ], 200);
     }
 
- 
+
 
     public function updateBusinessprofile(Request $request)
     {
@@ -337,12 +337,12 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-        
+
         // name: '',
         // email: '',
         // gender: '',
         // birthdate: '',
-        
+
         // address_1: '',
         // country_1: '',
         // landmark_1: '',
@@ -377,7 +377,7 @@ class AuthController extends Controller
             'landmark_2'        => !empty($request->landmark_2) ? $request->landmark_2 : "",
             'phone_1'           => !empty($request->phone_1) ? $request->phone_1 : "",
             'phone_2'           => !empty($request->phone_2) ? $request->phone_2 : "",
-            
+
 
 
             'website'           => !empty($request->website) ? $request->website : "",
@@ -424,33 +424,46 @@ class AuthController extends Controller
         $data = auth('api')->user();
 
         $addressData = [
-            'address_1' => $data->address_1 ?? '',
-            'country_1' => $data->country_1 ?? '',
-            'city_1' => $data->city_1 ?? '',
+            'address_1'  => $data->address_1 ?? '',
+            'country_1'  => $data->country_1 ?? '',
+            'city_1'     => $data->city_1 ?? '',
             'landmark_1' => $data->landmark_1 ?? '',
-            'phone_1' => $data->phone_1 ?? '',
-            'country_2' => $data->country_2 ?? '',
-            'city_2' => $data->city_2 ?? '',
+            'phone_1'    => $data->phone_1 ?? '',
+
+            'country_2'  => $data->country_2 ?? '',
+            'city_2'     => $data->city_2 ?? '',
             'landmark_2' => $data->landmark_2 ?? '',
-            'phone_2' => $data->phone_2 ?? '',
-            'address_2' => $data->address_2 ?? '',
+            'phone_2'    => $data->phone_2 ?? '',
+            'address_2'  => $data->address_2 ?? '',
         ];
+
         $formattedAddresses = [];
 
         // Address 1
-        if (!empty($addressData['address_1']) || !empty($addressData['country_1']) || !empty($addressData['city_1']) || !empty($addressData['landmark_1']) || !empty($addressData['phone_1'])) {
-            $addressParts = array_filter([$addressData['address_1'], $addressData['landmark_1'], $addressData['city_1'], $addressData['country_1'], $addressData['phone_1']]);
-            $formattedAddresses[] = implode(', ', $addressParts);
+        $address1 = implode(', ', array_filter([
+            $addressData['address_1'],
+            $addressData['landmark_1'],
+            $addressData['city_1'],
+            $addressData['country_1'],
+            $addressData['phone_1']
+        ], fn($v) => $v !== null && $v !== ''));
+
+        if ($address1 !== '') {
+            $formattedAddresses[] = $address1;
         }
 
         // Address 2
-        if (!empty($addressData['address_2']) || !empty($addressData['country_2']) || !empty($addressData['city_2']) || !empty($addressData['landmark_2']) || !empty($addressData['phone_2'])) {
-            $addressParts = array_filter([$addressData['address_2'], $addressData['landmark_2'], $addressData['city_2'], $addressData['country_2'], $addressData['phone_2']]);
-            $formattedAddresses[] = implode(', ', $addressParts);
-        }
+        $address2 = implode(', ', array_filter([
+            $addressData['address_2'],
+            $addressData['landmark_2'],
+            $addressData['city_2'],
+            $addressData['country_2'],
+            $addressData['phone_2']
+        ], fn($v) => $v !== null && $v !== ''));
 
-        // dd($formattedAddresses);
-        // return false;
+        if ($address2 !== '') {
+            $formattedAddresses[] = $address2;
+        }
 
         return response()->json([
             'data' => $data,

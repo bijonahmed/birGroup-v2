@@ -17,6 +17,7 @@ class Order extends Model
         'subtotal',
         'order_status',
         'billing_name',
+        'customer_id',
         'billing_email',
         'billing_phone_number',
         'billing_address',

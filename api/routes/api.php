@@ -21,6 +21,7 @@ use App\Http\Controllers\Brands\BrandsController;
 use App\Http\Controllers\Product\ProductController;
 use App\Http\Controllers\Cart\CartController;
 use App\Http\Controllers\Order\OrderController;
+use App\Http\Controllers\Order\OrderSubmit;
 use App\Http\Controllers\Chat\ChatController;
 /*
 |--------------------------------------------------------------------------
@@ -229,7 +230,8 @@ Route::group([
     'prefix' => 'order'
 ], function () {
     //Add to cart 
-    Route::post('submitOrder', [OrderController::class, 'submitOrder']);
+    Route::post('submitOrder', [OrderSubmit::class, 'submitOrder']);
+   // Route::post('submitOrder', [OrderController::class, 'submitOrder']);
     Route::get('getOrder', [OrderController::class, 'getOrder']);
     Route::get('allOrders', [OrderController::class, 'allOrders']);
     Route::get('orderDetails/{orderid}', [OrderController::class, 'orderDetails']);

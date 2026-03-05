@@ -30,7 +30,7 @@
                                 <input type="password" placeholder="Password" v-model="login.password">
                                 <i class="toggle-password fa-solid fa-eye"></i>
                             </div>
-                            <div class="d-flex justify-content-end align-items-center mb-2">
+                            <div class="d-flex justify-content-end align-items-center mb-2 d-none">
                                 <div class="d-flex align-items-center d-none">
                                     <input type="checkbox" id="remeber"><label for="remeber">Remember me</label>
                                 </div>
@@ -40,7 +40,7 @@
                                 <button class="btn_logins" type="submit">Login</button>
                             </div>
                             <div class="d-flex">
-                                <p style="font-size: 12px !important;" class="text-center w-100 mt-2">Don't have
+                                <p style="font-size: 12px !important;  text-align: center;" class="text-center w-100 mt-2">Don't have
                                     Account? <nuxt-link to="/login" class="btn_signup " type="button">SignUp</nuxt-link>
                                 </p>
                             </div>

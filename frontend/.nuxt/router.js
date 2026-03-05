@@ -13,6 +13,7 @@ const _1f869794 = () => interopDefault(import('..\\pages\\changepassword.vue' /*
 const _6464d0cf = () => interopDefault(import('..\\pages\\changepassword copy.vue' /* webpackChunkName: "pages/changepassword copy" */))
 const _1be65abd = () => interopDefault(import('..\\pages\\charity.vue' /* webpackChunkName: "pages/charity" */))
 const _4631c7f1 = () => interopDefault(import('..\\pages\\checkout.vue' /* webpackChunkName: "pages/checkout" */))
+const _2abdd9f4 = () => interopDefault(import('..\\pages\\checkout copy.vue' /* webpackChunkName: "pages/checkout copy" */))
 const _7b5af09c = () => interopDefault(import('..\\pages\\coupons.vue' /* webpackChunkName: "pages/coupons" */))
 const _121a4ccc = () => interopDefault(import('..\\pages\\customer-review.vue' /* webpackChunkName: "pages/customer-review" */))
 const _34e02d3e = () => interopDefault(import('..\\pages\\flas-sale.vue' /* webpackChunkName: "pages/flas-sale" */))
@@ -43,7 +44,6 @@ const _ecfcacda = () => interopDefault(import('..\\pages\\affiliate\\affiliate-p
 const _0bb8afcd = () => interopDefault(import('..\\pages\\affiliate\\affiliate-programe-register.vue' /* webpackChunkName: "pages/affiliate/affiliate-programe-register" */))
 const _84d84bc6 = () => interopDefault(import('..\\pages\\affiliate\\affiliate-transfer.vue' /* webpackChunkName: "pages/affiliate/affiliate-transfer" */))
 const _0f88944c = () => interopDefault(import('..\\pages\\brand-product\\brand-grid.vue' /* webpackChunkName: "pages/brand-product/brand-grid" */))
-const _507935ab = () => interopDefault(import('..\\pages\\brand-product\\brand-grid copy.vue' /* webpackChunkName: "pages/brand-product/brand-grid copy" */))
 const _c393f120 = () => interopDefault(import('..\\pages\\category\\all-categorys.vue' /* webpackChunkName: "pages/category/all-categorys" */))
 const _30aec5ce = () => interopDefault(import('..\\pages\\category\\category-filter.vue' /* webpackChunkName: "pages/category/category-filter" */))
 const _36a073c8 = () => interopDefault(import('..\\pages\\category\\category-grid.vue' /* webpackChunkName: "pages/category/category-grid" */))
@@ -141,6 +141,10 @@ export const routerOptions = {
     path: "/checkout",
     component: _4631c7f1,
     name: "checkout"
+  }, {
+    path: "/checkout%20copy",
+    component: _2abdd9f4,
+    name: "checkout copy"
   }, {
     path: "/coupons",
     component: _7b5af09c,
@@ -261,10 +265,6 @@ export const routerOptions = {
     path: "/brand-product/brand-grid",
     component: _0f88944c,
     name: "brand-product-brand-grid"
-  }, {
-    path: "/brand-product/brand-grid%20copy",
-    component: _507935ab,
-    name: "brand-product-brand-grid copy"
   }, {
     path: "/category/all-categorys",
     component: _c393f120,
