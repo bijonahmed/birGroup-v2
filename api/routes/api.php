@@ -359,8 +359,10 @@ Route::group([
     Route::get('bannerTopget', [SettingController::class, 'getbannerTop']);
     Route::post('bannerTop', [SettingController::class, 'updatebannerTop']);
     Route::post('dealsbannner', [SettingController::class, 'updatedealsbannner']);
+        Route::post('updatedealsbannnerLink', [SettingController::class, 'updatedealsbannnerLink']);
     Route::get('getdealsbanner', [SettingController::class, 'getdealsbanners']);
     Route::post('sliderLeftads', [SettingController::class, 'updatesliderLeftads']);
+       Route::post('updatesliderLeftadsLink', [SettingController::class, 'updatesliderLeftadsLink']);
     Route::get('getadsbannerreq', [SettingController::class, 'getadsbanner']);
 
     // coupons 

@@ -212,7 +212,8 @@ class UnauthenticatedController extends Controller
 
         foreach ($data as $v) {
             $result[] = [
-                'id' => $v->id,
+                'id'   => $v->id,
+                'link' => !empty($v->link) ? $v->link : "",
                 'images' => !empty($v->images) ? url($v->images) : '',
             ];
         }
@@ -1253,6 +1254,8 @@ class UnauthenticatedController extends Controller
             $formatedData[] = [
                 'id' => $value->id,
                 'name' => $value->name,
+                'imageOneLink' => !empty($value->imageOneLink) ? $value->imageOneLink : "",
+                'imageTwoLink' => !empty($value->imageTwoLink) ? $value->imageTwoLink : "",
                 'imageOne' => !empty($value->imageOne) ? url($value->imageOne) : '',
                 'imageTwo' => !empty($value->imageTwo) ? url($value->imageTwo) : '',
             ];
@@ -1443,11 +1446,17 @@ class UnauthenticatedController extends Controller
         if ($adsBannder->count() > 0) {
             $image1 = $adsBannder->adsOne ? url($adsBannder->adsOne) : null;
             $image2 = $adsBannder->adsTwo ? url($adsBannder->adsTwo) : null;
+
+            $image1Link = $adsBannder->adsOneLink ? url($adsBannder->adsOneLink) : null;
+            $image2Link = $adsBannder->adsTwoLink ? url($adsBannder->adsTwoLink) : null;
+
             return response()->json(
                 [
                     'status' => 200,
                     'image1' => $image1,
                     'image2' => $image2,
+                    'image1Link' => $image1Link,
+                    'image2Link' => $image2Link,
                 ],
                 200,
             );

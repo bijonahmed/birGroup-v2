@@ -68,7 +68,8 @@
                     <div class="carousel-inner height_100" v-if="sliders.length > 0">
                         <div class="carousel-item height_100" v-for="(item, index) in sliders" :key="item.id"
                             :class="{ active: index === 0 }">
-                            <img class="d-block w-100 height_100" :src="item.images" :alt="'Slide ' + (index + 1)">
+                            <a :href="item.link" target="_blank"><img class="d-block w-100 height_100"
+                                    :src="item.images" alt="Bir Ecommarce"></a>
                         </div>
 
                     </div>
@@ -88,12 +89,16 @@
             <div class="col-lg-3 col-12  d-xl-block d-none">
                 <div class="row" style="height: 49%; object-fit: cover;">
                     <div class="col-12 ">
-                        <img :src="adsData1" class="img-fluid h-100" alt="">
+                        <a :href="image1Link" target="_blank">
+                            <img :src="adsData1" class="img-fluid h-100" alt="">
+                        </a>
                     </div>
                 </div>
                 <div class="row mt-2" style="height: 49%; object-fit: cover;">
                     <div class="col-12 ">
-                        <img :src="adsData2" class="img-fluid h-100" alt="">
+                        <a :href="image2Link" target="_blank">
+                            <img :src="adsData2" class="img-fluid h-100" alt="">
+                        </a>
                     </div>
                 </div>
             </div>
@@ -148,6 +153,8 @@ export default {
             currentIndex: 0,
             adsData1: '',
             adsData2: '',
+            image1Link: '',
+            image2Link: ''
         };
         // Set the initial index
     },
@@ -201,6 +208,9 @@ export default {
             this.$axios.get('/unauthenticate/getAdsbanner').then(response => {
                 this.adsData1 = response.data.image1;
                 this.adsData2 = response.data.image2;
+                this.image1Link = response.data.image1Link;
+                this.image2Link = response.data.image2Link;
+
                 // console.log(response.data.image1);
             }).catch(error => {
                 this.error = error.message;

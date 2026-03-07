@@ -18,6 +18,7 @@ class Sliders extends Authenticatable
   protected $fillable = [
     'images',
     'status',
+    'link'
   ];
   
 

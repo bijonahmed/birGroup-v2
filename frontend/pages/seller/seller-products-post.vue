@@ -851,13 +851,7 @@ export default {
                 $('#formrest')[0].reset();
                 this.success_noti();
                 const product_id = res.data.product_id;
-                this.$router.push({
-                    path: '/seller/products/product-varient',
-                    query: {
-                        parameter: product_id
-                    }
-                })
-                return false;
+                 
                 //this.$router.push('/ecommarce/product-list');
             }).catch(error => {
                 if (error.response.status === 422) {

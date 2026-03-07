@@ -729,6 +729,23 @@ class SettingController extends Controller
             }
         }
     }
+
+    public function updatedealsbannnerLink(Request $request)
+    {
+        $dealsBanner = dealsbanner::first();
+
+        $dealsBanner->update([
+            'imageOneLink' => $request->imageOneLink,
+            'imageTwoLink' => $request->imageTwoLink,
+        ]);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Deals banner links updated successfully.'
+        ], 200);
+    }
+
+
     public function updatedealsbannner(request $request)
     {
         $messages = [
@@ -814,6 +831,8 @@ class SettingController extends Controller
                 'status' => 200,
                 'imageone' => url($dealbanner->imageOne),
                 'imagetwo' => url($dealbanner->imageTwo),
+                'imageOneLink' => $dealbanner->imageOneLink,
+                'imageTwoLink' => $dealbanner->imageTwoLink,
             ], 200);
         } else {
             return response()->json([
@@ -965,6 +984,25 @@ class SettingController extends Controller
 
         $updateCoupon->update($updateData);
     }
+
+
+
+
+    public function updatesliderLeftadsLink(request $request)
+    {
+        $adsBanner = sliderSideAdsModel::first();
+        $adsBanner->update(["adsOneLink" => $request->adsOneLink]);
+        $adsBanner->update(["adsTwoLink" => $request->adsTwoLink]);
+
+        return response()->json([
+            'status' => 202,
+            'message' => "Banner add succesfully"
+        ], 202);
+    }
+
+
+
+
     public function updatesliderLeftads(request $request)
     {
         $messages = [
@@ -1019,6 +1057,8 @@ class SettingController extends Controller
                 // if (!$request->hasFile('ads1') || !$request->ads1) {
                 $adsBanner->update(["adsOne" => $imageName]);
                 $adsBanner->update(["adsTwo" => $imageNameTwo]);
+
+
                 // }
             }
         }
@@ -1066,10 +1106,19 @@ class SettingController extends Controller
         if ($adsBanner->count() > 0) {
             $adsOne = $adsBanner->adsOne ? url($adsBanner->adsOne) : null;
             $adsTwo = $adsBanner->adsTwo ? url($adsBanner->adsTwo) : null;
+
+            $adsOneLink = $adsBanner->adsOneLink ? $adsBanner->adsOneLink : null;
+            $adsTwoLink = $adsBanner->adsTwoLink ? $adsBanner->adsTwoLink : null;
+
+
             return response()->json([
                 'status' => 200,
                 'adsOne' => $adsOne,
-                'adsTwo' => $adsTwo
+                'adsTwo' => $adsTwo,
+                'adsOneLink' => $adsOneLink,
+                'adsTwoLink' => $adsTwoLink,
+
+
             ], 200);
         } else {
             return response()->json([
@@ -1148,7 +1197,8 @@ class SettingController extends Controller
             // return false;
             $slider = Sliders::create([
                 'images' => $imageName,
-                'status' => $request->status, // Assuming status is part of the sliders table
+                'status' => $request->status,
+                'link'   => $request->link,
             ]);
 
             if ($slider) {

@@ -789,13 +789,7 @@ export default {
                 const product_id = res.data.product_id;
                 //alert(product_id);
                 // return false; 
-                this.$router.push({
-                    path: '/seller/products/product-varient',
-                    query: {
-                        parameter: product_id
-                    }
-                })
-                return false;
+               
                 //this.$router.push('/ecommarce/product-list');
             });
         },

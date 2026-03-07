@@ -10,6 +10,8 @@ class sliderSideAdsModel extends Model
     use HasFactory;
     protected $fillable =[
         'adsOne',
-        'adsTwo'
+        'adsTwo',
+        'adsOneLink',
+        'adsTwoLink',
     ];
 }

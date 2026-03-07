@@ -11,6 +11,8 @@ class dealsbanner extends Model
     protected $fillable = [
         'imageOne',
         'imageTwo',
+        'imageOneLink',
+        'imageTwoLink'
     ];
 
 }

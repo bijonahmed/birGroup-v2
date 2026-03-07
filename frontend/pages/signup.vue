@@ -70,8 +70,8 @@
                                     </button>
                                     <div class="social_login">
                                         <div>
-                                            <h6 class="text-center">Back to Home<button type="button"
-                                                    class="signIn"><a href="/">Home</a></button>
+                                            <h6 class="text-center">Back to Home<button type="button" class="signIn"><a
+                                                        href="/">Home</a></button>
                                             </h6>
                                         </div>
                                         <!-- <div class="">
@@ -185,7 +185,7 @@ export default {
             formData.append('name', this.insertdata.name);
             formData.append('email', this.insertdata.email);
             formData.append('password', this.insertdata.password);
-          //  formData.append('invite_code', this.insertdata.invite_code);
+            //  formData.append('invite_code', this.insertdata.invite_code);
             formData.append('password_confirmation', this.insertdata.password_confirmation);
             const headers = {
                 'Content-Type': 'multipart/form-data'
@@ -212,7 +212,8 @@ export default {
                     icon: "success",
                     title: "Signed in successfully"
                 });
-                this.$router.push('/');
+                window.location.href = "/";
+                // this.$router.push('/');
                 /*
                 if (process.client) {
                     this.$router.push({
@@ -228,51 +229,8 @@ export default {
                 }
             });
         },
+
         //customerLogin
-        async customerLogin() {
-            try {
-
-                const postData = {
-                    email: this.login.email,
-                    password: this.login.password,
-                    // Add other parameters as needed
-                };
-                //console.log("==========login email:" +  this.login.email);
-                //console.log("==========login password:" +  this.login.password);
-                //return false; 
-                let {
-                    data
-                } = await this.$axios.post('/auth/login', postData); //await this.login.post('/auth/login');
-                await this.$auth.setUserToken(data.access_token);
-
-
-                if (data.role_id === 3) {
-                    return this.$router.push('/seller/seller-dashboard');
-                } else if (data.role_id === 2) {
-                    return this.$router.push('/user/user-profile');
-                } else {
-                    console.warn('Unsupported role_id:', data.role_id);
-                }
-
-            } catch (err) {
-                console.log(err)
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: "top-end",
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true,
-                    didOpen: (toast) => {
-                        toast.onmouseenter = Swal.stopTimer;
-                        toast.onmouseleave = Swal.resumeTimer;
-                    }
-                });
-                Toast.fire({
-                    icon: "error",
-                    title: "Creadentials dosen't match"
-                });
-            }
-        },
 
     },
 

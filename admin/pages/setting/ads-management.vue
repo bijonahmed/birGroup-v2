@@ -6,7 +6,6 @@
                 <!-- top slider part start here  -->
                 <div class="row">
                     <div class="col-md-8 m-auto">
-
                         <div class="form-group mb-2">
                             <label for="" class="text-dark fs-6">Home page To sliders</label>
                             <span class="text-gray d-block mb-2">For better experience user .gif file</span>
@@ -17,18 +16,34 @@
                                         <img :src="item.images" alt="" class="img-fluid">
                                         <button @click="removeSlider(item.id)"
                                             class="btn btn-danger w-100 mt-1 py-1">Remove</button>
+                                        <span v-if="item.link">
+                                            <a :href="item.link" target="_blank" rel="noopener noreferrer">
+                                                {{ item.link }}
+                                            </a>
+                                        </span>
+                                        <span v-else>
+                                            No link
+                                        </span>
                                         <!-- <nuxt-link :to="`/remove/${item.id}`" class="btn btn-danger w-100 mt-1 py-1">Remove</nuxt-link> -->
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="form_container bg-white p-3">
+                        <div class="form_container p-3" style="background-color: aliceblue;">
                             <form @submit.prevent="saveSliders" id="formrest" class="forms-sample"
                                 enctype="multipart/form-data">
+                                <!-- File Upload -->
                                 <div class="form-group mb-2">
                                     <input type="file" class="form-control" @change="sliderFileUpload" name="image">
                                     <p class="text-gray">Size: 600x400</p>
                                 </div>
+                                <!-- Link Input -->
+                                <div class="form-group mb-2">
+                                    <label for="link" class="text-dark fs-6">Link</label>
+                                    <input type="url" class="form-control" id="link" v-model="sliderdata.link"
+                                        placeholder="Enter link (https://example.com)">
+                                </div>
+                                <!-- Status Select -->
                                 <div class="form-group mb-2">
                                     <label for="status" class="text-dark fs-6">Status</label>
                                     <select v-model="sliderdata.status" id="status" class="form-control">
@@ -36,6 +51,7 @@
                                         <option value="1" selected>Published</option>
                                     </select>
                                 </div>
+                                <!-- Submit Button -->
                                 <div class="form-group mb-2">
                                     <button type="submit" class="btn-success w-100 py-1 border-0">
                                         <i class="bx bx-check-circle mr-1"></i>Submit
@@ -46,7 +62,6 @@
                     </div>
                 </div>
                 <!-- top slider part end here  -->
-
                 <!--top header banner row-->
                 <div class="row">
                     <div class="col-md-8 m-auto">
@@ -91,21 +106,24 @@
                                 <div class="form-group mb-2">
                                     <label for="" class="text-dark fs-3">Slider side ads banner</label>
                                     <span class="text-gray d-block">For better experience use .gif file</span>
-
                                     <div class="row dealsBanner">
                                         <div class="col-md-6">
                                             <img id="adsBanner" :src="adsOne" alt="File Preview" class="img-fluid">
+                                            <input type="text" v-model="adsOneLink" class="form-control w-100"
+                                                @input="onLinkChange('adsOne', adsOneLink)"
+                                                placeholder="Enter link for first ad" />
                                         </div>
                                         <div class="col-md-6">
                                             <img id="adsBanner" :src="adsTwo" alt="File Preview" class="img-fluid">
+                                            <input type="text" v-model="adsTwoLink" class="form-control w-100"
+                                                @input="onLinkChange('adsTwo', adsTwoLink)"
+                                                placeholder="Enter link for second ad" />
                                         </div>
                                     </div>
                                     <!-- input part  -->
                                     <input type="file" class="form-control mb-2" @change="ads1" ref="adsOne">
-
                                     <input type="file" class="form-control" @change="ads2" ref="adsTwo">
                                     <p class="text-warning">Size: 600x370</p>
-
                                 </div>
                                 <div class="form-group mb-2">
                                     <button type="submit" class="btn-success w-100 py-1 border-0">
@@ -117,7 +135,6 @@
                     </div>
                 </div>
                 <!--slider side banner end-->
-
                 <!--top header banner row-->
                 <div class="row">
                     <div class="col-md-8 m-auto">
@@ -127,20 +144,22 @@
                                 <div class="form-group mb-2">
                                     <label for="" class="text-dark fs-3">Deals for you ads banner</label>
                                     <span class="text-gray d-block ">For better experience user .gif file</span>
-
                                     <div class="row dealsBanner">
                                         <div class="col-md-6">
                                             <img id="dealsBanner" :src="dealsImageOne" alt="File Preview"
                                                 class="img-fluid">
+                                            <input type="text" v-model="imageOneLink" class="form-control w-100"
+                                                @input="onLinkChangeDeals('imageOne', imageOneLink)" />
                                         </div>
                                         <div class="col-md-6">
                                             <img id="dealsBanner" :src="dealsImageTwo" alt="File Preview"
                                                 class="img-fluid">
+                                            <input type="text" v-model="imageTwoLink" class="form-control w-100"
+                                                @input="onLinkChangeDeals('imageTwo', imageTwoLink)" />
                                         </div>
                                     </div>
                                     <!-- input part  -->
                                     <input type="file" class="form-control mb-2" @change="dealsImage1" ref="imageOne">
-
                                     <input type="file" class="form-control" @change="dealsImage2" ref="imageTwo">
                                     <p class="text-gray">Size: 572x250</p>
                                 </div>
@@ -159,8 +178,6 @@
         <!--end page wrapper -->
     </div>
 </template>
-
-
 <script>
 export default {
     head: {
@@ -170,17 +187,20 @@ export default {
         return {
             sliderdata: {
                 image: '',
+                link: '',
                 status: '1',
-
             },
             sliders: [],
             bannerImage: '',
             dealsImageOne: null,
             dealsImageTwo: null,
+            imageOneLink: null,
+            imageTwoLink: null,
             previewURL: null,
             adsOne: null,
             adsTwo: null,
-
+            adsOneLink: null,
+            adsTwoLink: null,
             insertdata: {
                 image: null, // To store the selected file
                 status: 'published', // To store the selected status   
@@ -222,6 +242,7 @@ export default {
         saveSliders() {
             const formData = new FormData();
             formData.append('image', this.sliderdata.image);
+            formData.append('link', this.sliderdata.link);
             formData.append('status', this.sliderdata.status);
             this.$axios.post('/setting/addslidersImages', formData)
                 .then(response => {
@@ -234,7 +255,6 @@ export default {
                         msg: 'Your data has been successfully updated.'
                     });
                 });
-
         },
         async slidersImg() {
             console.log("slider images...");
@@ -334,10 +354,13 @@ export default {
                     this.error = error.message;
                     console.error('Error fetching Top header banner data:', error);
                 });
-
             this.$axios.get('/setting/getdealsbanner').then(response => {
                 this.dealsImageOne = response.data.imageone;
                 this.dealsImageTwo = response.data.imagetwo;
+
+                this.imageOneLink = response.data.imageOneLink;
+                this.imageTwoLink = response.data.imageTwoLink;
+
             })
                 .catch(error => {
                     this.error = error.message;
@@ -347,6 +370,8 @@ export default {
             this.$axios.get('/setting/getadsbannerreq').then(response => {
                 this.adsOne = response.data.adsOne;
                 this.adsTwo = response.data.adsTwo;
+                this.adsOneLink = response.data.adsOneLink;
+                this.adsTwoLink = response.data.adsTwoLink;
                 // console.log(response.data.adsOne);
             })
                 .catch(error => {
@@ -354,14 +379,95 @@ export default {
                     console.error('Error fetching Deals banner data:', error);
                 });
         },
+
+        onLinkChangeDeals(adKey, linkValue) {
+            console.log(`Link changed for ${adKey}: ${linkValue}`);
+            // Prepare FormData to send current links to backend
+            const formData = new FormData();
+            // Append current links dynamically
+            formData.append('imageOneLink', this.imageOneLink || '');
+            formData.append('imageTwoLink', this.imageTwoLink || '');
+            console.log("Checked " + formData);
+            // return false; 
+            // Make POST request
+            this.$axios
+                .post('/setting/updatedealsbannnerLink', formData)
+                .then((response) => {
+                    Lobibox.notify('success', {
+                        pauseDelayOnHover: true,
+                        continueDelayOnInactiveTab: false,
+                        position: 'top right',
+                        icon: 'bx bx-check-circle',
+                        msg: 'Your data has been successfully updated.',
+                    });
+                })
+                .catch((error) => {
+                    console.error('Error saving data:', error);
+                    let errorMsg = 'An error occurred while saving data.';
+                    // Check for server response error message
+                    if (error.response?.data?.errors?.image) {
+                        errorMsg = error.response.data.errors.image;
+                    } else if (error.response?.data?.message) {
+                        errorMsg = error.response.data.message;
+                    }
+                    Lobibox.notify('error', {
+                        pauseDelayOnHover: true,
+                        continueDelayOnInactiveTab: false,
+                        position: 'top right',
+                        icon: 'bx bx-error-circle',
+                        msg: errorMsg,
+                    });
+                });
+        },
+
+        onLinkChange(adKey, linkValue) {
+            console.log(`Link changed for ${adKey}: ${linkValue}`);
+            // Prepare FormData to send current links to backend
+            const formData = new FormData();
+            // Append current links dynamically
+            formData.append('adsOneLink', this.adsOneLink || '');
+            formData.append('adsTwoLink', this.adsTwoLink || '');
+            console.log("Checked " + formData);
+            // return false; 
+            // Make POST request
+            this.$axios
+                .post('/setting/updatesliderLeftadsLink', formData)
+                .then((response) => {
+                    Lobibox.notify('success', {
+                        pauseDelayOnHover: true,
+                        continueDelayOnInactiveTab: false,
+                        position: 'top right',
+                        icon: 'bx bx-check-circle',
+                        msg: 'Your data has been successfully updated.',
+                    });
+                })
+                .catch((error) => {
+                    console.error('Error saving data:', error);
+                    let errorMsg = 'An error occurred while saving data.';
+                    // Check for server response error message
+                    if (error.response?.data?.errors?.image) {
+                        errorMsg = error.response.data.errors.image;
+                    } else if (error.response?.data?.message) {
+                        errorMsg = error.response.data.message;
+                    }
+                    Lobibox.notify('error', {
+                        pauseDelayOnHover: true,
+                        continueDelayOnInactiveTab: false,
+                        position: 'top right',
+                        icon: 'bx bx-error-circle',
+                        msg: errorMsg,
+                    });
+                });
+        },
+
+
+
         saveData() {
             const formData = new FormData();
             formData.append('image', this.insertdata.image);
             formData.append('status', this.insertdata.status);
-
             this.$axios.post('/setting/bannerTop', formData)
                 .then(response => {
-
                     this.previewURL = response.data.images;
                     Lobibox.notify('success', {
                         pauseDelayOnHover: true,
@@ -407,7 +513,6 @@ export default {
             formData.append('imageOne', this.$refs.imageOne.files[0]);
             formData.append('imageTwo', this.$refs.imageTwo.files[0]);
             // console.log(formData);
-
             // Make a POST request to your API endpoint
             this.$axios.post('/setting/dealsbannner', formData)
                 .then(response => {
@@ -457,7 +562,6 @@ export default {
                         });
                     }
                 });
-
         },
         updateads() {
             const formData = new FormData();
@@ -518,7 +622,6 @@ export default {
     }
 };
 </script>
-
 <style>
 .slider_img_box {
     margin-bottom: 10px;
