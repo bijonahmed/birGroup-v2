@@ -1567,22 +1567,29 @@ class UnauthenticatedController extends Controller
     }
     public function checkAttribueDetails(Request $request)
     {
+
+        // dd($request->all());
+
         try {
-            $data['attribute'] = ProductVarrientHistory::where('color', $request->color)
-                ->where('product_id', $request->product_id)
+
+            $ckhProduct  = Product::where('slug', $request->slug)->first();
+            $product_id  = !empty($ckhProduct) ? $ckhProduct->id : "";
+
+            $data['attribute'] = ProductVarrientHistory::where('product_id', $product_id)
                 ->get();
             $variantData = $data['attribute'];
             $formatedData = [];
             foreach ($variantData as $Key => $value) {
                 $formatedData[] = [
-                    'id' => $value->id,
-                    'color' => $value->color,
-                    'size' => $value->size,
-                    'sku' => $value->sku,
-                    'qty' => $value->qty,
-                    'rprice' => number_format($value->price, 2),
-                    'price' => $value->price,
-                    'image' => !empty($value->image) ? url($value->image) : '',
+                    'id'        => $value->id,
+                    'color'     => $value->color,
+                    'size'      => $value->size,
+                    'name'      => $value->name,
+                    'sku'       => $value->sku,
+                    'qty'       => $value->qty,
+                    'rprice'    => number_format($value->price, 2),
+                    'price'     => $value->price,
+                    'image'     => !empty($value->image) ? url($value->image) : '',
                     'product_id' => $value->product_id,
                 ];
             }
@@ -1595,26 +1602,19 @@ class UnauthenticatedController extends Controller
     public function search(Request $request)
     {
         $searchTerm = $request->input('term');
-        $categoryResults = Categorys::where('name', 'like', '%' . $searchTerm . '%')
-            ->take(20) // Limit the number of category results to 10
-            ->pluck('name', 'slug')
-            ->map(function ($name, $slug) {
-                return ['label' => Str::limit($name, 100), 'catslug' => $slug, 'type' => 'category'];
+
+        $productResults = Product::where('name', 'like', '%' . $searchTerm . '%')
+            ->limit(20)
+            ->get(['name', 'slug'])
+            ->map(function ($product) {
+                return [
+                    'label' => Str::limit($product->name, 80),
+                    'slug'  => $product->slug,
+                    'type'  => 'product'
+                ];
             });
 
-        $productResults = Product::join('produc_categories', 'product.id', '=', 'produc_categories.product_id')
-            ->join('categorys', 'produc_categories.category_id', '=', 'categorys.id')
-            ->where('product.name', 'like', '%' . $searchTerm . '%')
-            ->orWhere('categorys.name', 'like', '%' . $searchTerm . '%')
-            ->take(20) // Limit the number of product results to 10
-            ->pluck('product.name', 'product.slug')
-            ->map(function ($name, $slug) {
-                return ['label' => Str::limit($name, 80), 'slug' => $slug, 'type' => 'product'];
-            });
-        // Merge and limit the results
-        $mergedResults = $categoryResults->concat($productResults)->take(10);
-
-        return response()->json($mergedResults);
+        return response()->json($productResults);
     }
     //blogCat
     public function blogCat()

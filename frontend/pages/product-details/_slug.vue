@@ -118,6 +118,7 @@
                                             <p v-if="pro_row.stock_status == 1 && pro_row.stock_qty >= 1">In stock</p>
                                             <p v-else-if="pro_row.stock_status == 2 && pro_row.stock_qty >= 1">in stock
                                             </p>
+
                                             <p v-else-if="pro_row.stock_status == 3">Out of stock</p>
                                             <p v-else-if="pro_row.stock_status == 4">Preorder</p>
                                             <p v-else-if="pro_row.stock_qty == 0">Out Of stock</p>
@@ -138,39 +139,24 @@
                                                 </h6>
                                             </div> -->
                                             <div class="d-flex align-items-end mb-2">
-                                                <div class="size_attr"
-                                                    v-if="colorGroup !== null && colorGroup.length > 0">
-                                                    <label for="">Color:</label>
-                                                    <select v-model="color" class="form-control w-100"
-                                                        @change="showAttrVal()">
-                                                        <option disabled value="" selected>Select</option>
-                                                        <option v-for="(item, index) in colorGroup" :key="index"
-                                                            :value="item.color" :selected="item.selected">
-                                                            {{ item.color }}
-                                                        </option>
-                                                    </select>
-                                                </div>
-                                                <!-- {{ attibute }} -->
+
+                                                <!-- {{ varientList }} -->
                                                 <!-- ===================================  -->
-                                                <div class="size_attr"
-                                                    v-if="colorGroup !== null && colorGroup.length > 0">
-                                                    <label for="">Size:</label>
-                                                    <select v-model="size" required class="form-control">
-                                                        <option disabled value="" selected>Select</option>
+                                                <div class="size_attr mt-2 border-redish" v-if="varientList.length > 0">
+                                                    <label>Attribue:</label>
+
+                                                    <select v-model="size" required class="form-control"
+                                                        style=" width: 200px;">
+                                                        <option disabled value="">Select</option>
+
                                                         <option v-for="(varient, index) in varientList" :key="index"
-                                                            @click="handleButtonClick(varient)" :value="varient.size">
-                                                            {{ varient.size }}</option>
+                                                            @click="handleButtonClick(varient)" :value="varient.name">
+                                                            {{ varient.name }}
+                                                        </option>
+
                                                     </select>
                                                 </div>
-                                                <div class="size_attr" v-if="warranty.length > 0">
-                                                    <label for="">Warranty:</label>
-                                                    <select v-model="warranty_id" required class="form-control">
-                                                        <option disabled value="" selected>Select</option>
-                                                        <option v-for="(warranty, index) in warranty" :key="index"
-                                                            @click="updateWarranty(warranty)" :value="warranty.id">
-                                                            {{ warranty.warranty_name }}</option>
-                                                    </select>
-                                                </div>
+
 
                                                 <!-- ==============================  -->
                                             </div>
@@ -485,6 +471,7 @@ export default {
         this.updateDateTime();
         this.getTotal();
         this.scrollToTop();
+        this.showAttrVal();
 
     },
     computed: {
@@ -641,21 +628,22 @@ export default {
             // console.log('Button clicked for price:', varient.price);
             // console.log('Button clicked for image:', varient.image);
         },
+
         showAttrVal() {
+            //   console.log("Test...................");
             this.varientList = [];
             // console.log("value:" + this.color +"===="+ this.pro_Id);
-            const color = this.color;
-            let product_id = this.pro_Id;
+            let slug = this.$route.params.slug;
+            this.$axios
+                .get(`/unauthenticate/checkAttribueDetails?slug=${slug}`)
+                .then((response) => {
+                    this.varientList = response.data;
 
-            this.$axios.get(`/unauthenticate/checkAttribueDetails`, {
-                params: {
-                    product_id: product_id,
-                    color: color
-                }
-            }).then(response => {
-                this.varientList = response.data;
-                // console.log(response.data);
-            });
+                    console.log("Response Data:", response.data);
+                })
+                .catch((error) => {
+                    console.error("API Error:", error);
+                });
 
 
         },
@@ -829,7 +817,20 @@ export default {
                         productToAdd.warranty_name = warranty_name ? warranty_name : '';
                     }
 
-                    if (this.color == '' || this.size == '') {
+
+                    productToAdd.color = this.color;
+                    productToAdd.size = this.size;
+
+                    const existingItem = this.cart.find((item) => item.product.id === productId);
+
+                    if (existingItem) {
+                        existingItem.quantity += this.updatedQuantity;
+                    } else {
+                        this.cart.push({
+                            product: productToAdd,
+                            quantity: this.updatedQuantity,
+                        });
+
                         const Toast = Swal.mixin({
                             toast: true,
                             position: "top-end",
@@ -842,44 +843,14 @@ export default {
                             }
                         });
                         Toast.fire({
-                            icon: "error",
-                            title: "Please select an attribute"
+                            icon: "success",
+                            title: "Product successfully Added to cart"
                         });
-                    } else {
-                        productToAdd.color = this.color;
-                        productToAdd.size = this.size;
-
-                        const existingItem = this.cart.find((item) => item.product.id === productId);
-
-                        if (existingItem) {
-                            existingItem.quantity += this.updatedQuantity;
-                        } else {
-                            this.cart.push({
-                                product: productToAdd,
-                                quantity: this.updatedQuantity,
-                            });
-
-                            const Toast = Swal.mixin({
-                                toast: true,
-                                position: "top-end",
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
-                                didOpen: (toast) => {
-                                    toast.onmouseenter = Swal.stopTimer;
-                                    toast.onmouseleave = Swal.resumeTimer;
-                                }
-                            });
-                            Toast.fire({
-                                icon: "success",
-                                title: "Product successfully Added to cart"
-                            });
-                        }
-
-                        this.saveCart();
-                        this.cartItemCount();
-                        console.log('Item added to cart successfully.');
                     }
+
+                    this.saveCart();
+                    this.cartItemCount();
+                    console.log('Item added to cart successfully.');
 
 
                 } catch (error) {
@@ -1126,7 +1097,7 @@ export default {
 .zoom-container {
     position: relative;
     /* IMPORTANT */
-        border: 3px solid var(--color_Primary);
+    border: 3px solid var(--color_Primary);
     overflow: hidden;
 }
 
@@ -1192,5 +1163,13 @@ export default {
     display: flex;
     flex-direction: column;
     gap: 5px;
+}
+
+.border-redish {
+    border: 2px solid #f87171;
+    background: #fff5f5;
+    padding: 10px;
+    border-radius: 6px;
+
 }
 </style>

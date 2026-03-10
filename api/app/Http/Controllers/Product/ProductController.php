@@ -279,30 +279,20 @@ class ProductController extends Controller
     {
         $product_id         = $request->product_id;
         $arrData            = ProductVarrientHistory::where('product_id', $product_id)->get();
-        $groupData          = ProductVarrientHistory::where('product_id', $product_id)->select('id', 'color')->groupBy('color')->get();
         $formatedData = [];
         foreach ($arrData as $Key => $value) {
             $formatedData[] = [
                 'id'               => $value->id,
-                'color'            => $value->color,
-                'size'             => $value->size,
-                'sku'              => $value->sku,
+                'name'             => $value->name,
                 'qty'              => $value->qty,
                 'price'            => $value->price,
                 'image'            => !empty($value->image) ? url($value->image) : "",
                 'product_id'       => $value->product_id,
             ];
         }
-        $gdata = [];
-        foreach ($groupData as $Key => $value) {
-            $gdata[] = [
-                'id'               => $value->id,
-                'color'            => $value->color,
-            ];
-        }
 
         $pdata['varient']    = $formatedData;
-        $pdata['colorGroup'] = $gdata;
+        //   $pdata['colorGroup'] = $gdata;
         return response()->json($pdata);
     }
 
@@ -594,6 +584,36 @@ class ProductController extends Controller
 
     public function insertVarient(Request $request)
     {
+
+        //dd($request->all());
+        $names      = $request->name;
+        $qtys       = $request->qty;
+        $prices     = $request->price;
+        $product_id = $request->product_id;
+
+        // Step 1: Delete all existing variants of this product
+        ProductVarrientHistory::where('product_id', $product_id)->delete();
+
+        // Step 2: Insert new variants
+        foreach ($names as $key => $name) {
+
+            ProductVarrientHistory::create([
+                'product_id' => $product_id,
+                'name'       => $name,
+                'qty'        => $qtys[$key],
+                'price'      => $prices[$key],
+            ]);
+        }
+
+        return response()->json([
+            'status'  => 200,
+            'message' => 'Variant updated successfully'
+        ]);
+
+
+
+        exit;
+
         $validator = Validator::make($request->all(), [
             'id' => 'required|array',
             'id.*' => 'required',

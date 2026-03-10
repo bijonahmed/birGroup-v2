@@ -29,11 +29,11 @@
                                     <div class="card">
 
                                         <table class="table table-bordered w-100">
-                                            <tr>
+                                            <!-- <tr>
                                                 <td width="21%">Seller Name</td>
                                                 <td width="1%"><strong>:</strong></td>
                                                 <td width="78%">{{ seller_name }}</td>
-                                            </tr>
+                                            </tr> -->
                                             <tr>
                                                 <td width="21%">Product Name</td>
                                                 <td width="1%"><strong>:</strong></td>
@@ -252,42 +252,6 @@
                                 <hr />
                                 <!-- start demo -->
 
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        Color:
-                                        <select v-model="color" class="form-control w-100" @change="showAttrVal()">
-                                            <option disabled value="" selected>Select</option>
-                                            <option v-for="(item, index) in colorGroup" :key="index" :value="item.color"
-                                                :selected="item.selected">
-                                                {{ item.color }}
-                                            </option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4">Size:
-
-                                        <button v-for="(varient, index) in varientList" :key="index"
-                                            @click="handleButtonClick(varient)">
-                                            {{ varient.size }}
-                                        </button>
-
-                                    </div>
-                                    <div class="col-md-4">
-                                        Show<br />
-                                        ID: {{ varientData.id }}<br />
-                                        color: {{ varientData.color }}<br />
-                                        Size: {{ varientData.size }}<br />
-                                        sku: {{ varientData.sku }}<br />
-                                        qty: {{ varientData.qty }}<br />
-                                        price: {{ varientData.price }}<br />
-                                        price: {{ varientData.image }}<br />
-
-                                    </div>
-
-
-
-                                </div>
-
-
                                 <!-- END demo -->
                                 <hr />
                                 <div class="row" v-if="historVarient.length > 0">
@@ -299,13 +263,11 @@
                                         <thead>
                                             <tr>
                                                 <th scope="col">#</th>
-                                                <th scope="col">Color</th>
-                                                <th scope="col">Size</th>
-                                                <th scope="col">SKU</th>
+                                                <th scope="col">Name</th>
                                                 <th scope="col">Qty</th>
                                                 <th scope="col">Price</th>
-                                                <th scope="col">Images</th>
-                                                <th scope="col">Action</th>
+                                                <!-- <th scope="col">Images</th> -->
+                                                <!-- <th scope="col">Action</th> -->
 
 
                                             </tr>
@@ -314,19 +276,17 @@
                                             <!-- {{ historVarient }} -->
                                             <tr v-for="(data, index) in historVarient" :key="data.id">
                                                 <th scope="row">{{ index + 1 }}.</th>
-                                                <td>{{ data.color }}</td>
-                                                <td>{{ data.size }}</td>
-                                                <td>{{ data.sku }}</td>
+                                                <td>{{ data.name }}</td>
                                                 <td>{{ data.qty }}</td>
-                                                <td>{{ data.price }}</td>
-                                                <td><img :src="data.image" alt="N/A" style="height: 50px; width: 60px;"
+                                                <td>BDT: {{ data.price }}</td>
+                                                <!-- <td><img :src="data.image" alt="N/A" style="height: 50px; width: 60px;"
                                                         class="img-fluid max-width-100 img-thumbnail" />
-                                                </td>
-                                                <td>
+                                                </td> -->
+                                                <td class="d-none">
                                                     <nuxt-link
                                                         :to='`/ecommarce/product-varient?parameter=${data.product_id}`'
                                                         type="button" class="btn btn-warning">EDIT</nuxt-link>
-                                                    <!-- <button @click="deleteAttributeValue(key)" type="button">DEL</button> -->
+                                                    
                                                 </td>
                                             </tr>
                                         </tbody>

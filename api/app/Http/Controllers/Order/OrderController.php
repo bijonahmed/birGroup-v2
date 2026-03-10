@@ -307,14 +307,21 @@ class OrderController extends Controller
 
 
         $devlDate = OrderHistory::join('product', 'product.id', '=', 'order_history.product_id')
-        ->select('product.delivery_days','product.name as product_name', 'product.thumnail_img', 'product.discount_status', 'product.discount', 'product.vat_status', 'product.vat', 'order_history.*')
-        ->where('order_id', $findorder->id)->first();
+            ->select('product.delivery_days', 'product.name as product_name', 'product.thumnail_img', 'product.discount_status', 'product.discount', 'product.vat_status', 'product.vat', 'order_history.*')
+            ->where('order_id', $findorder->id)->first();
         $delivery_days =  (!empty($devlDate) && isset($devlDate->delivery_days)) ? $devlDate->delivery_days : "";
         $order['devliveryDate'] = $delivery_days;
 
         $findCustomer = User::where('id', $findorder->customer_id)->first();
+
+        //   dd($findorder->customer_id);
+
+
+
+
         $order['customername']  = !empty($findCustomer->name) ? $findCustomer->name : "";
         $order['customeremail'] = !empty($findCustomer->email) ? $findCustomer->email : "";
+        $order['customerphone'] = !empty($findCustomer->phone_number) ? $findCustomer->phone_number : "";
         $order['orderdata']     = $orders;
         $order['orderrow']      = !empty($findorder->orderstatus) ? $findorder->orderstatus : "";
         $order['order_status']  = !empty($findorder->order_status) ? $findorder->order_status : "";
@@ -349,16 +356,19 @@ class OrderController extends Controller
         // return false;
 
         $data['orders'] = Order::join('order_status', 'orders.order_status', '=', 'order_status.id')
-            ->select('orders.*', 'order_status.name', 
-            'order_history.id as order_history_id', 
-            'order_history.product_id as order_history_product_id', 
-            'order_history.seller_id as order_history_seller_id', 
-            'order_history.quantity as order_history_quantity', 
-            'order_history.price as order_history_price', 
-            'order_history.total as order_history_total', 
-            'order_history.quantity as qty', 'product.name as product_name', 
-            'product.slug as product_slug', 
-            'product.thumnail_img as thumbnail_img'
+            ->select(
+                'orders.*',
+                'order_status.name',
+                'order_history.id as order_history_id',
+                'order_history.product_id as order_history_product_id',
+                'order_history.seller_id as order_history_seller_id',
+                'order_history.quantity as order_history_quantity',
+                'order_history.price as order_history_price',
+                'order_history.total as order_history_total',
+                'order_history.quantity as qty',
+                'product.name as product_name',
+                'product.slug as product_slug',
+                'product.thumnail_img as thumbnail_img'
             )
             ->Leftjoin('order_history', 'order_history.order_id', '=', 'orders.id')
             ->Leftjoin('product', 'product.id', '=', 'order_history.product_id') // Join with product table
@@ -392,20 +402,30 @@ class OrderController extends Controller
     public function allOrdersAdmin()
     {
 
-        $data['orders']  = Order::join('order_status', 'orders.order_status', '=', 'order_status.id')
+        $data['orders'] = Order::join('order_status', 'orders.order_status', '=', 'order_status.id')
             ->select('orders.*', 'order_status.name')
-            ->get(); //Order::where('customer_id', $this->userid)->get();
+            ->get();
+
+        $orders = [];
+
         foreach ($data['orders'] as $v) {
+
+            $productNames = OrderHistory::where('order_id', $v->id)
+                ->leftJoin('product', 'product.id', '=', 'order_history.product_id')
+                ->pluck('product.name')
+                ->implode(', '); // combine names
+
             $orders[] = [
-                'id'           => $v->id,
-                'name'         => $v->name,
-                'orderId'      => $v->orderId,
-                'placeOn' => date('d M Y', strtotime($v->created_at)),
-                'total'        => number_format($v->total, 2),
+                'id'          => $v->id,
+                'name'        => $v->name,
+                'productName' => $productNames,
+                'orderId'     => $v->orderId,
+                'placeOn'     => date('d M Y', strtotime($v->created_at)),
+                'total'       => number_format($v->total, 2),
             ];
         }
 
-        $order['orderdata']      = $orders;
+        $order['orderdata'] = $orders;
 
         return response()->json($order, 200);
     }
@@ -492,7 +512,7 @@ class OrderController extends Controller
         $order->save();
 
         $lastOrderId = $order->id;
-        
+
         $formattedItems = [];
         foreach ($cartData as $item) {
             $formattedItem = [
@@ -517,7 +537,7 @@ class OrderController extends Controller
                     'product_id'    => $item->product->id,
                     'order_id'      => $order->orderId,
                 ]);
-            } 
+            }
 
             $formattedItems[] = $formattedItem;
             ordersProduct::create($formattedItem);

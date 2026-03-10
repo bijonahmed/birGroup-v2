@@ -16,9 +16,7 @@ class ProductVarrientHistory extends Authenticatable
   protected $fillable = [
     'id',
     'product_id',
-    'color',
-    'size',
-    'sku',
+    'name',
     'qty',
     'price',
     'image'

@@ -32,7 +32,8 @@
 
                                         <div class="col">
                                             <h4>Orders Details(Order id: {{ orderid }}) </h4>
-                                            Customer Name: {{ customername }}, Customer Email: {{ customeremail }}
+                                            <b>Name:</b> {{ customername }}, <b> Phone:</b> {{ customerphone }},
+                                            <b>Email:</b> {{ customeremail }}
                                         </div>
 
                                         <div class="col">
@@ -134,8 +135,8 @@
                                     <form id="trackingForm" @submit.prevent="adddTrackingStatus()">
                                         <div class="mb-3">
                                             <label for="orderId" hidden class="form-label">Order ID</label>
-                                            <input type="text" disabled class="form-control" v-model="orderid" name="orderId"
-                                                required>
+                                            <input type="text" disabled class="form-control" v-model="orderid"
+                                                name="orderId" required>
                                         </div>
                                         <!-- <div class="mb-3 d-none">
                                             <label for="eventDescription" class="form-label">Event Description</label>
@@ -145,27 +146,39 @@
                                         <div class="mb-3">
                                             <label for="eventStatus" class="form-label">Event Status</label>
                                             <div class="form-group">
-                                                <input type="checkbox" v-model="trackStatus.packed" :checked="trackStatus.packed==1" id="packed">
+                                                <input type="checkbox" v-model="trackStatus.packed"
+                                                    :checked="trackStatus.packed == 1" id="packed">
                                                 <label for="packed">Packed</label>
                                             </div>
                                             <div class="form-group">
-                                                <input type="checkbox" v-model="trackStatus.dispatched" :checked="trackStatus.dispatched==1" id="Dispatched">
+                                                <input type="checkbox" v-model="trackStatus.dispatched"
+                                                    :checked="trackStatus.dispatched == 1" id="Dispatched">
                                                 <label for="Dispatched">Dispatched</label>
                                             </div>
                                             <div class="form-group">
-                                                <input type="checkbox"  v-model="trackStatus.outForDelivery" :checked="trackStatus.outForDelivery==1"  id="Out">
+                                                <input type="checkbox" v-model="trackStatus.outForDelivery"
+                                                    :checked="trackStatus.outForDelivery == 1" id="Out">
                                                 <label for="Out">Out for delivery</label>
                                             </div>
                                             <div class="form-group">
-                                                <input type="checkbox"  :disabled="trackStatus.returned == 1  || trackStatus.canceled ==1" v-model="trackStatus.deliverd"  :checked="trackStatus.deliverd==1"  id="Delivered">
+                                                <input type="checkbox"
+                                                    :disabled="trackStatus.returned == 1 || trackStatus.canceled == 1"
+                                                    v-model="trackStatus.deliverd" :checked="trackStatus.deliverd == 1"
+                                                    id="Delivered">
                                                 <label for="Delivered">Delivered</label>
                                             </div>
                                             <div class="form-group">
-                                                <input type="checkbox" :disabled="trackStatus.deliverd == 1  || trackStatus.returned ==1" v-model="trackStatus.canceled" :checked="trackStatus.canceled==1"  id="Canceled">
+                                                <input type="checkbox"
+                                                    :disabled="trackStatus.deliverd == 1 || trackStatus.returned == 1"
+                                                    v-model="trackStatus.canceled" :checked="trackStatus.canceled == 1"
+                                                    id="Canceled">
                                                 <label for="Canceled">Canceled</label>
                                             </div>
                                             <div class="form-group">
-                                                <input type="checkbox" :disabled="trackStatus.deliverd == 1 || trackStatus.canceled ==1" v-model="trackStatus.returned" :checked="trackStatus.returned==1"  id="Return">
+                                                <input type="checkbox"
+                                                    :disabled="trackStatus.deliverd == 1 || trackStatus.canceled == 1"
+                                                    v-model="trackStatus.returned" :checked="trackStatus.returned == 1"
+                                                    id="Return">
                                                 <label for="Return">Return</label>
                                             </div>
                                         </div>
@@ -185,17 +198,18 @@
                                                 <span class="order-track-text-sub">{{ orderDate }}</span>
                                             </div>
                                         </div>
-                                        <div class="order-track-step"  :class="{ active: trackStatus.packed == 1 }">
+                                        <div class="order-track-step" :class="{ active: trackStatus.packed == 1 }">
                                             <div class="order-track-status">
                                                 <span class="order-track-status-dot"></span>
                                                 <span class="order-track-status-line"></span>
                                             </div>
                                             <div class="order-track-text">
                                                 <p class="order-track-text-stat">Packed</p>
-                                                <span class="order-track-text-sub">Your order items packed and ready for delivery.</span>
+                                                <span class="order-track-text-sub">Your order items packed and ready for
+                                                    delivery.</span>
                                             </div>
                                         </div>
-                                        <div class="order-track-step"  :class="{ active: trackStatus.dispatched == 1 }">
+                                        <div class="order-track-step" :class="{ active: trackStatus.dispatched == 1 }">
                                             <div class="order-track-status">
                                                 <span class="order-track-status-dot"></span>
                                                 <span class="order-track-status-line"></span>
@@ -207,17 +221,21 @@
                                                     final hub.</span>
                                             </div>
                                         </div>
-                                        <div class="order-track-step" :class="{ active: trackStatus.outForDelivery == 1 }">
+                                        <div class="order-track-step"
+                                            :class="{ active: trackStatus.outForDelivery == 1 }">
                                             <div class="order-track-status">
                                                 <span class="order-track-status-dot"></span>
                                                 <span class="order-track-status-line"></span>
                                             </div>
                                             <div class="order-track-text">
                                                 <p class="order-track-text-stat">Out for delivery</p>
-                                                <span class="order-track-text-sub">Your order is ready for delivery</span>
+                                                <span class="order-track-text-sub">Your order is ready for
+                                                    delivery</span>
                                             </div>
                                         </div>
-                                        <div class="order-track-step " v-if="trackStatus.canceled == 0 || trackStatus.canceled == '' " :class="{ active: trackStatus.deliverd == 1 }">
+                                        <div class="order-track-step "
+                                            v-if="trackStatus.canceled == 0 || trackStatus.canceled == ''"
+                                            :class="{ active: trackStatus.deliverd == 1 }">
                                             <div class="order-track-status">
                                                 <span class="order-track-status-dot"></span>
                                                 <span class="order-track-status-line"></span>
@@ -226,7 +244,7 @@
                                                 <p class="order-track-text-stat">Order Delivered</p>
                                                 <span class="order-track-text-sub">Your order has been delivered.</span>
                                             </div>
-                                        </div>  
+                                        </div>
                                         <div class="order-track-step " v-if="trackStatus.canceled == 1">
                                             <div class="order-track-status">
                                                 <span class="order-track-status-dot bg-danger"></span>
@@ -270,6 +288,7 @@ export default {
             orderid: '',
             customername: '',
             customeremail: '',
+            customerphone: '',
             insertdata: {
                 orderId: this.$route.query.orderId,
                 orderstatus: '',
@@ -283,7 +302,7 @@ export default {
             notifmsg: '',
             errors: {},
             orderDate: '',
-            trackStatus:{
+            trackStatus: {
                 packed: '',
                 dispatched: '',
                 outForDelivery: '',
@@ -326,7 +345,7 @@ export default {
             formData.append('deliverd', this.trackStatus.deliverd);
             formData.append('canceled', this.trackStatus.canceled);
             formData.append('returned', this.trackStatus.returned);
-            
+
 
             formData.append('order_id', this.orderid);
             // formData.append('status', this.tracking.status);
@@ -444,10 +463,11 @@ export default {
                 this.orderstatus = response.data.orderrow;
                 this.customername = response.data.customername;
                 this.customeremail = response.data.customeremail;
+                this.customerphone = response.data.customerphone;
                 this.order_status = response.data.OrderStatus;
                 this.orderDate = response.data.create_at;
                 this.insertdata.orderstatus = response.data.orderstatus_id;
-                
+
                 this.trackStatus.packed = response.data.packed_status;
                 this.trackStatus.dispatched = response.data.dispatched_status;
                 this.trackStatus.outForDelivery = response.data.outForDelivery_status;
