@@ -67,7 +67,7 @@
                         <table class="table table-hover table-sm">
                             <thead>
                                 <tr>
-                                    <th>Role</th>
+                                    <th class="d-none">Role</th>
                                     <th>UserID</th>
                                     <th>Name</th>
                                     <th>Email</th>
@@ -79,7 +79,7 @@
                             </thead>
                             <tbody>
                                 <tr v-for="item in paginatedData" :key="item.id">
-                                    <td>{{ item.rulename }}</td>
+                                    <td class="d-none">{{ item.rulename }}</td>
                                     <td>{{ item.id }}</td>
                                     <td>{{ item.name }}</td>
                                     <td>{{ item.email }}</td>

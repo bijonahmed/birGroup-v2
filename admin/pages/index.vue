@@ -9,7 +9,7 @@
                             <Nuxt-link to="/ecommarce/product-list" class="text-decoration-none">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center text-white">
-                                        <p class="mb-0">Products</p>
+                                        <p class="mb-0">Products ({{ allproducts }})</p>
                                         <i class="bx bx-envelope fs-3 ms-auto"></i>
                                     </div>
                                 </div>
@@ -21,7 +21,7 @@
                             <Nuxt-link to="/orders/order-list" class="text-decoration-none">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center text-white">
-                                        <p class="mb-0">All Orders</p>
+                                        <p class="mb-0">Today Orders ({{ todayOrders }})</p>
                                         <i class="bx bx-envelope fs-3 ms-auto"></i>
                                     </div>
                                 </div>
@@ -93,10 +93,13 @@ export default {
             userData: {
                 role_id: '',
             },
+            todayOrders:0,
+            allproducts:0,
         }
     },
     mounted() {
         this.defaultLoadingData();
+        this.todayOrdersData();
     },
     computed: {
 
@@ -108,11 +111,18 @@ export default {
         }
     },
     methods: {
-
         defaultLoadingData() {
             this.$axios.get('/auth/showProfileData').then(response => {
                 console.log(response.data.data.role_id)
                 this.userData.role_id = response.data.data.role_id;
+
+            });
+        },
+         todayOrdersData() {
+            this.$axios.get('/order/checkOrders').then(response => {
+            
+                this.todayOrders = response.data.orders;
+                this.allproducts = response.data.products;
 
             });
         },

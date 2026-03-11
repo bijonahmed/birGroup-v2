@@ -18,6 +18,7 @@ use App\Models\couponUseHistory;
 use App\Models\ordersProduct;
 use App\Models\productwarrantyhistory;
 use App\Models\trackingModel;
+use Carbon\Carbon;
 use App\Models\WishList;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator as FacadesValidator;
@@ -343,6 +344,64 @@ class OrderController extends Controller
 
         return response()->json($order, 200);
     }
+
+
+
+    public function checkOrders()
+    {
+
+        $orders = Order::whereDate('created_at', Carbon::today())->count();
+        $data['orders']     = $orders;
+        $data['products']   = Product::where('status', 1)->count();
+        return response()->json($data, 200);
+    }
+    public function orderFilterReport(Request $request)
+    {
+
+        $query = Order::query();
+
+        // date filter
+        if ($request->fromDate && $request->toDate) {
+
+            $query->whereBetween('orders.created_at', [
+                $request->fromDate . ' 00:00:00',
+                $request->toDate . ' 23:59:59'
+            ]);
+        } else {
+
+            // default today filter
+            $query->whereDate('orders.created_at', Carbon::today());
+        }
+
+        if ($request->sellerId) {
+            $query->where('product.seller_id', $request->sellerId);
+        }
+
+        $orders = $query
+            ->where('users.role_id', 3)
+            ->join('order_status', 'orders.order_status', '=', 'order_status.id')
+            ->join('order_history', 'orders.id', '=', 'order_history.order_id')
+            ->join('product', 'order_history.product_id', '=', 'product.id')
+            ->join('users', 'product.seller_id', '=', 'users.id')
+
+            ->select(
+                'orders.*',
+                'order_status.name as status_name',
+                'product.name as product_name',
+                'users.name as seller_name'
+            )
+            //->where()
+            ->orderBy('orders.id', 'DESC')
+            ->get();
+
+        return response()->json([
+            'orderdata' => $orders
+        ]);
+    }
+
+
+
+
     public function allOrders()
     {
 

@@ -49,6 +49,13 @@
                                 <Nuxt-link to="/orders/order-list"><i class="bx bx-right-arrow-alt"></i>All
                                     Orders</Nuxt-link>
                             </li>
+
+                             <li>
+                                <Nuxt-link to="/orders/order-report"><i class="bx bx-right-arrow-alt"></i>Order Report</Nuxt-link>
+                            </li>
+
+
+
                         </ul>
                     </div>
                 </li>
@@ -86,7 +93,7 @@
                         </ul>
                     </div>
                 </li>
-                <li class="mb-1">
+                <li class="mb-1 d-none">
                     <a class="btn has-arrow align-items-center rounded collapsed  dropdown-toggle"
                         data-bs-toggle="collapse" data-bs-target="#Coupons-collapse" aria-expanded="false">
                         <i class="bx bx-category"></i>
@@ -120,11 +127,11 @@
                                 <Nuxt-link to="/ecommarce/category-list"><i
                                         class="bx bx-right-arrow-alt"></i>Category</Nuxt-link>
                             </li>
-                            <li>
+                            <li class="d-none">
                                 <Nuxt-link to="/ecommarce/attributes-list"><i
                                         class="bx bx-right-arrow-alt"></i>Attributes</Nuxt-link>
                             </li>
-                            <li>
+                            <li class="d-none">
                                 <Nuxt-link to="/manufacturer/manufacturers-list"><i
                                         class="bx bx-right-arrow-alt"></i>Manufacturers</Nuxt-link>
                             </li>
@@ -162,7 +169,7 @@
                     </div>
                 </li>
 
-                <li class="mb-1">
+                <li class="mb-1 d-none">
                     <a class="btn has-arrow align-items-center rounded collapsed  dropdown-toggle"
                         data-bs-toggle="collapse" data-bs-target="#blog-collapse" aria-expanded="false">
                         <i class="bx bx-category"></i>

@@ -63,6 +63,7 @@ Route::group([
 
     Route::get('showProfileData', [AuthController::class, 'showProfileData']);
 
+
     Route::post('password/email', [ForgotPasswordController::class, 'sendPasswordResetEmail']);
     Route::post('password/reset', [ResetPasswordController::class, 'updatePassword']);
 });
@@ -234,6 +235,8 @@ Route::group([
    // Route::post('submitOrder', [OrderController::class, 'submitOrder']);
     Route::get('getOrder', [OrderController::class, 'getOrder']);
     Route::get('allOrders', [OrderController::class, 'allOrders']);
+    Route::get('orderFilterReport', [OrderController::class, 'orderFilterReport']);
+    Route::get('checkOrders', [OrderController::class, 'checkOrders']);
     Route::get('orderDetails/{orderid}', [OrderController::class, 'orderDetails']);
     Route::post('updateOrderStatus', [OrderController::class, 'updateOrderStatus']);
     Route::get('addtowish/{slug}', [OrderController::class, 'addtowish']);
