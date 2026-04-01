@@ -19,7 +19,7 @@
                     <div class="menu-title">Dashboard</div>
                 </Nuxt-link>
             </li>
-            <span v-if="user.role_id === 1">
+            <span v-if="user.role_id == 1">
                 <li class="mb-1">
                     <a class="btn has-arrow align-items-center rounded collapsed  dropdown-toggle"
                         data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">

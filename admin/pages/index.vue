@@ -1,7 +1,7 @@
 <template>
     <div class="page-wrapper" v-if="$auth.loggedIn">
         <div class="page-content">
-            <span v-if="userData.role_id === 1">
+            <span v-if="userData.role_id == 1">
                 <div class="row g-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-5">
 
                     <div class="col">

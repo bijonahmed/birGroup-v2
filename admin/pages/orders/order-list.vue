@@ -95,9 +95,9 @@
 
                                                 <!-- Delivery Note (DN) Button -->
                                                 <button type="button" class="btn btn-warning bg-history-light"
-                                                    @click="edit(item.orderId)">
+                                                    @click="makedeliveryNote(item.orderId)">
 
-                                                   Delivery note
+                                                    Delivery note
 
                                                     <!-- Delivery SVG -->
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -210,13 +210,21 @@ export default {
 
         },
         makeInvoice(orderId) {
-            this.$router.push({ 
+            this.$router.push({
                 path: '/orders/invoice',
                 query: {
                     orderId: orderId
                 }
             })
-        }
+        },
+        makedeliveryNote(orderId) {
+            this.$router.push({
+                path: '/orders/delivery',
+                query: {
+                    orderId: orderId
+                }
+            })
+        },
     },
 };
 </script>

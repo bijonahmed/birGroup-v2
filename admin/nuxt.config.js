@@ -21,11 +21,11 @@ export default {
         rel: "stylesheet",
         href: "https://getbootstrap.com/docs/5.0/examples/sidebars/sidebars.css",
       },
- {
+      {
         rel: "stylesheet",
         href: "https://unpkg.com/vue-multiselect@2.1.6/dist/vue-multiselect.min.css",
       },
-      
+
       { rel: "stylesheet", href: "/plugins/notifications/css/lobibox.min.css" },
       { rel: "stylesheet", href: "/plugins/metismenu/css/metisMenu.min.css" },
       { rel: "stylesheet", href: "/css/pace.min.css" },
@@ -36,9 +36,14 @@ export default {
     ],
     script: [
       { src: "/js/bootstrap.bundle.min.js" },
-      { src: "https://cdn.ckeditor.com/4.17.1/standard/ckeditor.js", },
-      { src: "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js", },
-      { src: "https://getbootstrap.com/docs/5.0/examples/sidebars/sidebars.js", ssr: false},
+      { src: "https://cdn.ckeditor.com/4.17.1/standard/ckeditor.js" },
+      {
+        src: "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js",
+      },
+      {
+        src: "https://getbootstrap.com/docs/5.0/examples/sidebars/sidebars.js",
+        ssr: false,
+      },
       { src: "/plugins/metismenu/js/metisMenu.min.js" },
       { src: "/plugins/sparkline-charts/jquery.sparkline.min.js" },
       { src: "/plugins/jquery-knob/excanvas.js" },
@@ -48,14 +53,12 @@ export default {
       { src: "/plugins/notifications/js/notifications.min.js" },
       { src: "/plugins/notifications/js/notification-custom-script.js" },
       { src: "https://cdn.jsdelivr.net/npm/sweetalert2@11" },
-      //end notification 
+      //end notification
       { src: "/js/pace.min.js" },
       { src: "/js/adminlte.js" },
     ],
   },
-  css: [
-    'quill/dist/quill.snow.css', // Adjust the path as needed
-  ],
+  css: ["quill/dist/quill.snow.css"],
   plugins: [
     "~/plugins/vform.js",
     // { src: "~/plugins/jquery.js", ssr: false },
@@ -67,17 +70,17 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: ["@nuxtjs/axios", "@nuxtjs/auth-next"],
   auth: {
-    // Options
     strategies: {
       local: {
         token: {
           property: "access_token",
-          // required: true,
-          // type: 'Bearer'
+          global: true,
+          type: "Bearer",
+          maxAge: 86400,
         },
         user: {
           property: false,
-          // autoFetch: true
+          autoFetch: true,
         },
         endpoints: {
           login: { url: "/auth/login", method: "post" },
@@ -86,18 +89,34 @@ export default {
         },
       },
     },
+
+    // ✅ Use cookie storage instead of localStorage (fixes SSR/live domain issue)
+    cookie: {
+      prefix: "auth.",
+      options: {
+        path: "/",
+        secure: true,
+        sameSite: "Lax",
+        maxAge: 86400,
+      },
+    },
+
+    localStorage: false,
+
     redirect: {
       login: "/login",
       logout: "/",
       callback: "/login",
       home: "/",
     },
+
+    rewriteRedirects: true,
   },
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-//  baseURL: "http://127.0.0.1:8000/api",
-  // baseURL: "https://api.isumax.com/api/",  
-  baseURL: process.env.NODE_ENV === 'production' ? 'https://birv2.api.futuregenit.com/api' : 'http://127.0.0.1:8000/api/',
+    // baseURL: "http://127.0.0.1:8000/api",
+    // baseURL: "https://api.isumax.com/api/",
+    baseURL: process.env.API_BASE_URL || "http://127.0.0.1:8000/api/",
   },
   // router: {
   //   middleware: ['auth']
