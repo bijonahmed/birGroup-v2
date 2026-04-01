@@ -48,6 +48,7 @@ use Illuminate\Support\Facades\Validator as FacadesValidator;
 use Workbench\App\Models\User as AppModelsUser;
 use App\Models\BlogModel;
 use App\Models\blogCategory;
+use App\Models\OrderStatus;
 use App\Models\Salary;
 
 class UnauthenticatedController extends Controller
@@ -1301,7 +1302,8 @@ class UnauthenticatedController extends Controller
         }
         return response()->json(
             [
-                'data' => $formatedData,
+                'orderstatus' => OrderStatus::all(),
+                'data'        => $formatedData,
                 'active_data' => $activeData,
             ],
             200,

@@ -3,7 +3,6 @@
         <LogoAndPayment />
         <!-- navbar section start here  -->
         <NavbarSecond />
-
         <section class="main_content">
             <div class="container">
                 <div class="row">
@@ -11,11 +10,8 @@
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                         <div class="product_details_part">
                             <div class="row">
-                                <!-- <p>Product Slug: {{ pro_row.description }}</p> -->
                                 <!-- left part  -->
                                 <div class="col-md-5">
-
-                                    <!-- {{ featuresimgs }} -->
                                     <div class="loading-indicator" v-if="loading" style="text-align: center;">
                                         <div class="loader-container">
                                             <center class="loader-text">Loading...</center>
@@ -26,7 +22,6 @@
                                         <div class="zoom-container" @mousedown="startDrag" @mousemove="onDrag"
                                             @mouseup="endDrag" @mouseleave="endDrag" @touchstart="startDrag"
                                             @touchmove="onDrag" @touchend="endDrag">
-
                                             <!-- Control Buttons -->
                                             <div class="zoom-buttons">
                                                 <button @click="zoomIn" class="zoom-btn">+</button>
@@ -34,7 +29,6 @@
                                                 <button @click="rotateLeft" class="zoom-btn">⟲</button>
                                                 <button @click="rotateRight" class="zoom-btn">⟳</button>
                                             </div>
-
                                             <img :src="featuresimgs" class="sliderimg" :style="{
                                                 transform: `
                 translate(${positionX}px, ${positionY}px)
@@ -53,30 +47,16 @@
                                             </a>
                                         </div>
                                     </section>
-
                                     <!-- image slider end here  -->
-
                                 </div>
                                 <!-- right part  -->
                                 <div class="col-md-7">
                                     <div class="pro_info">
                                         <div class="badgeses">
                                             <div>
-                                                <span v-if="seller !== ''">{{ seller.name
-                                                }}</span>
+                                                <span v-if="seller !== ''">{{ seller.name }}</span>
                                                 <strong v-if="pro_row.free_shopping == 1">free delivery</strong>
-                                                <!-- <span style="background-color: red;"><a href="affiliate.html" style="color: #fff;">Click to Get Your affiliate link</a></span> -->
                                             </div>
-
-                                            <!-- <div v-if="loggedIn">
-                                                <a href="#" @click="addtowishlist"><i
-                                                        class="fa-regular fa-heart"></i></a>
-
-                                            </div>
-                                            <div v-else>
-                                                <a href="#" @click="login"><i class="fa-regular fa-heart"></i></a>
-                                            </div> -->
-
                                         </div>
                                         <div class="details_title">
                                             <h1>{{ pro_row.product_name }}</h1>
@@ -88,77 +68,45 @@
                                                 </nuxt-link>
                                                 <span v-else>No Brand</span>
                                             </h6>
-
                                         </div>
                                         <div class="price_div">
-                                            <!-- {{ pro_row }} -->
                                             <h5 v-if="pro_row.discount_status == 1">
                                                 <div class="d-flex align-items-center">
                                                     Now: BDT{{ getTotal(pro_row.last_price) }}
                                                     <p style="color: gray;font-size: 12px;"> &nbsp;+Inclusing VAT.</p>
                                                 </div>
-                                                <!-- <p class="ms-0 d-block"><strike v-if="pro_row.discount !== 0">Was: ${{
-                                                    pro_row.price.toFixed(2) }} </strike><span>{{ pro_row.discount
-                                                        }}%</span></p> -->
                                             </h5>
                                             <h5 v-else-if="pro_row.discount_status == 2">
                                                 <div class="d-flex align-items-center">
                                                     Now: BDT{{ (pro_row.last_price).toFixed(2) }}
                                                     <p style="color: gray;font-size: 12px;"> &nbsp;+Inclusing VAT.</p>
                                                 </div>
-                                                <!-- <p class="ms-0 d-block"><strike v-if="pro_row.discount !== 0">Was: ${{
-                                                    pro_row.price.toFixed(2) }} </strike><span>${{ pro_row.discount
-                                                        }}</span></p> -->
                                             </h5>
-
-
-
                                             <h5 v-else>BDT{{ pro_row.last_price }} </h5>
-
                                             <p v-if="pro_row.stock_status == 1 && pro_row.stock_qty >= 1">In stock</p>
                                             <p v-else-if="pro_row.stock_status == 2 && pro_row.stock_qty >= 1">in stock
                                             </p>
-
                                             <p v-else-if="pro_row.stock_status == 3">Out of stock</p>
                                             <p v-else-if="pro_row.stock_status == 4">Preorder</p>
                                             <p v-else-if="pro_row.stock_qty == 0">Out Of stock</p>
                                             <p v-else>Out Of stock</p>
                                         </div>
                                         <div class="ratings_pro">
-                                            <!-- <p v-if="pro_row.free_shopping == 0">+shipping (${{ pro_row.flat_rate_price
-                                                }} in per {{ pro_row.unit }})</p>
-                                            <div class="d-flex align-items-center d-none">
-                                                <div class="d-flex align-items-center ">
-                                                    <i class="fa-solid fa-star active"></i>
-                                                    <i class="fa-solid fa-star active"></i>
-                                                    <i class="fa-solid fa-star active"></i>
-                                                    <i class="fa-solid fa-star"></i>
-                                                    <i class="fa-solid fa-star"></i>
-                                                </div>
-                                                <h6 class="mb-0 ms-2">( <a href="#feedback">188 verified ratings</a>)
-                                                </h6>
-                                            </div> -->
                                             <div class="d-flex align-items-end mb-2">
-
-                                                <!-- {{ varientList }} -->
-                                                <!-- ===================================  -->
+                                                <!-- Variant tile grid -->
                                                 <div class="size_attr mt-2 border-redish" v-if="varientList.length > 0">
-                                                    <label>Attribue:</label>
-
-                                                    <select v-model="size" required class="form-control"
-                                                        style=" width: 200px;">
-                                                        <option disabled value="">Select</option>
-
-                                                        <option v-for="(varient, index) in varientList" :key="index"
-                                                            @click="handleButtonClick(varient)" :value="varient.name">
+                                                    <label>Attribute:</label>
+                                                    <div class="variant-grid">
+                                                        <div v-for="(varient, index) in varientList" :key="index"
+                                                            class="variant-tile"
+                                                            :class="{ 'active': size === varient.name }"
+                                                            @click="handleButtonClick(varient)">
                                                             {{ varient.name }}
-                                                        </option>
-
-                                                    </select>
+                                                            <span class="corner-mark"
+                                                                v-if="size === varient.name"></span>
+                                                        </div>
+                                                    </div>
                                                 </div>
-
-
-                                                <!-- ==============================  -->
                                             </div>
                                             <div class="d-flex align-items-center">
                                                 <div class="number my-1">
@@ -182,7 +130,6 @@
                                                 futureDate }}</strong></p>
                                         </div>
                                         <div class="shortDescPro">
-
                                         </div>
                                         <div class="promotion d-none">
                                             <h4>Promotions</h4>
@@ -205,7 +152,6 @@
                 </div>
             </div>
         </section>
-
         <!-- details section -->
         <section class="details_scrollspay">
             <div class="container">
@@ -213,145 +159,6 @@
                     <div class="col-12">
                         <!-- details part start here  -->
                         <div class="row">
-                            <div class="col-12">
-                                <div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-offset="0"
-                                    class="scrollspy-example" tabindex="0">
-                                    <div class="product_details" id="details">
-
-                                    </div>
-
-                                    <!-- customer recent views  -->
-
-                                    <div class="feedback d-none" id="feedback">
-                                        <div class="side_title">
-                                            <h5>Varified Customer Feedback</h5>
-                                            <a href="customer-review.html">See All <i
-                                                    class="fa-solid fa-arrow-right"></i></a>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <h2>Varified ratings(147)</h2>
-                                                <div class="box_rating">
-                                                    <h3>4.5/5</h3>
-                                                    <div class="ratings">
-                                                        <span class="fa fa-star checked"></span>
-                                                        <span class="fa fa-star checked"></span>
-                                                        <span class="fa fa-star checked"></span>
-                                                        <span class="fa fa-star"></span>
-                                                        <span class="fa fa-star"></span>
-                                                    </div>
-                                                    <p>147 verified ratings</p>
-                                                </div>
-                                                <div class="rate_count">
-                                                    <p>5</p>
-                                                    <i class="fa fa-star checked"></i>
-                                                    <span>(106)</span>
-                                                    <div class="progress">
-                                                        <div class="progress-bar" role="progressbar" style="width: 25%;"
-                                                            aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="rate_count">
-                                                    <p>4</p>
-                                                    <i class="fa fa-star checked"></i>
-                                                    <span>(106)</span>
-                                                    <div class="progress">
-                                                        <div class="progress-bar" role="progressbar" style="width: 25%;"
-                                                            aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="rate_count">
-                                                    <p>3</p>
-                                                    <i class="fa fa-star checked"></i>
-                                                    <span>(106)</span>
-                                                    <div class="progress">
-                                                        <div class="progress-bar" role="progressbar" style="width: 25%;"
-                                                            aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="rate_count">
-                                                    <p>2</p>
-                                                    <i class="fa fa-star checked"></i>
-                                                    <span>(106)</span>
-                                                    <div class="progress">
-                                                        <div class="progress-bar" role="progressbar" style="width: 25%;"
-                                                            aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="rate_count">
-                                                    <p>1</p>
-                                                    <i class="fa fa-star checked"></i>
-                                                    <span>(106)</span>
-                                                    <div class="progress">
-                                                        <div class="progress-bar" role="progressbar" style="width: 25%;"
-                                                            aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-8 right_side_rate">
-                                                <h2>COMMENTS FROM VERIFIED PURCHASES(51)</h2>
-                                                <div>
-                                                    <div class="ratings">
-                                                        <span class="fa fa-star checked"></span>
-                                                        <span class="fa fa-star checked"></span>
-                                                        <span class="fa fa-star checked"></span>
-                                                        <span class="fa fa-star"></span>
-                                                        <span class="fa fa-star"></span>
-                                                    </div>
-                                                    <h5>Awsome</h5>
-                                                    <p>awesome</p>
-                                                    <div class="d-flex justify-content-between">
-                                                        <p>04-08-2023 By <a href="#">User </a></p>
-                                                        <p class="varify_tag"><i class="fa fa-check"></i>Varified
-                                                            Customer</p>
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <div class="ratings">
-                                                        <span class="fa fa-star checked"></span>
-                                                        <span class="fa fa-star checked"></span>
-                                                        <span class="fa fa-star checked"></span>
-                                                        <span class="fa fa-star"></span>
-                                                        <span class="fa fa-star"></span>
-                                                    </div>
-                                                    <h5>Awsome</h5>
-                                                    <p>awesome</p>
-                                                    <div class="d-flex justify-content-between">
-                                                        <p>04-08-2023 By <a href="#">User </a></p>
-                                                        <p class="varify_tag"><i class="fa fa-check"></i>Varified
-                                                            Customer</p>
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <div class="ratings">
-                                                        <span class="fa fa-star checked"></span>
-                                                        <span class="fa fa-star checked"></span>
-                                                        <span class="fa fa-star checked"></span>
-                                                        <span class="fa fa-star"></span>
-                                                        <span class="fa fa-star"></span>
-                                                    </div>
-                                                    <h5>Awsome</h5>
-                                                    <p>awesome</p>
-                                                    <div class="d-flex justify-content-between">
-                                                        <p>04-08-2023 By <a href="#">User </a></p>
-                                                        <p class="varify_tag"><i class="fa fa-check"></i>Varified
-                                                            Customer</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- You may like this  -->
-
-                                </div>
-
-                            </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 d-none">
                                 <div class="sidebar_here">
                                     <div id="list-example" class="list-group id_list">
@@ -362,7 +169,6 @@
                                         <a class="list-group-item list-group-item-action" href="#feedback"><i
                                                 class="fa-regular fa-message"></i>Varified Customer Feedback</a>
                                     </div>
-
                                     <div class="pro_cart">
                                         <div class="d-flex">
                                             <div><img :src="featuresimgs" alt=""></div>
@@ -374,17 +180,14 @@
                                         <button class="btn_cart" type="button"> <i class="fa-solid fa-cart-shopping"
                                                 @click="addToCart(pro_row.id)"></i>Add to Cart </button>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </section>
         <Footer />
-
     </div>
 </template>
 
@@ -397,7 +200,6 @@ import Common_MobileSearchProduct from '~/components/Common_MobileSearchProduct.
 import NavbarSecond from '../../components/NavbarSecond.vue';
 
 export default {
-
     components: {
         NavbarSecond,
         LogoAndPayment,
@@ -405,25 +207,21 @@ export default {
         Common_MiniTabNavbar,
         Common_MobileSearchProduct,
     },
-
     head: {
         title: 'Product Details',
     },
-
-    async asyncData({
-        params
-    }) {
+    async asyncData({ params }) {
         const productSlug = params.slug;
         return {
             warranty_id: '',
             warranty_name: '',
-            //cart
+            // cart
             cart: [],
             itemCount: 0,
             subtotal: 0,
             updatedQuantity: 1,
             product: [],
-            //end cart
+            // end cart
             currentIndex: 0,
             featuresimgs: '',
             slider_img: [],
@@ -450,17 +248,13 @@ export default {
             futureDay: null,
             daysToAdd: '',
             seller: [],
-            historVarient: [],
             colorGroup: [],
             varientList: [],
-            color: '',
             size: '',
             warranty: [],
             warrantyamt: '0',
             total: '',
-
             loading: false,
-
         };
     },
     mounted() {
@@ -472,109 +266,61 @@ export default {
         this.getTotal();
         this.scrollToTop();
         this.showAttrVal();
-
     },
     computed: {
         loggedIn() {
             return this.$auth.loggedIn;
         },
-
     },
     methods: {
         scrollToTop() {
             setTimeout(() => {
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             }, 100);
         },
         zoomIn() {
-            if (this.zoomLevel < 3) {
-                this.zoomLevel += 0.2
-            }
+            if (this.zoomLevel < 3) { this.zoomLevel += 0.2; }
         },
-
         zoomOut() {
             if (this.zoomLevel > 1) {
-                this.zoomLevel -= 0.2
+                this.zoomLevel -= 0.2;
                 if (this.zoomLevel === 1) {
-                    this.positionX = 0
-                    this.positionY = 0
+                    this.positionX = 0;
+                    this.positionY = 0;
                 }
             }
         },
-
-        rotateLeft() {
-            this.rotation -= 90
-        },
-
-        rotateRight() {
-            this.rotation += 90
-        },
-
+        rotateLeft() { this.rotation -= 90; },
+        rotateRight() { this.rotation += 90; },
         startDrag(e) {
-            if (this.zoomLevel === 1) return
-
-            this.isDragging = true
-
-            const clientX = e.type.includes('mouse')
-                ? e.clientX
-                : e.touches[0].clientX
-
-            const clientY = e.type.includes('mouse')
-                ? e.clientY
-                : e.touches[0].clientY
-
-            this.startX = clientX - this.positionX
-            this.startY = clientY - this.positionY
+            if (this.zoomLevel === 1) return;
+            this.isDragging = true;
+            const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+            const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+            this.startX = clientX - this.positionX;
+            this.startY = clientY - this.positionY;
         },
-
         onDrag(e) {
-            if (!this.isDragging) return
-
-            const clientX = e.type.includes('mouse')
-                ? e.clientX
-                : e.touches[0].clientX
-
-            const clientY = e.type.includes('mouse')
-                ? e.clientY
-                : e.touches[0].clientY
-
-            this.positionX = clientX - this.startX
-            this.positionY = clientY - this.startY
+            if (!this.isDragging) return;
+            const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+            const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+            this.positionX = clientX - this.startX;
+            this.positionY = clientY - this.startY;
         },
-
-        endDrag() {
-            this.isDragging = false
-        },
+        endDrag() { this.isDragging = false; },
         getTotal(price) {
-
             const priceNumber = parseFloat(price);
             const warrantyAmtNumber = parseFloat(this.warrantyamt);
-
-            if (isNaN(priceNumber)) {
-                console.error('Invalid price:', price);
-                return '';
-            }
-
-            if (isNaN(warrantyAmtNumber)) {
-                console.error('Invalid warranty amount:', this.warrantyamt);
-                return '';
-            }
-
+            if (isNaN(priceNumber)) { console.error('Invalid price:', price); return ''; }
+            if (isNaN(warrantyAmtNumber)) { console.error('Invalid warranty amount:', this.warrantyamt); return ''; }
             const totalAmt = priceNumber + warrantyAmtNumber;
             this.total = totalAmt;
             return totalAmt.toFixed(2);
         },
         updateWarranty(warranty) {
-            // console.log(this.pro_row.last_price);
-            // console.log(warranty.warranty_name);
-
             this.warrantyamt = warranty.price;
             this.warranty_name = warranty.warranty_name;
             this.getTotal();
-
         },
         checkqty() {
             const qty = this.pro_row.stock_qty;
@@ -582,32 +328,28 @@ export default {
             if (upqty >= qty) {
                 this.updatedQuantity = qty;
                 const Toast = Swal.mixin({
-                    toast: true,
-                    position: "top-end",
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true,
+                    toast: true, position: "top-end", showConfirmButton: false,
+                    timer: 3000, timerProgressBar: true,
                     didOpen: (toast) => {
                         toast.onmouseenter = Swal.stopTimer;
                         toast.onmouseleave = Swal.resumeTimer;
                     }
                 });
-                Toast.fire({
-                    icon: "error",
-                    title: "You've reached the stock limit"
-                });
+                Toast.fire({ icon: "error", title: "You've reached the stock limit" });
             }
         },
+
+        // ✅ UPDATED: now sets this.size so cart captures the selected variant name
         handleButtonClick(varient) {
+            this.size = varient.name;           // <-- FIX: set size for cart
             this.varientData = varient;
             this.pro_row.price = varient.price;
             this.pro_row.stock_qty = varient.qty;
             this.featuresimgs = varient.image ? varient.image : this.pro_mainimage;
 
-            let last_price; // Declare using let instead of const
+            let last_price;
             let d_status = this.pro_row.discount_status;
             let dis_c = this.pro_row.discount;
-
             if (d_status == 1) {
                 last_price = varient.price - (varient.price * dis_c / 100);
             } else if (d_status == 2) {
@@ -615,374 +357,220 @@ export default {
             } else {
                 last_price = varient.price;
             }
-
             this.pro_row.last_price = last_price;
-
-            // console.log(this.pro_row.stock_qty);
-            // console.log(this.pro_row.last_price);
-
-            // Handle button click event for the selected variant
-            // console.log('Button clicked for color:', varient.color);
-            // console.log('Button clicked for size:', varient.size);
-            // console.log('Button clicked for qty:', varient.qty);
-            // console.log('Button clicked for price:', varient.price);
-            // console.log('Button clicked for image:', varient.image);
         },
 
         showAttrVal() {
-            //   console.log("Test...................");
             this.varientList = [];
-            // console.log("value:" + this.color +"===="+ this.pro_Id);
             let slug = this.$route.params.slug;
             this.$axios
                 .get(`/unauthenticate/checkAttribueDetails?slug=${slug}`)
                 .then((response) => {
                     this.varientList = response.data;
-
                     console.log("Response Data:", response.data);
                 })
                 .catch((error) => {
                     console.error("API Error:", error);
                 });
-
-
         },
-        // =================================================
+
         updateDateTime() {
             const now = new Date();
-            if (now.getHours() >= 17) {
-                now.setDate(now.getDate() + 1);
-            }
-            const formattedDateTime = `${now.toDateString()} ${now.toLocaleTimeString()}`;
-            this.currentDateTime = formattedDateTime;
+            if (now.getHours() >= 17) { now.setDate(now.getDate() + 1); }
+            this.currentDateTime = `${now.toDateString()} ${now.toLocaleTimeString()}`;
             const futureDate = new Date(now.getTime() + this.daysToAdd * 24 * 60 * 60 * 1000);
             this.futureDate = futureDate.toDateString();
             const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            this.futureDay = days, [futureDate.getDay()];
+            this.futureDay = days[futureDate.getDay()];
             setTimeout(this.updateDateTime, 1000);
         },
+
         login() {
             const Toast = Swal.mixin({
-                toast: true,
-                position: "top-end",
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
+                toast: true, position: "top-end", showConfirmButton: false,
+                timer: 3000, timerProgressBar: true,
                 didOpen: (toast) => {
                     toast.onmouseenter = Swal.stopTimer;
                     toast.onmouseleave = Swal.resumeTimer;
                 }
             });
-            Toast.fire({
-                icon: "error",
-                title: "Please log in to your account to add items to your wishlist."
-            });
+            Toast.fire({ icon: "error", title: "Please log in to your account to add items to your wishlist." });
         },
+
         async addtowishlist() {
             this.loading = true;
-            const productSlug = this.$route.params.slug; //this.$route.query.slug;
-            await this.$axios.get(`/order/addtowish/${productSlug}`).then(response => {
-                Swal.fire({
-                    position: "top-end",
-                    icon: "success",
-                    title: 'Item successfully added to your wishlist!',
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                console.log(response);
-            })
-                .catch(error => {
-                    // Handle error
+            const productSlug = this.$route.params.slug;
+            await this.$axios.get(`/order/addtowish/${productSlug}`)
+                .then(response => {
+                    Swal.fire({
+                        position: "top-end", icon: "success",
+                        title: 'Item successfully added to your wishlist!',
+                        showConfirmButton: false, timer: 1500
+                    });
+                    console.log(response);
                 })
-                .finally(() => {
-                    this.loading = false; // Hide loader after response
-                });
-
+                .catch(error => { })
+                .finally(() => { this.loading = false; });
         },
+
         increment() {
-            // console.log(this.pro_row.stock_qty);
-            // Increase the quantity value
             if (this.updatedQuantity < this.pro_row.stock_qty) {
                 this.updatedQuantity++;
             } else {
                 const Toast = Swal.mixin({
-                    toast: true,
-                    position: "top-end",
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true,
+                    toast: true, position: "top-end", showConfirmButton: false,
+                    timer: 3000, timerProgressBar: true,
                     didOpen: (toast) => {
                         toast.onmouseenter = Swal.stopTimer;
                         toast.onmouseleave = Swal.resumeTimer;
                     }
                 });
-                Toast.fire({
-                    icon: "error",
-                    title: "You've reached the stock limit"
-                });
+                Toast.fire({ icon: "error", title: "You've reached the stock limit" });
             }
         },
         decrement() {
-            // Decrease the quantity value, but ensure it doesn't go below 1
-            if (this.updatedQuantity > 1) {
-                this.updatedQuantity--;
-            }
+            if (this.updatedQuantity > 1) { this.updatedQuantity--; }
         },
         sanitizeInput() {
-            // Remove non-numeric characters from the input
-            // Remove non-numeric characters from the input
             this.updatedQuantity = this.updatedQuantity.replace(/\D/g, '');
-
-            // Ensure the value is not empty
-            if (this.updatedQuantity === '') {
-                this.updatedQuantity = 1;
-            }
+            if (this.updatedQuantity === '') { this.updatedQuantity = 1; }
         },
-        //for cart
+
+        // cart
         loadCart() {
             const savedCart = localStorage.getItem('cart');
-
-            if (savedCart) {
-                this.cart = JSON.parse(savedCart);
-            }
+            if (savedCart) { this.cart = JSON.parse(savedCart); }
         },
         saveCart() {
             this.loading = true;
             localStorage.setItem('cart', JSON.stringify(this.cart));
-            setTimeout(() => {
-                this.loading = false;
-            }, 2000);
+            setTimeout(() => { this.loading = false; }, 2000);
         },
         cartItemCount() {
             let itemCount = 0;
-            this.cart.forEach((item) => {
-                itemCount += parseInt(item.quantity);
-            });
+            this.cart.forEach((item) => { itemCount += parseInt(item.quantity); });
             this.itemCount = itemCount;
-            // console.log('Emitting cartItemCountUpdated event with itemCount:', this.itemCount);
             this.$eventBus.$emit('cartItemCountUpdated', this.itemCount);
-
         },
         updateQuantity(productId, newQuantity) {
             const index = this.cart.findIndex((item) => item.product.id === productId);
-
             if (index !== -1) {
                 this.cart[index].quantity = newQuantity;
                 this.saveCart();
             }
         },
+
         async addToCart(productId) {
             console.log(this.warranty_name);
+
+            // Guard: if variants exist, user must select one first
+            if (this.varientList.length > 0 && !this.size) {
+                const Toast = Swal.mixin({
+                    toast: true, position: "top-end", showConfirmButton: false,
+                    timer: 3000, timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+                Toast.fire({ icon: "warning", title: "Please select a variant first." });
+                return;
+            }
+
             const up_price = this.pro_row.last_price;
             const warrantyamt = this.warrantyamt;
             const warranty_id = this.warranty_id;
             const warranty_name = this.warranty_name;
-
-
             const pro_price = this.pro_row.price;
             const qty = this.pro_row.stock_qty;
 
-            if (this.colorGroup.length > 0) {
-                try {
-                    const productToAdd = this.product.find((product) => product.id === productId);
-
-                    // Ensure product and quantity are valid
-                    if (!productToAdd || !this.updatedQuantity) {
-                        // console.error('Product or quantity is invalid.');
-                        const Toast = Swal.mixin({
-                            toast: true,
-                            position: "top-end",
-                            showConfirmButton: false,
-                            timer: 3000,
-                            timerProgressBar: true,
-                            didOpen: (toast) => {
-                                toast.onmouseenter = Swal.stopTimer;
-                                toast.onmouseleave = Swal.resumeTimer;
-                            }
-                        });
-                        Toast.fire({
-                            icon: "error",
-                            title: "Product or quantity is invalid."
-                        });
-                        return;
-                    }
-
-                    productToAdd.last_price = up_price;
-                    productToAdd.price = pro_price;
-                    productToAdd.stock_qty = qty;
-
-                    if (warranty_id) {
-                        productToAdd.warrantyamt = warrantyamt ? warrantyamt : '';
-                        productToAdd.warranty_id = warranty_id ? warranty_id : '';
-                        productToAdd.warranty_name = warranty_name ? warranty_name : '';
-                    }
-
-
-                    productToAdd.color = this.color;
-                    productToAdd.size = this.size;
-
-                    const existingItem = this.cart.find((item) => item.product.id === productId);
-
-                    if (existingItem) {
-                        existingItem.quantity += this.updatedQuantity;
-                    } else {
-                        this.cart.push({
-                            product: productToAdd,
-                            quantity: this.updatedQuantity,
-                        });
-
-                        const Toast = Swal.mixin({
-                            toast: true,
-                            position: "top-end",
-                            showConfirmButton: false,
-                            timer: 3000,
-                            timerProgressBar: true,
-                            didOpen: (toast) => {
-                                toast.onmouseenter = Swal.stopTimer;
-                                toast.onmouseleave = Swal.resumeTimer;
-                            }
-                        });
-                        Toast.fire({
-                            icon: "success",
-                            title: "Product successfully Added to cart"
-                        });
-                    }
-
-                    this.saveCart();
-                    this.cartItemCount();
-                    console.log('Item added to cart successfully.');
-
-
-                } catch (error) {
-                    console.error('Error adding item to cart:', error);
-
-                    const Toast = Swal.mixin({
-                        toast: true,
-                        position: "top-end",
-                        showConfirmButton: false,
-                        timer: 3000,
-                        timerProgressBar: true,
-                        didOpen: (toast) => {
-                            toast.onmouseenter = Swal.stopTimer;
-                            toast.onmouseleave = Swal.resumeTimer;
-                        }
-                    });
-                    Toast.fire({
-                        icon: "error",
-                        title: "Product not Added to cart"
-                    });
+            // Helper: stamp all variant/price fields onto a product object
+            const stampProduct = (productToAdd) => {
+                productToAdd.last_price = up_price;
+                productToAdd.price = pro_price;
+                productToAdd.stock_qty = qty;
+                productToAdd.color = this.color;
+                productToAdd.size = this.size;   // ✅ selected variant name
+                if (warranty_id) {
+                    productToAdd.warrantyamt = warrantyamt || '';
+                    productToAdd.warranty_id = warranty_id || '';
+                    productToAdd.warranty_name = warranty_name || '';
                 }
-            } else {
-                try {
-                    const productToAdd = this.product.find((product) => product.id === productId);
-                    // Ensure product and quantity are valid
-                    if (!productToAdd || !this.updatedQuantity) {
-                        // console.error('Product or quantity is invalid.');
-                        const Toast = Swal.mixin({
-                            toast: true,
-                            position: "top-end",
-                            showConfirmButton: false,
-                            timer: 3000,
-                            timerProgressBar: true,
-                            didOpen: (toast) => {
-                                toast.onmouseenter = Swal.stopTimer;
-                                toast.onmouseleave = Swal.resumeTimer;
-                            }
-                        });
-                        Toast.fire({
-                            icon: "error",
-                            title: "Product or quantity is invalid."
-                        });
-                        return;
+                return productToAdd;
+            };
+
+            // ✅ Helper: find existing cart entry matching product AND selected variant
+            const findExisting = () =>
+                this.cart.find(
+                    (item) =>
+                        item.product.id === productId &&
+                        item.product.size === this.size   // ✅ match by variant too
+                );
+
+            const showToast = (icon, title) => {
+                const Toast = Swal.mixin({
+                    toast: true, position: "top-end", showConfirmButton: false,
+                    timer: 3000, timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
                     }
+                });
+                Toast.fire({ icon, title });
+            };
 
-                    productToAdd.last_price = up_price;
-                    productToAdd.color = this.color;
-                    productToAdd.size = this.size;
+            try {
+                const productToAdd = this.product.find((product) => product.id === productId);
 
-                    const existingItem = this.cart.find((item) => item.product.id === productId);
-
-                    if (existingItem) {
-                        existingItem.quantity += this.updatedQuantity;
-                    } else {
-                        this.cart.push({
-                            product: productToAdd,
-                            quantity: this.updatedQuantity,
-                        });
-
-                        const Toast = Swal.mixin({
-                            toast: true,
-                            position: "top-end",
-                            showConfirmButton: false,
-                            timer: 3000,
-                            timerProgressBar: true,
-                            didOpen: (toast) => {
-                                toast.onmouseenter = Swal.stopTimer;
-                                toast.onmouseleave = Swal.resumeTimer;
-                            }
-                        });
-                        Toast.fire({
-                            icon: "success",
-                            title: "Product successfully Added to cart"
-                        });
-                    }
-
-                    this.saveCart();
-                    this.cartItemCount();
-                    console.log('Item added to cart successfully.');
-
-
-                } catch (error) {
-                    console.error('Error adding item to cart:', error);
-
-                    const Toast = Swal.mixin({
-                        toast: true,
-                        position: "top-end",
-                        showConfirmButton: false,
-                        timer: 3000,
-                        timerProgressBar: true,
-                        didOpen: (toast) => {
-                            toast.onmouseenter = Swal.stopTimer;
-                            toast.onmouseleave = Swal.resumeTimer;
-                        }
-                    });
-                    Toast.fire({
-                        icon: "error",
-                        title: "Product not Added to cart"
-                    });
+                if (!productToAdd || !this.updatedQuantity) {
+                    showToast("error", "Product or quantity is invalid.");
+                    return;
                 }
+
+                // ✅ Stamp selected variant + price onto a fresh copy so we don't
+                //    mutate the source array for different variant selections
+                const cartProduct = stampProduct({ ...productToAdd });
+
+                const existingItem = findExisting();
+                if (existingItem) {
+                    // Same product + same variant already in cart → just bump qty
+                    existingItem.quantity += this.updatedQuantity;
+                    existingItem.product.size = this.size;   // keep in sync
+                    existingItem.product.last_price = up_price;
+                } else {
+                    // New entry (new product OR same product but different variant)
+                    this.cart.push({ product: cartProduct, quantity: this.updatedQuantity });
+                    showToast("success", "Product successfully Added to cart");
+                }
+
+                this.saveCart();
+                this.cartItemCount();
+                console.log('Item added to cart successfully. size:', this.size);
+            } catch (error) {
+                console.error('Error adding item to cart:', error);
+                showToast("error", "Product not Added to cart");
             }
-
-
         },
-        //end cart
+        // end cart
+
         initLightSlider() {
             let thumbnails = document.getElementsByClassName('Slider-thumbnail');
             let activeImages = document.getElementsByClassName('active');
-
             for (let i = 0; i < thumbnails.length; i++) {
                 thumbnails[i].addEventListener('click', (e) => {
                     e.preventDefault();
-
-                    if (activeImages.length > 0) {
-                        activeImages[0].classList.remove('active');
-                    }
-
+                    if (activeImages.length > 0) { activeImages[0].classList.remove('active'); }
                     thumbnails[i].classList.add('active');
                     this.featuresimgs = this.slider_img[i].thumnail;
                 });
             }
         },
         changeSlide(index) {
-            // Change the slide when a thumbnail is clicked
             this.currentIndex = index;
             this.featuresimgs = this.slider_img[index].thumnail;
         },
-
         async fetchData() {
-            const prosulg = this.$route.params.slug; //this.$route.query.slug;
-            // console.log("-----------" + prosulg);
-            // return false; 
+            const prosulg = this.$route.params.slug;
             this.loading = false;
             const response = await this.$axios.get(`/unauthenticate/productSlug/${prosulg}`);
             this.featuresimgs = response.data.data.featuredImage;
@@ -997,25 +585,15 @@ export default {
             this.historVarient = response.data.attibute.varient;
             this.colorGroup = response.data.attibute.colorGroup;
             this.warranty = response.data.warranty;
-            // console.log(response.data.warranty);
             this.loading = false;
-
             $(".product_details").html(response.data.data.pro_row.description);
             $(".shortDescPro").html(response.data.data.pro_row.short_description);
-            // console.log("====TEST=========" + response.data.attibute);
-
         },
-
     },
-
 }
 </script>
 
 <style scoped>
-/* img {
-        width: 100%;
-        display: block;
-    } */
 /* Featured main image border */
 .Slider-featuredImage {
     border: 3px solid var(--color_Primary);
@@ -1049,23 +627,19 @@ export default {
 }
 
 .Slider-featuredImage {
-    padding: 4px
+    padding: 4px;
 }
 
 .Slider-thumbnails {
-    /* display: flex; */
     width: 100%;
-    /* overflow: scroll; */
     margin-top: 4px;
     padding: 4px;
     margin-right: 16px;
-
 }
 
 .Slider-thumbnail {
     opacity: 0.7;
     cursor: pointer;
-
 }
 
 .Slider-thumbnail img {
@@ -1079,36 +653,25 @@ export default {
 
 .Slider-thumbnail:hover,
 .Slider-thumbnail:active,
-/* .Slider-thumbnail:focus {
-        opacity: 1;
-        outline: solid 2px black;
-        outline-offset: 2px;
-    } */
-
 .Slider-thumbnail:not(:first-of-type) {
     margin-left: 10px;
 }
 
-/* zoom in out  */
+/* zoom in out */
 .Slider {
     max-width: 500px;
 }
 
 .zoom-container {
     position: relative;
-    /* IMPORTANT */
     border: 3px solid var(--color_Primary);
     overflow: hidden;
 }
 
-
 .sliderimg {
     width: 100%;
     transition: transform 0.3s ease;
-    /* ADD BORDER */
-
     border-radius: 6px;
-    /* optional - সুন্দর look এর জন্য */
 }
 
 /* Buttons Top Left */
@@ -1170,6 +733,50 @@ export default {
     background: #fff5f5;
     padding: 10px;
     border-radius: 6px;
+}
 
+/* ── Variant tile grid ── */
+.variant-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.variant-tile {
+    position: relative;
+    min-width: 52px;
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 13px;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    background: #fff;
+    color: #333;
+    transition: border-color 0.15s;
+}
+
+.variant-tile:hover {
+    border-color: #f97316;
+}
+
+.variant-tile.active {
+    border-color: #f97316;
+    border-width: 1.5px;
+}
+
+/* Orange triangle corner indicator */
+.corner-mark {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 0 14px 14px;
+    border-color: transparent transparent #f97316 transparent;
+    border-radius: 0 0 3px 0;
 }
 </style>

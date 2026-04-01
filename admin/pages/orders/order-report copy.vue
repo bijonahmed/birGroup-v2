@@ -15,9 +15,9 @@
                     </nav>
                 </div>
 
-                <!-- Summary Stats (3 cards only — Avg Order removed) -->
+                <!-- Summary Stats -->
                 <div class="row g-3 mb-4" v-if="!loading && filteredData.length">
-                    <div class="col-6 col-md-4">
+                    <div class="col-md-3">
                         <div class="stat-card">
                             <div class="stat-icon blue"><i class="bx bx-receipt"></i></div>
                             <div>
@@ -26,7 +26,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-6 col-md-4">
+                    <div class="col-md-3">
                         <div class="stat-card">
                             <div class="stat-icon green"><i class="bx bx-store"></i></div>
                             <div>
@@ -35,7 +35,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-4">
+                    <div class="col-md-3">
                         <div class="stat-card">
                             <div class="stat-icon purple"><i class="bx bx-money"></i></div>
                             <div>
@@ -44,10 +44,20 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon orange"><i class="bx bx-trending-up"></i></div>
+                            <div>
+                                <div class="stat-value">{{ filteredData.length ? Math.round(totalSum /
+                                    filteredData.length).toLocaleString() : 0 }}</div>
+                                <div class="stat-label">Avg Order Value (TK)</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Filter Card -->
-                <div class="report-card filter-card mb-4 no-print">
+                <div class="report-card filter-card mb-4">
                     <div class="card-header-custom">
                         <i class="bx bx-filter-alt me-2"></i>
                         <span>Filter Orders</span>
@@ -79,56 +89,50 @@
                                 </select>
                             </div>
                             <div class="col-md-2">
-                                <button class="btn btn-filter w-100" @click="fetchData">
-                                    <i class="bx bx-search-alt me-1"></i> Apply Filter
-                                </button>
+                                <label class="form-label-custom">Search</label>
+                                <input type="text" class="form-control form-control-custom" v-model="searchQuery"
+                                    placeholder="Order ID / Product...">
                             </div>
                             <div class="col-md-2">
-                                <button class="btn btn-reset w-100" @click="resetFilters">
-                                    <i class="bx bx-reset me-1"></i> Reset
+                                <button class="btn btn-filter w-100" @click="fetchData">
+                                    <i class="bx bx-search-alt me-1"></i> Apply Filter
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Report Card -->
-                <div class="report-card" id="printable-area">
-
-                    <div
-                        class="card-header-custom d-flex justify-content-between align-items-center flex-wrap gap-2 no-print">
+                <!-- Table Card -->
+                <div class="report-card">
+                    <div class="card-header-custom d-flex justify-content-between align-items-center flex-wrap gap-2">
                         <div class="d-flex align-items-center gap-2">
                             <i class="bx bx-receipt me-1"></i>
                             <span>Order Report</span>
                             <span class="record-count" v-if="!loading">{{ filteredData.length }} records</span>
                         </div>
                         <div class="d-flex align-items-center gap-2">
+                            <!-- View Toggle -->
                             <div class="view-toggle">
                                 <button :class="['toggle-btn', viewMode === 'flat' ? 'active' : '']"
-                                    @click="viewMode = 'flat'">
-                                    <i class="bx bx-table me-1"></i> Flat
+                                    @click="viewMode = 'flat'" title="Flat Table View">
+                                    <i class="bx bx-table"></i> Flat
                                 </button>
                                 <button :class="['toggle-btn', viewMode === 'grouped' ? 'active' : '']"
-                                    @click="viewMode = 'grouped'">
-                                    <i class="bx bx-layer me-1"></i> By Seller
+                                    @click="viewMode = 'grouped'" title="Grouped by Seller">
+                                    <i class="bx bx-layer"></i> By Seller
                                 </button>
                             </div>
-                            <button class="btn btn-action" @click="printReport">
-                                <i class="bx bx-printer me-1"></i> Print / PDF
+                            <!-- Actions -->
+                            <button class="btn btn-action" @click="exportCSV" title="Export CSV">
+                                <i class="bx bx-download me-1"></i> CSV
+                            </button>
+                            <button class="btn btn-action" @click="printReport" title="Print">
+                                <i class="bx bx-printer me-1"></i> Print
                             </button>
                         </div>
                     </div>
 
-                    <!-- Print Header (only visible on print) -->
-                    <div class="print-header">
-                        <div class="print-logo">Order Report</div>
-                        <div class="print-meta">
-                            Period: {{ filters.fromDate }} → {{ filters.toDate }} &nbsp;|&nbsp;
-                            Generated: {{ todayFormatted }}
-                        </div>
-                    </div>
-
-                    <div class="card-body-custom">
+                    <div class="card-body-custom" id="printable-area">
 
                         <!-- Loader -->
                         <div v-if="loading" class="loader-wrap">
@@ -136,8 +140,8 @@
                             <p class="loader-text">Loading orders...</p>
                         </div>
 
-                        <!-- ── FLAT VIEW ── -->
-                        <template v-else-if="viewMode === 'flat'">
+                        <!-- FLAT VIEW -->
+                        <div v-else-if="viewMode === 'flat'">
                             <div class="table-responsive">
                                 <table class="table report-table">
                                     <thead>
@@ -152,12 +156,10 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-if="!filteredData.length">
-                                            <td colspan="7">
-                                                <div class="no-data">
-                                                    <i class="bx bx-folder-open"></i>
-                                                    <p>No orders found for the selected period</p>
-                                                </div>
+                                        <tr v-if="filteredData.length === 0">
+                                            <td colspan="7" class="text-center no-data">
+                                                <i class="bx bx-folder-open"></i>
+                                                <p>No orders found</p>
                                             </td>
                                         </tr>
                                         <tr v-for="(item, index) in filteredData" :key="index">
@@ -168,10 +170,9 @@
                                             <td>{{ item.seller_name }}</td>
                                             <td class="text-end amount-cell">{{ Number(item.total).toLocaleString() }}
                                             </td>
-                                            <td class="text-center">
-                                                <span :class="['status-badge', statusClass(item.status_name)]">{{
-                                                    item.status_name }}</span>
-                                            </td>
+                                            <td class="text-center"><span
+                                                    :class="['status-badge', statusClass(item.status_name)]">{{
+                                                        item.status_name }}</span></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -180,39 +181,34 @@
                                 <span class="total-label">Grand Total</span>
                                 <span class="total-amount">{{ totalSum.toLocaleString() }} TK.</span>
                             </div>
-                        </template>
+                        </div>
 
-                        <!-- ── GROUPED BY SELLER VIEW ── -->
-                        <template v-else-if="viewMode === 'grouped'">
-                            <div v-if="!filteredData.length">
-                                <div class="no-data">
-                                    <i class="bx bx-folder-open"></i>
-                                    <p>No orders found for the selected period</p>
-                                </div>
+                        <!-- GROUPED BY SELLER VIEW -->
+                        <div v-else-if="viewMode === 'grouped'">
+                            <div v-if="filteredData.length === 0" class="text-center no-data py-5">
+                                <i class="bx bx-folder-open"></i>
+                                <p>No orders found</p>
                             </div>
-
-                            <div v-for="(group, gIndex) in groupedBySeller" :key="gIndex" class="seller-section">
-                                <div class="seller-section-header">
-                                    <div class="seller-header-left">
+                            <div v-for="(group, gIndex) in groupedBySeller" :key="gIndex" class="seller-group mb-4">
+                                <!-- Seller Header -->
+                                <div class="seller-header" @click="toggleGroup(gIndex)">
+                                    <div class="d-flex align-items-center gap-3">
                                         <div class="seller-avatar">{{ group.sellerName.charAt(0).toUpperCase() }}</div>
-                                        <div class="seller-info">
+                                        <div>
                                             <div class="seller-name">{{ group.sellerName }}</div>
-                                            <div class="seller-meta">
-                                                <span><i class="bx bx-receipt"></i> {{ group.orders.length }}
-                                                    Orders</span>
-                                                <span class="dot">·</span>
-                                                <span><i class="bx bx-money"></i> {{ group.subtotal.toLocaleString() }}
-                                                    TK.</span>
-                                            </div>
+                                            <div class="seller-meta">{{ group.orders.length }} orders &bull; {{
+                                                group.subtotal.toLocaleString() }} TK.</div>
                                         </div>
                                     </div>
-                                    <div class="seller-header-right">
-                                        <div class="seller-total-badge">{{ group.subtotal.toLocaleString() }} TK.</div>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <span class="seller-subtotal">{{ group.subtotal.toLocaleString() }} TK.</span>
+                                        <i
+                                            :class="['bx', collapsedGroups.includes(gIndex) ? 'bx-chevron-down' : 'bx-chevron-up', 'toggle-icon']"></i>
                                     </div>
                                 </div>
-
-                                <div class="seller-orders-table">
-                                    <table class="table report-table inner-table">
+                                <!-- Seller Orders Table -->
+                                <div v-show="!collapsedGroups.includes(gIndex)" class="seller-table-wrap">
+                                    <table class="table report-table seller-inner-table">
                                         <thead>
                                             <tr>
                                                 <th>#</th>
@@ -231,18 +227,16 @@
                                                 <td>{{ item.product_name }}</td>
                                                 <td class="text-end amount-cell">{{ Number(item.total).toLocaleString()
                                                 }}</td>
-                                                <td class="text-center">
-                                                    <span :class="['status-badge', statusClass(item.status_name)]">{{
-                                                        item.status_name }}</span>
-                                                </td>
+                                                <td class="text-center"><span
+                                                        :class="['status-badge', statusClass(item.status_name)]">{{
+                                                            item.status_name }}</span></td>
                                             </tr>
                                         </tbody>
                                         <tfoot>
                                             <tr class="subtotal-row">
-                                                <td colspan="4" class="text-end subtotal-label">Subtotal for {{
-                                                    group.sellerName }}</td>
-                                                <td class="text-end subtotal-amount">{{ group.subtotal.toLocaleString()
-                                                }} TK.</td>
+                                                <td colspan="4" class="text-end"><strong>Subtotal</strong></td>
+                                                <td class="text-end"><strong>{{ group.subtotal.toLocaleString() }}
+                                                        TK.</strong></td>
                                                 <td></td>
                                             </tr>
                                         </tfoot>
@@ -250,16 +244,15 @@
                                 </div>
                             </div>
 
-                            <div class="total-row mt-4" v-if="filteredData.length">
-                                <span class="total-label">Grand Total — {{ groupedBySeller.length }} Sellers, {{
-                                    filteredData.length }} Orders</span>
+                            <!-- Grand Total -->
+                            <div class="total-row mt-3" v-if="filteredData.length">
+                                <span class="total-label">Grand Total ({{ groupedBySeller.length }} Sellers)</span>
                                 <span class="total-amount">{{ totalSum.toLocaleString() }} TK.</span>
                             </div>
-                        </template>
+                        </div>
 
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -267,17 +260,19 @@
 
 <script>
 export default {
-    head: { title: 'Order Report' },
+    head: { title: "Order Report" },
     data() {
         return {
             data: [],
             order_status: [],
             allsellers: [],
             loading: false,
-            viewMode: 'grouped',
+            viewMode: 'flat',
+            collapsedGroups: [],
+            searchQuery: '',
             filters: {
-                fromDate: this.getFirstOfMonth(),
-                toDate: this.getToday(),
+                fromDate: this.getDefaultFromDate(),
+                toDate: this.getDefaultToDate(),
                 sellerId: '',
                 orderStatus: ''
             }
@@ -289,7 +284,15 @@ export default {
     },
     computed: {
         filteredData() {
-            return this.data;
+            let result = this.data;
+            if (this.searchQuery) {
+                const q = this.searchQuery.toLowerCase();
+                result = result.filter(item =>
+                    (item.orderId && item.orderId.toLowerCase().includes(q)) ||
+                    (item.product_name && item.product_name.toLowerCase().includes(q))
+                );
+            }
+            return result;
         },
         totalSum() {
             return this.filteredData.reduce((sum, item) => sum + Number(item.total || 0), 0);
@@ -303,17 +306,15 @@ export default {
                 map[key].subtotal += Number(item.total || 0);
             });
             return Object.values(map).sort((a, b) => b.subtotal - a.subtotal);
-        },
-        todayFormatted() {
-            return new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
         }
     },
     methods: {
-        getFirstOfMonth() {
-            const now = new Date();
-            return new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+        getDefaultFromDate() {
+            const d = new Date();
+            d.setDate(d.getDate() - 15);
+            return d.toISOString().split('T')[0];
         },
-        getToday() {
+        getDefaultToDate() {
             return new Date().toISOString().split('T')[0];
         },
         async fetchData() {
@@ -343,91 +344,50 @@ export default {
                 console.error(error);
             }
         },
-        resetFilters() {
-            this.filters = {
-                fromDate: this.getFirstOfMonth(),
-                toDate: this.getToday(),
-                sellerId: '',
-                orderStatus: ''
-            };
-            this.fetchData();
+        toggleGroup(index) {
+            const i = this.collapsedGroups.indexOf(index);
+            if (i === -1) this.collapsedGroups.push(index);
+            else this.collapsedGroups.splice(i, 1);
         },
         statusClass(status) {
-            if (!status) return 'status-default';
+            if (!status) return '';
             const s = status.toLowerCase();
             if (s.includes('deliver') || s.includes('complet')) return 'status-success';
             if (s.includes('cancel') || s.includes('reject')) return 'status-danger';
             if (s.includes('pending') || s.includes('process')) return 'status-warning';
             return 'status-default';
         },
+        exportCSV() {
+            const headers = ['Order ID', 'Date', 'Product Name', 'Seller Name', 'Total', 'Status'];
+            const rows = this.filteredData.map(item => [
+                item.orderId,
+                item.created_at.split('T')[0],
+                item.product_name,
+                item.seller_name,
+                item.total,
+                item.status_name
+            ]);
+            const csv = [headers, ...rows].map(r => r.map(v => `"${v || ''}"`).join(',')).join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `order-report-${this.filters.fromDate}-to-${this.filters.toDate}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+        },
         printReport() {
-            const printContents = document.getElementById('printable-area').innerHTML;
-            const originalContents = document.body.innerHTML;
-            document.body.innerHTML = `
-                <html>
-                  <head>
-                    <title>Order Report</title>
-                    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-                    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
-                    <style>
-                      @import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Display:wght@600;700&display=swap');
-                      * { font-family: 'Google Sans', sans-serif; box-sizing: border-box; }
-                      body { padding: 24px; background: #fff; }
-                      .no-print { display: none !important; }
-                      .print-header { display: block !important; padding-bottom: 14px; border-bottom: 2px solid #1a2b4a; margin-bottom: 20px; }
-                      .print-logo { font-family: 'Google Sans Display', sans-serif; font-size: 1.4rem; font-weight: 700; color: #1a2b4a; }
-                      .print-meta { font-size: 0.8rem; color: #5a6a80; margin-top: 4px; }
-                      .card-body-custom { padding: 16px 0; }
-                      .report-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-                      .report-table thead th { background: #f4f7fb; color: #5a6a80; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; padding: 10px 12px; border-bottom: 2px solid #dde4ef; white-space: nowrap; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                      .report-table tbody td { padding: 9px 12px; color: #2c3e58; border-bottom: 1px solid #f0f3f8; }
-                      .inner-table thead th { background: #fafcff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                      .row-num { color: #aab4c4; font-size: 0.72rem; font-weight: 600; }
-                      .order-id { font-family: 'Google Sans Display', sans-serif; font-size: 0.77rem; font-weight: 600; color: #3d6be4; }
-                      .amount-cell { font-weight: 600; color: #1a2b4a; }
-                      .status-badge { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; }
-                      .status-success { background: #e6f9f0; color: #1aad68; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                      .status-danger  { background: #ffeaea; color: #e03b3b; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                      .status-warning { background: #fff4e0; color: #d97706; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                      .status-default { background: #eaf1ff; color: #3d6be4; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                      .seller-section { margin-bottom: 24px; border: 1px solid #e2e9f4; border-radius: 10px; overflow: hidden; page-break-inside: avoid; }
-                      .seller-section-header { display: flex; justify-content: space-between; align-items: center; padding: 13px 18px; background: #1a2b4a !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                      .seller-header-left { display: flex; align-items: center; gap: 12px; }
-                      .seller-avatar { width: 38px; height: 38px; border-radius: 8px; background: rgba(255,255,255,0.18); color: #fff; font-family: 'Google Sans Display', sans-serif; font-size: 1rem; font-weight: 700; display: flex; align-items: center; justify-content: center; border: 1.5px solid rgba(255,255,255,0.3); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                      .seller-name { font-family: 'Google Sans Display', sans-serif; font-size: 0.9rem; font-weight: 700; color: #fff; }
-                      .seller-meta { font-size: 0.72rem; color: rgba(255,255,255,0.65); margin-top: 2px; display: flex; gap: 6px; }
-                      .seller-total-badge { font-family: 'Google Sans Display', sans-serif; font-size: 0.9rem; font-weight: 700; color: #fff; background: rgba(255,255,255,0.15); padding: 5px 14px; border-radius: 7px; border: 1px solid rgba(255,255,255,0.25); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                      .subtotal-row td { background: #f4f7fb !important; border-top: 2px solid #dde4ef; font-weight: 600; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                      .subtotal-label { font-size: 0.78rem; color: #5a6a80; }
-                      .subtotal-amount { font-family: 'Google Sans Display', sans-serif; color: #1a2b4a; }
-                      .total-row { display: flex; justify-content: flex-end; align-items: center; gap: 14px; margin-top: 14px; padding: 13px 18px; background: #eaf1ff !important; border-radius: 8px; border: 1px solid #d4e2fb; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                      .total-label { font-size: 0.78rem; font-weight: 600; color: #5a6a80; text-transform: uppercase; }
-                      .total-amount { font-family: 'Google Sans Display', sans-serif; font-size: 1.1rem; font-weight: 700; color: #1e42b8; }
-                      .dot { opacity: 0.5; }
-                      .text-end { text-align: right !important; }
-                      .text-center { text-align: center !important; }
-                      .mt-4 { margin-top: 1.5rem !important; }
-                      .table { width: 100%; margin-bottom: 0; }
-                      @page { margin: 16mm; }
-                    </style>
-                  </head>
-                  <body>${printContents}</body>
-                </html>
-            `;
             window.print();
-            document.body.innerHTML = originalContents;
-            window.location.reload();
         }
     }
 };
 </script>
 
 <style scoped>
-/* ── Google Sans font (replaces DM Sans + Sora) ── */
-@import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Display:wght@600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Sora:wght@600;700&display=swap');
 
 * {
-    font-family: 'Google Sans', sans-serif;
+    font-family: 'DM Sans', sans-serif;
 }
 
 /* ── Stat Cards ── */
@@ -435,10 +395,10 @@ export default {
     background: #fff;
     border: 1px solid #e8edf2;
     border-radius: 14px;
-    padding: 16px 18px;
+    padding: 18px 20px;
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 16px;
     box-shadow: 0 2px 10px rgba(15, 30, 60, 0.05);
     transition: transform 0.15s;
 }
@@ -448,13 +408,13 @@ export default {
 }
 
 .stat-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 11px;
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.25rem;
+    font-size: 1.3rem;
     flex-shrink: 0;
 }
 
@@ -473,15 +433,20 @@ export default {
     color: #7c4dff;
 }
 
+.stat-icon.orange {
+    background: #fff4e8;
+    color: #f07b00;
+}
+
 .stat-value {
-    font-family: 'Google Sans Display', sans-serif;
-    font-size: 1.2rem;
+    font-family: 'Sora', sans-serif;
+    font-size: 1.25rem;
     font-weight: 700;
     color: #1a2b4a;
 }
 
 .stat-label {
-    font-size: 0.73rem;
+    font-size: 0.75rem;
     color: #8a9bb5;
     font-weight: 500;
 }
@@ -496,10 +461,10 @@ export default {
 }
 
 .card-header-custom {
-    font-family: 'Google Sans Display', sans-serif;
+    font-family: 'Sora', sans-serif;
     font-size: 0.85rem;
     font-weight: 600;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.03em;
     color: #1a2b4a;
     background: #f4f7fb;
     border-bottom: 1px solid #e8edf2;
@@ -512,9 +477,9 @@ export default {
     padding: 22px;
 }
 
-/* ── Record Count ── */
+/* ── Record count ── */
 .record-count {
-    font-size: 0.73rem;
+    font-size: 0.75rem;
     font-weight: 500;
     color: #6b7c96;
     background: #eaf0f9;
@@ -524,8 +489,8 @@ export default {
 
 /* ── Form ── */
 .form-label-custom {
-    font-size: 0.73rem;
-    font-weight: 700;
+    font-size: 0.75rem;
+    font-weight: 600;
     color: #5a6a80;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -541,7 +506,6 @@ export default {
     color: #1a2b4a;
     background: #fafcff;
     transition: border-color 0.2s, box-shadow 0.2s;
-    font-family: 'Google Sans', sans-serif;
 }
 
 .form-control-custom:focus {
@@ -560,7 +524,6 @@ export default {
     padding: 9px 16px;
     font-size: 0.875rem;
     font-weight: 600;
-    font-family: 'Google Sans', sans-serif;
     transition: transform 0.15s, box-shadow 0.15s;
 }
 
@@ -568,23 +531,6 @@ export default {
     transform: translateY(-1px);
     box-shadow: 0 5px 16px rgba(61, 107, 228, 0.3);
     color: #fff;
-}
-
-.btn-reset {
-    background: #fff;
-    border: 1.5px solid #dde4ef;
-    color: #5a6a80;
-    border-radius: 8px;
-    padding: 9px 16px;
-    font-size: 0.875rem;
-    font-weight: 600;
-    font-family: 'Google Sans', sans-serif;
-    transition: all 0.15s;
-}
-
-.btn-reset:hover {
-    border-color: #aab4c4;
-    color: #1a2b4a;
 }
 
 .btn-action {
@@ -595,7 +541,6 @@ export default {
     padding: 6px 13px;
     font-size: 0.8rem;
     font-weight: 600;
-    font-family: 'Google Sans', sans-serif;
     transition: all 0.15s;
 }
 
@@ -619,7 +564,6 @@ export default {
     background: transparent;
     font-size: 0.78rem;
     font-weight: 600;
-    font-family: 'Google Sans', sans-serif;
     color: #8a9bb5;
     padding: 5px 12px;
     border-radius: 6px;
@@ -644,14 +588,13 @@ export default {
 .report-table thead th {
     background: #f4f7fb;
     color: #5a6a80;
-    font-size: 0.71rem;
-    font-weight: 700;
+    font-size: 0.72rem;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     padding: 11px 14px;
     border-bottom: 2px solid #dde4ef;
     white-space: nowrap;
-    font-family: 'Google Sans', sans-serif;
 }
 
 .report-table tbody tr {
@@ -667,29 +610,24 @@ export default {
     color: #2c3e58;
     border-bottom: 1px solid #f0f3f8;
     vertical-align: middle;
-    font-family: 'Google Sans', sans-serif;
-}
-
-.inner-table thead th {
-    background: #fafcff;
 }
 
 .row-num {
     color: #aab4c4;
-    font-size: 0.73rem;
+    font-size: 0.75rem;
     font-weight: 600;
     width: 36px;
 }
 
 .order-id {
-    font-family: 'Google Sans Display', sans-serif;
+    font-family: 'Sora', sans-serif;
     font-size: 0.78rem;
-    font-weight: 700;
+    font-weight: 600;
     color: #3d6be4;
 }
 
 .amount-cell {
-    font-weight: 700;
+    font-weight: 600;
     color: #1a2b4a;
 }
 
@@ -698,11 +636,10 @@ export default {
     display: inline-block;
     padding: 3px 11px;
     border-radius: 20px;
-    font-size: 0.71rem;
+    font-size: 0.72rem;
     font-weight: 600;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.03em;
     white-space: nowrap;
-    font-family: 'Google Sans', sans-serif;
 }
 
 .status-success {
@@ -732,7 +669,7 @@ export default {
     align-items: center;
     gap: 16px;
     margin-top: 16px;
-    padding: 14px 20px;
+    padding: 14px 18px;
     background: linear-gradient(135deg, #f0f5ff, #eaf1ff);
     border-radius: 10px;
     border: 1px solid #d4e2fb;
@@ -743,111 +680,94 @@ export default {
     font-weight: 600;
     color: #5a6a80;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
-    font-family: 'Google Sans', sans-serif;
+    letter-spacing: 0.05em;
 }
 
 .total-amount {
-    font-family: 'Google Sans Display', sans-serif;
+    font-family: 'Sora', sans-serif;
     font-size: 1.2rem;
     font-weight: 700;
     color: #1e42b8;
 }
 
-/* ── Seller Section ── */
-.seller-section {
-    margin-bottom: 28px;
-    border: 1px solid #e2e9f4;
+/* ── Seller Grouped View ── */
+.seller-group {
+    border: 1px solid #e8edf2;
     border-radius: 12px;
     overflow: hidden;
 }
 
-.seller-section-header {
+.seller-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 20px;
-    background: linear-gradient(135deg, #1a2b4a 0%, #2550c7 100%);
+    padding: 14px 20px;
+    background: linear-gradient(135deg, #f4f7fb, #eef2fb);
+    cursor: pointer;
+    transition: background 0.15s;
+    border-bottom: 1px solid #e8edf2;
 }
 
-.seller-header-left {
-    display: flex;
-    align-items: center;
-    gap: 14px;
+.seller-header:hover {
+    background: #e8effa;
 }
 
 .seller-avatar {
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
     border-radius: 10px;
-    background: rgba(255, 255, 255, 0.18);
+    background: linear-gradient(135deg, #3d6be4, #2550c7);
     color: #fff;
-    font-family: 'Google Sans Display', sans-serif;
-    font-size: 1.1rem;
+    font-family: 'Sora', sans-serif;
+    font-size: 1rem;
     font-weight: 700;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1.5px solid rgba(255, 255, 255, 0.3);
     flex-shrink: 0;
 }
 
 .seller-name {
-    font-family: 'Google Sans Display', sans-serif;
-    font-size: 0.95rem;
+    font-family: 'Sora', sans-serif;
+    font-size: 0.9rem;
     font-weight: 700;
-    color: #fff;
+    color: #1a2b4a;
 }
 
 .seller-meta {
     font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.65);
-    margin-top: 3px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-family: 'Google Sans', sans-serif;
+    color: #8a9bb5;
+    margin-top: 2px;
 }
 
-.seller-meta i {
-    font-size: 0.8rem;
-}
-
-.dot {
-    opacity: 0.5;
-}
-
-.seller-total-badge {
-    font-family: 'Google Sans Display', sans-serif;
-    font-size: 1rem;
+.seller-subtotal {
+    font-family: 'Sora', sans-serif;
+    font-size: 0.95rem;
     font-weight: 700;
-    color: #fff;
-    background: rgba(255, 255, 255, 0.15);
-    padding: 6px 16px;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #1e42b8;
 }
 
-.seller-orders-table {
-    background: #fff;
+.toggle-icon {
+    font-size: 1.1rem;
+    color: #8a9bb5;
+    transition: transform 0.2s;
+}
+
+.seller-table-wrap {
+    padding: 0;
+}
+
+.seller-inner-table {
+    margin-bottom: 0;
+}
+
+.seller-inner-table thead th {
+    background: #fafcff;
 }
 
 .subtotal-row td {
-    background: #f4f7fb !important;
-    border-top: 2px solid #dde4ef !important;
-}
-
-.subtotal-label {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: #5a6a80;
-    font-family: 'Google Sans', sans-serif;
-}
-
-.subtotal-amount {
-    font-family: 'Google Sans Display', sans-serif;
-    font-weight: 700;
-    color: #1a2b4a;
+    background: #f4f7fb;
+    border-top: 2px solid #dde4ef;
 }
 
 /* ── Loader ── */
@@ -878,31 +798,42 @@ export default {
     font-size: 0.85rem;
     color: #8a9bb5;
     margin: 0;
-    font-family: 'Google Sans', sans-serif;
 }
 
 /* ── No Data ── */
 .no-data {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 50px 0;
+    padding: 60px 0 !important;
     color: #aab4c4;
 }
 
 .no-data i {
-    font-size: 2.8rem;
-    margin-bottom: 10px;
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 8px;
 }
 
 .no-data p {
-    font-size: 0.88rem;
+    font-size: 0.9rem;
     margin: 0;
-    font-family: 'Google Sans', sans-serif;
 }
 
-/* ── Print header hidden on screen ── */
-.print-header {
-    display: none;
+/* ── Print ── */
+@media print {
+
+    .filter-card,
+    .btn-filter,
+    .btn-action,
+    .view-toggle {
+        display: none !important;
+    }
+
+    .report-card {
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+
+    .stat-card {
+        box-shadow: none;
+    }
 }
 </style>

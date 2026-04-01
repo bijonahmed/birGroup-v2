@@ -38,6 +38,9 @@ class OrderSubmit extends Controller
 
     public function submitOrder(Request $request)
     {
+
+    //dd($request->all());
+
         // 1️⃣ Validate request
         $validator = FacadesValidator::make(
             $request->all(),

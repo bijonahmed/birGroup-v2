@@ -66,8 +66,48 @@
                                         <td class="text-center">{{ item.name }}</td>
                                         <td>
                                             <center>
+
+                                                <!-- Edit Button -->
                                                 <button type="button" class="btn btn-warning bg-history-light"
-                                                    @click="edit(item.orderId)"><i class="bx bx-edit"></i></button>
+                                                    @click="edit(item.orderId)">
+
+                                                    <!-- Edit SVG -->
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                        fill="currentColor" viewBox="0 0 16 16">
+                                                        <path
+                                                            d="M12.854.146a.5.5 0 0 1 .707 0l2.293 2.293a.5.5 0 0 1 0 .707l-10 10L3 14l.854-2.854 10-10zM11.207 3L13 4.793 14.793 3 13 1.207 11.207 3zM1 13.5V16h2.5l9.793-9.793-2.5-2.5L1 13.5z" />
+                                                    </svg>
+                                                </button>
+
+                                                <!-- Invoice Button -->
+                                                <button type="button" class="btn btn-warning bg-history-light"
+                                                    @click="makeInvoice(item.orderId)">
+
+                                                    Invoice
+
+                                                    <!-- Invoice SVG -->
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                        fill="currentColor" viewBox="0 0 16 16">
+                                                        <path d="M2 2h12v12H2z" fill="none" />
+                                                        <path d="M4 4h8v1H4zm0 2h8v1H4zm0 2h5v1H4z" />
+                                                    </svg>
+                                                </button>
+
+                                                <!-- Delivery Note (DN) Button -->
+                                                <button type="button" class="btn btn-warning bg-history-light"
+                                                    @click="edit(item.orderId)">
+
+                                                   Delivery note
+
+                                                    <!-- Delivery SVG -->
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                        fill="currentColor" viewBox="0 0 16 16">
+                                                        <path d="M0 1h10v9H0zM10 4h3l3 3v3h-6z" />
+                                                        <circle cx="3" cy="12" r="2" />
+                                                        <circle cx="11" cy="12" r="2" />
+                                                    </svg>
+                                                </button>
+
                                             </center>
                                         </td>
                                     </tr>
@@ -168,6 +208,14 @@ export default {
                 }
             })
 
+        },
+        makeInvoice(orderId) {
+            this.$router.push({ 
+                path: '/orders/invoice',
+                query: {
+                    orderId: orderId
+                }
+            })
         }
     },
 };

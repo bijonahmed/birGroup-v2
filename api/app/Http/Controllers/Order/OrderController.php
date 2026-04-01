@@ -25,7 +25,6 @@ use Illuminate\Support\Facades\Validator as FacadesValidator;
 
 class OrderController extends Controller
 {
-
     protected $userid;
     public function __construct()
     {
@@ -36,7 +35,6 @@ class OrderController extends Controller
             $this->userid = $user->id;
         }
     }
-
     public function orderStatusRow($id)
     {
         try {
@@ -53,7 +51,6 @@ class OrderController extends Controller
         }
         return response()->json($response, 200);
     }
-
     public function save_order(Request $request)
     {
         //dd($request->all());
@@ -72,17 +69,14 @@ class OrderController extends Controller
         } else {
             OrderStatus::where('id', $request->id)->update($data);
         }
-
         $response = [
             'data' => $data,
             'message' => 'success'
         ];
         return response()->json($response, 200);
     }
-
     public function orderStatus()
     {
-
         try {
             $rows = OrderStatus::all();
             $response = [
@@ -97,7 +91,6 @@ class OrderController extends Controller
         }
         return response()->json($response, 200);
     }
-
     function addtowish($slug)
     {
         $findproduct = Product::where('slug', $slug)->select('id')->first();
@@ -107,12 +100,8 @@ class OrderController extends Controller
         $row->save();
         return response()->json("Item successfully added to your wishlist!", 200);
     }
-
     function allWishList()
     {
-
-
-
         $rows = WishList::join('product', 'product.id', '=', 'wishlist.product_id')->where('wishlist.customer_id', $this->userid)
             ->select(
                 'wishlist.id as wishid',
@@ -139,18 +128,13 @@ class OrderController extends Controller
             ->leftJoin('users', 'users.id', '=', 'product.seller_id')
             ->leftJoin('brands', 'product.brand', '=', 'brands.id')
             ->get();
-
-
         $products = [];
         foreach ($rows as $key => $v) {
             $last_price = 0;
-
             $vat = $v->vat ? $v->vat : '0';
             $price = $v->price + ($v->price * $vat / 100);
-
             $percent_discount = $price - ($price * $v->discount / 100);
             $fixed_discount = $price - $v->discount;
-
             if ($v->discount_status == 1) {
                 $last_price = $percent_discount;
             } elseif ($v->discount_status == 2) {
@@ -158,7 +142,6 @@ class OrderController extends Controller
             } else {
                 $last_price = $price;
             }
-
             $products[] = [
                 'id'                => $v->id,
                 'product_name'      => $v->name,
@@ -171,8 +154,6 @@ class OrderController extends Controller
                 'slug'              => $v->slug,
                 'last_price'        => $last_price,
                 'pro_slug'              => $v->slug,
-
-
                 'free_shopping'         => $v->free_shopping,
                 'flat_rate_price'       => $v->flat_rate_price,
                 'shipping_days'         => $v->shipping_days,
@@ -181,17 +162,12 @@ class OrderController extends Controller
                 'stock_qty'             => $v->stock_qty,
                 'seller_name'             => $v->seller_name,
                 'seller_slug'             => $v->seller_slug,
-
-
             ];
         }
-
         return response()->json($products, 200);
     }
-
     function removeWishList($id)
     {
-
         $wishlistItem = WishList::find($id);
         if (!$wishlistItem) {
             return response()->json(['error' => 'WishList item not found'], 404);
@@ -199,21 +175,16 @@ class OrderController extends Controller
         $wishlistItem->delete();
         return response()->json(['message' => 'WishList item deleted successfully']);
     }
-
     function generateUniqueRandomNumber($length = 5)
     {
         do {
             $randomNumber = mt_rand(pow(10, $length - 1), pow(10, $length) - 1);
         } while (Order::where('id', $randomNumber)->exists());
-
         return $randomNumber;
     }
-
     public function getOrder()
     {
-
         $orders = [];
-
         $data['orders']  = Order::where('customer_id', $this->userid)->where('order_status', 1)->limit(2)->get();
         foreach ($data['orders'] as $v) {
             $orders[] = [
@@ -222,21 +193,15 @@ class OrderController extends Controller
                 'total'        => number_format($v->total, 2),
             ];
         }
-
         $order['orderdata']      = $orders;
-
         return response()->json($order, 200);
     }
-
-
     public function update_order_status(Request $request)
     {
         $data['order_status'] = $request->orderstatus;
         Order::where('orderId', $request->orderId)->update($data);
         return response()->json("update successfully", 200);
     }
-
-
     public function updateOrderStatus(Request $request)
     {
         $orderId = $request->orderId;
@@ -245,43 +210,30 @@ class OrderController extends Controller
         Order::where('orderId', $orderId)->update($data);
         return response()->json("update successfully", 200);
     }
-
     public function orderDetails($order_id)
     {
-
         $orderStatus     = orderStatus::all();
         $findorder       = Order::join('order_status', 'order_status.id', '=', 'orders.order_status')
             ->select('orders.*', 'order_status.name as orderstatus', 'order_status.id as orderstatus_id')
             ->where('orderId', $order_id)->first();
-
         $data['orders']  = OrderHistory::join('product', 'product.id', '=', 'order_history.product_id')
             ->select('product.name as product_name', 'product.thumnail_img', 'product.discount_status', 'product.discount', 'product.vat_status', 'product.vat', 'order_history.*')
             ->where('order_id', $findorder->id)->get();
-
         $findOrderedProduct = ordersProduct::where('order_id', $order_id)
             ->join('product', 'product.id', '=', 'orders_product.product_id')
             ->select('product.name as pro_name', 'product.slug as pro_slug', 'product.thumnail_img as pro_image', 'orders_product.*')
             ->get();
-
         foreach ($findOrderedProduct as $item) {
             $item->pro_img = url($item->pro_image);
         }
-
-
-
         // dd($findOrderedProduct);
         // return false;
-
-
         foreach ($data['orders'] as $v) {
-
             $last_price = 0;
             $vat = $v->vat ? $v->vat : '0';
             $price = $v->price + ($v->price * $vat / 100);
-
             $percent_discount = $price - ($price * $v->discount / 100);
             $fixed_discount = $price - $v->discount;
-
             if ($v->discount_status == 1) {
                 $last_price = $percent_discount;
             } elseif ($v->discount_status == 2) {
@@ -289,9 +241,15 @@ class OrderController extends Controller
             } else {
                 $last_price = $v->price;
             }
-
+            $orderrow = Order::find($v->order_id);
+            $rowCheck = ordersProduct::where('order_id', $orderrow->orderId)->where('product_id', $v->product_id)->first();
+            $size = !empty($rowCheck->size) ? $rowCheck->size : "";
             $orders[] = [
-                'product_name'      => $v->product_name,
+                'order_id'          => $v->order_id,
+                'orderId'           => $orderrow->orderId,
+                'product_id'        => $v->product_id,
+                'product_name'      => $v->product_name . ($size ? ' - ' . $size : ''),
+                'size'              => $size,
                 'thumbnail_img'     => url($v->thumnail_img),
                 'quantity'          => $v->quantity,
                 'price'             => $v->price,
@@ -300,26 +258,17 @@ class OrderController extends Controller
                 'vat_status'        => $v->vat_status,
                 'vat'               => $v->vat,
                 'last_price'        => $last_price,
-
                 'price'           => $v->price,
                 'total'           => $v->quantity * $v->price,
             ];
         }
-
-
         $devlDate = OrderHistory::join('product', 'product.id', '=', 'order_history.product_id')
             ->select('product.delivery_days', 'product.name as product_name', 'product.thumnail_img', 'product.discount_status', 'product.discount', 'product.vat_status', 'product.vat', 'order_history.*')
             ->where('order_id', $findorder->id)->first();
         $delivery_days =  (!empty($devlDate) && isset($devlDate->delivery_days)) ? $devlDate->delivery_days : "";
         $order['devliveryDate'] = $delivery_days;
-
         $findCustomer = User::where('id', $findorder->customer_id)->first();
-
         //   dd($findorder->customer_id);
-
-
-
-
         $order['customername']  = !empty($findCustomer->name) ? $findCustomer->name : "";
         $order['customeremail'] = !empty($findCustomer->email) ? $findCustomer->email : "";
         $order['customerphone'] = !empty($findCustomer->phone_number) ? $findCustomer->phone_number : "";
@@ -329,7 +278,6 @@ class OrderController extends Controller
         $order['orderstatus_id'] = !empty($findorder->orderstatus_id) ? $findorder->orderstatus_id : "";
         $order['orderData']     = !empty($findorder) ? $findorder : "";
         $order['OrderStatus']   = $orderStatus;
-
         $order['packed_status'] = !empty($findorder->packed_status) ? $findorder->packed_status : "";
         $order['dispatched_status'] = !empty($findorder->dispatched_status) ? $findorder->dispatched_status : "";
         $order['outForDelivery_status'] = !empty($findorder->outForDelivery_status) ? $findorder->outForDelivery_status : "";
@@ -337,19 +285,13 @@ class OrderController extends Controller
         $order['cancel_status'] = !empty($findorder->cancel_status) ? $findorder->cancel_status : "";
         $order['return_status'] = !empty($findorder->return_status) ? $findorder->return_status : "";
         $order['products'] = !empty($findOrderedProduct) ? $findOrderedProduct : '';
-
         $timestamp = strtotime($findorder->created_at);
         $formattedDate = date("jS F, Y", $timestamp);
         $order['create_at'] = !empty($findorder->created_at) ? $formattedDate : "";
-
         return response()->json($order, 200);
     }
-
-
-
     public function checkOrders()
     {
-
         $orders = Order::whereDate('created_at', Carbon::today())->count();
         $data['orders']     = $orders;
         $data['products']   = Product::where('status', 1)->count();
@@ -357,24 +299,22 @@ class OrderController extends Controller
     }
     public function orderFilterReport(Request $request)
     {
-
         $query = Order::query();
-
         // date filter
         if ($request->fromDate && $request->toDate) {
-
             $query->whereBetween('orders.created_at', [
                 $request->fromDate . ' 00:00:00',
                 $request->toDate . ' 23:59:59'
             ]);
         } else {
-
             // default today filter
             $query->whereDate('orders.created_at', Carbon::today());
         }
-
         if ($request->sellerId) {
             $query->where('product.seller_id', $request->sellerId);
+        }
+        if ($request->orderStatus) {
+            $query->where('orders.order_status', $request->orderStatus);
         }
 
         $orders = $query
@@ -383,7 +323,6 @@ class OrderController extends Controller
             ->join('order_history', 'orders.id', '=', 'order_history.order_id')
             ->join('product', 'order_history.product_id', '=', 'product.id')
             ->join('users', 'product.seller_id', '=', 'users.id')
-
             ->select(
                 'orders.*',
                 'order_status.name as status_name',
@@ -393,27 +332,19 @@ class OrderController extends Controller
             //->where()
             ->orderBy('orders.id', 'DESC')
             ->get();
-
         return response()->json([
             'orderdata' => $orders
         ]);
     }
-
-
-
-
     public function allOrders()
     {
-
         // $data['orders'] = Order::join('order_status', 'orders.order_status', '=', 'order_status.id')
         //     ->select('orders.*', 'order_status.name as order_status_name', 'orders_product.*')
         //     ->join('orders_product', 'orders_product.order_id', '=', 'orders.orderId')
         //     ->join('product', 'product.id', '=', 'orders_product.product_id')
         //     ->get();
-
         // dd($data);
         // return false;
-
         $data['orders'] = Order::join('order_status', 'orders.order_status', '=', 'order_status.id')
             ->select(
                 'orders.*',
@@ -434,10 +365,8 @@ class OrderController extends Controller
             ->where('orders.customer_id', $this->userid)
             ->orderBy('orders.created_at', 'desc')
             ->get();
-
         //             dd($data);
         // return false;
-
         foreach ($data['orders'] as $v) {
             $orders[] = [
                 'name'          => $v->name,
@@ -448,32 +377,22 @@ class OrderController extends Controller
                 'pro_name'      => $v->product_name,
                 'pro_slug'       => $v->product_slug,
                 'pro_img'       => url($v->thumbnail_img)
-
             ];
         }
-
         $order['orderdata']      = $orders;
-
         return response()->json($order, 200);
     }
-
-
     public function allOrdersAdmin()
     {
-
         $data['orders'] = Order::join('order_status', 'orders.order_status', '=', 'order_status.id')
             ->select('orders.*', 'order_status.name')
             ->get();
-
         $orders = [];
-
         foreach ($data['orders'] as $v) {
-
             $productNames = OrderHistory::where('order_id', $v->id)
                 ->leftJoin('product', 'product.id', '=', 'order_history.product_id')
                 ->pluck('product.name')
                 ->implode(', '); // combine names
-
             $orders[] = [
                 'id'          => $v->id,
                 'name'        => $v->name,
@@ -483,15 +402,11 @@ class OrderController extends Controller
                 'total'       => number_format($v->total, 2),
             ];
         }
-
         $order['orderdata'] = $orders;
-
         return response()->json($order, 200);
     }
-
     public function submitOrder(Request $request)
     {
-
         $validator = FacadesValidator::make(
             $request->all(),
             [
@@ -509,15 +424,11 @@ class OrderController extends Controller
                 'shipp_address'         => 'Please add your address',
                 'billAddress'           => 'Please add your billing address',
                 'payment_staus'         => 'Please select payment method',
-
             ]
         );
-
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-
-
         $subTotal               = $request->subTotal;
         $item_total               = $request->item_total;
         $shipp_address          = $request->shipp_address;
@@ -526,9 +437,7 @@ class OrderController extends Controller
         $Cutomer_email          = $request->Cutomer_email;
         $Cutomer_phone_number   = $request->Cutomer_phone_number;
         $payment_staus          = $request->payment_staus;
-
         $randomNum = $this->userid . $this->generateUniqueRandomNumber() . "-" . date("y");
-
         $cartData = json_decode($request->input('cart'));
         if (is_object($cartData)) {
             // Convert the stdClass object to an array
@@ -542,7 +451,6 @@ class OrderController extends Controller
             $quantity  = $cartItem->quantity; //$cartItem['quantity'];
             $price     = str_replace(',', '', $cartItem->product->price); //$cartItem['product']['price']); // Remove commas
             $price     = floatval($price); // Convert to float
-
             if (!is_numeric($quantity) || !is_numeric($price)) {
                 continue;
             }
@@ -550,12 +458,10 @@ class OrderController extends Controller
             $subtotal = $quantity * $price;
             $total += $subtotal;
         }
-
         $order                  = new Order();
         $order->orderId         = $randomNum;
         $order->total           = $item_total;
         $order->subtotal        = $subTotal;
-
         $order->shipper_name          = $Cutomer_name;
         $order->shipper_email         = $Cutomer_email;
         $order->shipper_phone_number  = $Cutomer_phone_number;
@@ -565,13 +471,10 @@ class OrderController extends Controller
         $order->billing_phone_number  = $Cutomer_phone_number;
         $order->billing_address       = $billAddress;
         $order->payment_type        = $payment_staus;
-
         $order->customer_id     = $this->userid;
         $order->order_status    = 1; // Order Placed 
         $order->save();
-
         $lastOrderId = $order->id;
-
         $formattedItems = [];
         foreach ($cartData as $item) {
             $formattedItem = [
@@ -586,7 +489,6 @@ class OrderController extends Controller
                 'size' => $item->product->size ? $item->product->size : '',
                 'vat' => $item->product->vat,
                 'vat_status' => $item->product->vat_status,
-
             ];
             // dd($item->product->warranty_id);
             // return false;
@@ -597,12 +499,9 @@ class OrderController extends Controller
                     'order_id'      => $order->orderId,
                 ]);
             }
-
             $formattedItems[] = $formattedItem;
             ordersProduct::create($formattedItem);
         }
-
-
         $itemtotal = 0;
         foreach ($cartData as $cartItem) {
             $pid = $cartItem->product->id; //$cartItem['product']['id'];
@@ -641,7 +540,6 @@ class OrderController extends Controller
             $order_history->total           = $itemtotal;
             $order_history->save();
         }
-
         $couponUse = $request->coupon_id ?? '';
         if ($couponUse !== '') {
             // dd($request->coupon_id,$request->user_id);
@@ -649,19 +547,14 @@ class OrderController extends Controller
                 'user_id' => $request->user_id,
                 'coupon_id' => $request->coupon_id,
             ]);
-
             return response()->json("Your order successfully done!", 200);
         }
-
         return response()->json("Your order successfully done!", 200);
     }
     public function orderTrackadd(request $request)
     {
-
         $id = $request->order_id;
-
         $order = Order::where('orderId', $id)->first();
-
         if ($order) {
             $order->update([
                 'packed_status' => $request->packed ? 1 : 0,
@@ -671,7 +564,6 @@ class OrderController extends Controller
                 'cancel_status' => $request->canceled ? 1 : 0,
                 'return_status' => $request->returned ? 1 : 0,
             ]);
-
             return response()->json(['message' => 'Order status updated successfully'], 200);
         } else {
             return response()->json(['error' => 'Order not found'], 404);

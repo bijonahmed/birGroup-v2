@@ -59,6 +59,9 @@
                                                 <div align="center">Total</div>
                                             </td>
                                         </tr>
+
+                                        <!-- <pre>==={{ orders }}==</pre> -->
+
                                         <tr v-for="(order, index) in orders" :key="index">
                                             <td>{{ index + 1 }}</td>
                                             <td>
@@ -389,50 +392,18 @@ export default {
                     });
 
                 });
-
-
-
-            // this.$axios.post('/order/orderTrack', formData)
-            //     .then(response => {
-            //         Lobibox.notify('success', {
-            //             pauseDelayOnHover: true,
-            //             continueDelayOnInactiveTab: false,
-            //             position: 'top right',
-            //             icon: 'bx bx-check-circle',
-            //             msg: 'Order has been successfully updated'
-            //         });
-            //     })
-            //     .catch(error => {
-            //         let errorMessage = 'An error occurred while updating the order. Please try again later.';
-
-            //         if (error.response && error.response.status === 422) {
-            //             const validationErrors = error.response.data.errors;
-            //             errorMessage = Object.keys(validationErrors)
-            //                 .map(field => `${field}: ${validationErrors[field].join(', ')}`)
-            //                 .join('\n');
-            //         } else if (error.response && error.response.data && error.response.data.message) {
-            //             errorMessage = error.response.data.message;
-            //         }
-
-            //         Lobibox.notify('error', {
-            //             pauseDelayOnHover: true,
-            //             continueDelayOnInactiveTab: false,
-            //             position: 'top right',
-            //             icon: 'bx bx-error-circle',
-            //             msg: errorMessage
-            //         });
-
-            //         console.error('Error:', error);
-            //     });
         },
-        // getTrackstatus(){
-        //     const orderId = this.$route.query.orderId;
-        //     this.$axios.get(`/order/orderTrackList/${orderId}`)
-        //     .then(response =>{
-        //         this.trackData = response.data;
-        //         console.log(response.data);
-        //     });
-        // },
+
+        /*
+        getTrackstatus() {
+            const orderId = this.$route.query.orderId;
+            this.$axios.get(`/order/orderTrackList/${orderId}`)
+                .then(response => {
+                    this.trackData = response.data;
+                    console.log(response.data);
+                });
+        },*/
+        
         saveData() {
             const formData = new FormData();
             formData.append('orderId', this.insertdata.orderId);

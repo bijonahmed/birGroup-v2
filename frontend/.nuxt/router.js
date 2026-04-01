@@ -92,6 +92,7 @@ const _d4e34f92 = () => interopDefault(import('..\\pages\\index.vue' /* webpackC
 const _358008fe = () => interopDefault(import('..\\pages\\user\\invite-user\\_id.vue' /* webpackChunkName: "pages/user/invite-user/_id" */))
 const _c6693122 = () => interopDefault(import('..\\pages\\business\\_slug.vue' /* webpackChunkName: "pages/business/_slug" */))
 const _05265991 = () => interopDefault(import('..\\pages\\product-details\\_slug.vue' /* webpackChunkName: "pages/product-details/_slug" */))
+const _24034c54 = () => interopDefault(import('..\\pages\\product-details\\_slug copy.vue' /* webpackChunkName: "pages/product-details/_slug copy" */))
 const _c7cd65ea = () => interopDefault(import('..\\pages\\resetpassword\\_slug.vue' /* webpackChunkName: "pages/resetpassword/_slug" */))
 
 const emptyFn = () => {}
@@ -457,6 +458,10 @@ export const routerOptions = {
     path: "/product-details/:slug?",
     component: _05265991,
     name: "product-details-slug"
+  }, {
+    path: "/product-details/:slug%20copy?",
+    component: _24034c54,
+    name: "product-details-slug copy"
   }, {
     path: "/resetpassword/:slug?",
     component: _c7cd65ea,
