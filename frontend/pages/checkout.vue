@@ -54,7 +54,7 @@
                           </div>
                           <div style="width:45%">
                             <b style="font-size:12px;color:#222;">
-                              {{ item.product.name }}
+                              {{ item.product.product_name }}
                             </b>
                           </div>
                         </nuxt-link>
@@ -500,7 +500,7 @@ export default {
             totalPrice += parseFloat(item.product.last_price) * item.quantity;
             sumOfFlatRatePrices += parseFloat(item.product.flat_rate_price ? item.product.flat_rate_price : '0') * item.quantity;
             sumOfLastPrices = totalPrice + item.product.warrantyamt * item.quantity;
-            console.log(sumOfLastPrices);
+          //  console.log(sumOfLastPrices);
           } else {
             sumOfLastPrices += parseFloat(item.product.last_price) * item.quantity;
             sumOfFlatRatePrices += parseFloat(item.product.flat_rate_price ? item.product.flat_rate_price : '0') * item.quantity;
@@ -630,7 +630,7 @@ export default {
         }
         this.user_id = response.data.data.id;
         //this.defaultLoading();
-       // this.getQuponList();
+        // this.getQuponList();
       });
     },
     getcompanyData() {
@@ -699,16 +699,14 @@ export default {
       formData.append("item_total", this.sumOfLastPrices);
       formData.append("delivery_fee", this.sumOfFlatRatePrices);
 
-      //Shipping Address
+      // Shipping Address
       formData.append("shipp_phoneNumber", this.shipp_phoneNumber);
       formData.append("shipp_address", this.shipp_address);
-      //Billing Details
+      // Billing Details
       formData.append("Cutomer_name", this.insertdata.name);
       formData.append("Cutomer_email", this.insertdata.email);
       formData.append("Cutomer_phone_number", this.insertdata.phone_number);
-      // formData.append("coupon_id", this.coupon_id ? this.coupon_id : '');
-      // formData.append("user_id", this.insertdata.id);
-      //Payment method
+      // Payment method
       formData.append("payment_staus", this.selectedPayment);
 
       // 5️⃣ Submit form via Axios
@@ -716,6 +714,22 @@ export default {
       this.$axios
         .post("/order/submitOrder", formData, { headers })
         .then((response) => {
+      
+          const orderConfirmData = {
+            customerName: this.insertdata.name,
+            customerEmail: this.insertdata.email,
+            customerPhone: this.insertdata.phone_number,
+            shippingAddress: this.shipp_address,
+            shippingPhone: this.shipp_phoneNumber,
+            paymentMethod: this.paymentMethod,
+            cartItems: JSON.parse(JSON.stringify(this.cart)), // snapshot before cart clears
+            itemTotal: this.sumOfLastPrices.toFixed(2),
+            deliveryFee: this.sumOfFlatRatePrices.toFixed(2),
+            total: this.totalSum.toFixed(2),
+            date: new Date().toLocaleDateString('en-GB'),
+          };
+          sessionStorage.setItem('lastOrderData', JSON.stringify(orderConfirmData));
+
           Swal.fire({
             icon: "success",
             title: "Order submitted successfully!",
@@ -726,7 +740,7 @@ export default {
             timerProgressBar: true,
           });
           this.clearCart();
-          this.$router.push("/");
+          this.$router.push("/order-confirm");
         })
         .catch((error) => {
           if (error.response.status === 422) {
