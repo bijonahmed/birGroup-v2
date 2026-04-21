@@ -13,29 +13,45 @@
                 <div class="checkout-billing">
                   <h6 class="section-title">Billing Details</h6>
                   <div class="row g-3 mb-4">
+
                     <div class="col-md-12">
+                      <label class="form-label" style="font-size:12px;">Full Name</label>
                       <input type="text" class="form-control custom-input" v-model="insertdata.name"
                         placeholder="Enter your full name">
                     </div>
+
                     <div class="col-md-6">
+                      <label class="form-label" style="font-size:12px;">Email</label>
                       <input type="email" class="form-control custom-input" v-model="insertdata.email"
                         placeholder="Enter your email">
                     </div>
+
                     <div class="col-md-6">
+                      <label class="form-label" style="font-size:12px;">Phone Number</label>
                       <input type="text" class="form-control custom-input" maxlength="11"
-                        v-model="insertdata.phone_number" placeholder="Enter your phone number">
+                        v-model="insertdata.phone_number" placeholder="Enter your phone number" @input="onlyNumber">
                     </div>
+
                   </div>
                   <h6 class="section-title">Shipping Address</h6>
                   <div class="row g-3">
+
                     <div class="col-md-6">
+                      <label class="form-label" style="font-size:12px;">
+                        Shipping Address
+                      </label>
+                      <input type="text" class="form-control custom-input" v-model="shipp_address"
+                        placeholder="Enter your shipping address">
+                    </div>
+
+                    <div class="col-md-6">
+                      <label class="form-label" style="font-size:12px;">
+                        Shipping Phone Number
+                      </label>
                       <input type="text" class="form-control custom-input" maxlength="11" v-model="shipp_phoneNumber"
-                        placeholder="Enter your shipping phone number">
+                        placeholder="Enter your shipping phone number" @input="onlyNumbership">
                     </div>
-                    <div class="col-md-6">
-                      <input type="text" class="form-control custom-input" placeholder="Enter your shipping address"
-                        v-model="shipp_address">
-                    </div>
+
                   </div>
                 </div>
               </div>
@@ -52,9 +68,9 @@
                             <img :src="item.product.thumnail_img" class="img-fluid" alt=""
                               style="height:80px;width:80px;border:1px solid #e5e5e5;padding:5px;border-radius:8px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,0.08);" />
                           </div>
-                          <div style="width:45%">
+                          <div style="width:45%" class="d-none">
                             <b style="font-size:12px;color:#222;">
-                              {{ item.product.product_name }}
+                              {{ item.product.name }}
                             </b>
                           </div>
                         </nuxt-link>
@@ -96,7 +112,7 @@
               </div>
             </div>
             <div class="col-md-4">
-              <div class="cart_summary d-none">
+              <div class="cart_summary">
                 <div class="side_title">
                   <h5>Delivery Charge</h5>
                 </div>
@@ -256,7 +272,7 @@ export default {
         card_number: '',
         expiry_date: '',
       },
-      selectedShipping: 60, // default active
+      selectedShipping: 60, // default active — Inside Dhaka
       shippingOptions: [
         { id: 1, name: "Inside Dhaka", price: 60 },
         { id: 2, name: "Outside Dhaka", price: 130 }
@@ -292,6 +308,7 @@ export default {
         address: "",
         email: "",
         phone_number: "",
+        password: "123456",
         country: "",
         city: "",
         //ship
@@ -351,6 +368,16 @@ export default {
       return this.$auth.loggedIn;
     },
   },
+  watch: {
+    // ✅ Watch selectedShipping — recalculate totals whenever delivery option changes
+    selectedShipping(newVal) {
+      this.calculateSumOfLastPrices();
+    },
+    // ✅ Watch selectedPayment — recalculate when COD toggled (COD fee affects total)
+    selectedPayment(newVal) {
+      this.calculateSumOfLastPrices();
+    },
+  },
   mounted() {
     this.openPromo();
     this.cart.forEach((item) => {
@@ -379,6 +406,16 @@ export default {
     this.calculateSumOfLastPrices();
   },
   methods: {
+    onlyNumber(e) {
+      // remove everything except digits
+      this.insertdata.phone_number = e.target.value.replace(/[^0-9]/g, '')
+    },
+
+    onlyNumbership(e) {
+      // remove everything except digits
+      this.shipp_phoneNumber = e.target.value.replace(/[^0-9]/g, '')
+    },
+
     selectPayment(method) {
       this.paymentMethod = method;
     },
@@ -488,38 +525,37 @@ export default {
     calculateSumOfLastPrices() {
       let selectedPayment = this.selectedPayment ? this.selectedPayment : '0';
       let COD_fee = this.COD_fee;
-      // console.log(COD_fee);
       const cartData = localStorage.getItem("cart");
       if (cartData) {
         const cart = JSON.parse(cartData);
         let sumOfLastPrices = 0;
-        let sumOfFlatRatePrices = 0;
         let totalPrice = 0;
+
         cart.forEach((item) => {
           if (item.product.warrantyamt) {
             totalPrice += parseFloat(item.product.last_price) * item.quantity;
-            sumOfFlatRatePrices += parseFloat(item.product.flat_rate_price ? item.product.flat_rate_price : '0') * item.quantity;
             sumOfLastPrices = totalPrice + item.product.warrantyamt * item.quantity;
-          //  console.log(sumOfLastPrices);
           } else {
             sumOfLastPrices += parseFloat(item.product.last_price) * item.quantity;
-            sumOfFlatRatePrices += parseFloat(item.product.flat_rate_price ? item.product.flat_rate_price : '0') * item.quantity;
           }
         });
-        let allsum;
-        let allsum_warranty = 0;
+
+        // ✅ Use selectedShipping directly as the delivery fee
+        let sumOfFlatRatePrices = parseFloat(this.selectedShipping || 0);
+
         let subsum = sumOfLastPrices + sumOfFlatRatePrices;
-        // console.log(subsum);
-        if (selectedPayment == "COD") {
+
+        let allsum;
+        if (selectedPayment === "COD") {
           allsum = parseFloat(subsum) + parseFloat(COD_fee);
-          // console.log(allsum);
         } else {
           allsum = subsum;
         }
+
         this.coupons.price = allsum;
         this.sumOfLastPrices = sumOfLastPrices;
-        this.sumOfFlatRatePrices = sumOfFlatRatePrices;
-        this.totalSum = allsum;
+        this.sumOfFlatRatePrices = sumOfFlatRatePrices; // ✅ Now reflects selected shipping option
+        this.totalSum = allsum;                          // ✅ Total = items + selected delivery fee
       }
     },
     updateSelectedData() {
@@ -714,10 +750,14 @@ export default {
       this.$axios
         .post("/order/submitOrder", formData, { headers })
         .then((response) => {
-      
+          console.log("Order submission response:", response.data.order_id);
+          //  return false; 
+          const order_id = response.data.order_id;
           const orderConfirmData = {
+            order_id: order_id,
             customerName: this.insertdata.name,
             customerEmail: this.insertdata.email,
+            password: this.insertdata.password,
             customerPhone: this.insertdata.phone_number,
             shippingAddress: this.shipp_address,
             shippingPhone: this.shipp_phoneNumber,
@@ -758,15 +798,6 @@ export default {
             });
           }
         });
-    },
-    clearCart() {
-      this.loading = true;
-      localStorage.removeItem("cart");
-      this.cart = [];
-      this.cartItemCount();
-      setTimeout(() => {
-        this.loading = false;
-      }, 2000);
     },
     updateQuantity(productId, newQuantity) {
       this.loading = true;

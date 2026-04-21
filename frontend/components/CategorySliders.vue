@@ -49,24 +49,24 @@
 
                                             <div v-if="item.discount_status == 1"
                                                 class="d-flex justify-content-center align-items-center gap-2">
-                                                <p class="mb-0">BDT{{ item.last_price.toFixed(2) }}</p>
+                                                <p class="mb-0">Tk.{{ item.last_price.toFixed(2) }}</p>
                                                 <p class="mb-0" v-if="item.discount !== 0">
-                                                    <strike>${{ item.price.toFixed(2) }}</strike>
+                                                    <strike>Tk.{{ item.price.toFixed(2) }}</strike>
                                                     <span>{{ item.discount }}%</span>
                                                 </p>
                                             </div>
 
                                             <div v-else-if="item.discount_status == 2"
                                                 class="d-flex justify-content-center align-items-center gap-2">
-                                                <p class="mb-0">BDT{{ item.last_price.toFixed(2) }}</p>
+                                                <p class="mb-0">Tk.{{ item.last_price.toFixed(2) }}</p>
                                                 <p class="mb-0" v-if="item.discount !== 0">
-                                                    <strike>${{ item.price.toFixed(2) }}</strike>
-                                                    <span>BDT{{ item.discount.toFixed(2) }}</span>
+                                                    <strike>Tk.{{ item.price.toFixed(2) }}</strike>
+                                                    <span>Tk.{{ item.discount.toFixed(2) }}</span>
                                                 </p>
                                             </div>
 
                                             <div v-else>
-                                                <p class="mb-0">BDT{{ item.last_price.toFixed(2) }}</p>
+                                                <p class="mb-0">Tk.{{ item.last_price.toFixed(2) }}</p>
                                             </div>
 
                                         </nuxt-link>

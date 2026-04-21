@@ -105,35 +105,35 @@
                                                     <!-- Discount Type 1 -->
                                                     <div v-if="item.discount_status == 1">
                                                         <p v-if="item.discount !== 0" class="mb-0 fw-bold">
-                                                            BDT {{ item.percent_discount.toFixed(2) }}
+                                                            Tk.{{ item.percent_discount.toFixed(2) }}
                                                         </p>
                                                         <p v-else class="mb-0 fw-bold">
-                                                            BDT {{ item.price.toFixed(2) }}
+                                                            Tk.{{ item.price.toFixed(2) }}
                                                         </p>
                                                         <p v-if="item.discount !== 0 && item.discount !== ''"
                                                             class="mb-0 text-muted">
-                                                            <strike>BDT {{ item.price }}</strike>
+                                                            <strike>Tk.{{ item.price }}</strike>
                                                             <span class="text-danger ms-1">{{ item.discount }}%</span>
                                                         </p>
                                                     </div>
                                                     <!-- Discount Type 2 -->
                                                     <div v-else-if="item.discount_status == 2">
                                                         <p v-if="item.discount !== 0" class="mb-0 fw-bold">
-                                                            BDT {{ item.fixed_discount.toFixed(2) }}
+                                                            Tk.{{ item.fixed_discount.toFixed(2) }}
                                                         </p>
                                                         <p v-else class="mb-0 fw-bold">
-                                                            BDT {{ item.price.toFixed(2) }}
+                                                            Tk.{{ item.price.toFixed(2) }}
                                                         </p>
                                                         <p v-if="item.discount !== 0 && item.discount !== ''"
                                                             class="mb-0 text-muted">
-                                                            <strike>BDT {{ item.price }}</strike>
+                                                            <strike>Tk.{{ item.price }}</strike>
                                                             <span class="text-danger ms-1">{{ item.discount }}</span>
                                                         </p>
                                                     </div>
                                                     <!-- No Discount -->
                                                     <div v-else>
                                                         <p class="mb-0 fw-bold">
-                                                            BDT {{ item.price.toFixed(2) }}
+                                                            Tk.{{ item.price.toFixed(2) }}
                                                         </p>
                                                     </div>
                                                 </div>

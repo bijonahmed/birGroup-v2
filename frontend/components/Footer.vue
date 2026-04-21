@@ -217,6 +217,10 @@
                             <li>
                                 <Nuxt-link to="/return-and-replacement">Return and Replacement</Nuxt-link>
                             </li>
+
+                            <li>
+                                <Nuxt-link to="/contactus">Contact Us</Nuxt-link>
+                            </li>
                         </ul>
                     </div>
 

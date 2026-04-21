@@ -196,7 +196,7 @@
                                 <i class="fas fa-circle-question"></i> Help
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Help Center </a></li>
+                                <li><Nuxt-link class="dropdown-item" to="/contactus">Help Center</Nuxt-link></li>
                                 <!-- <li><a class="dropdown-item" href="#">Place An Order</a></li>
                                 <li><a class="dropdown-item" href="#">Payment Option </a></li>
                                 <li><a class="dropdown-item" href="#">Truck an order </a></li>

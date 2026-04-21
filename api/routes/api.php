@@ -1,5 +1,4 @@
 <?php
-
 use App\Http\Controllers\Admin\AdminController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -33,8 +32,6 @@ use App\Http\Controllers\Chat\ChatController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
-
 Route::post('messages', [ChatController::class, 'message']);
 Route::post('customerSendMessages', [ChatController::class, 'customerSendMessages']);
 Route::post('sellerSendMessages', [ChatController::class, 'sellerSendMessages']);
@@ -42,9 +39,6 @@ Route::get('/messages/{community_slug}', [ChatController::class, 'getMessages'])
 Route::get('/getSellerMessages/{seller_id}', [ChatController::class, 'getSellerMessages']);
 Route::get('/getBuyListForSeller', [ChatController::class, 'getBuyerList']);
 Route::get('/getSellerList', [ChatController::class, 'getSellerList']);
-
-
-
 Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'
@@ -60,10 +54,7 @@ Route::group([
     Route::post('updateprofile', [AuthController::class, 'updateprofile']);
     Route::post('updateBusinessprofile', [AuthController::class, 'updateBusinessprofile']);
     Route::post('updatePassword', [AuthController::class, 'changesPassword']);
-
     Route::get('showProfileData', [AuthController::class, 'showProfileData']);
-
-
     Route::post('password/email', [ForgotPasswordController::class, 'sendPasswordResetEmail']);
     Route::post('password/reset', [ResetPasswordController::class, 'updatePassword']);
 });
@@ -71,7 +62,6 @@ Route::group([
     'middleware' => 'api',
     'prefix' => 'customer'
 ], function () {
-
     Route::get('getmlmReport', [CustomerController::class, 'getmlmReport']);
     Route::get('cateCommissionHistReport', [CustomerController::class, 'cateCommissionHistReport']);
     Route::get('getCustomerLevel', [CustomerController::class, 'getCustomerLevel']);
@@ -140,7 +130,6 @@ Route::group([
     Route::post('saveAttributeVal', [CategoryController::class, 'saveAttributeVal']);
     Route::get('getCategoryList', [CategoryController::class, 'allCategory']);
     Route::get('getSpeacialCategoryList', [CategoryController::class, 'getSpeacialCategoryList']);
-
     Route::get('getInacCategoryList', [CategoryController::class, 'allInacCategory']);
     Route::get('getProductCategoryList', [CategoryController::class, 'getProductCategoryList']);
     Route::get('removeProctCategory', [CategoryController::class, 'removeProctCategory']);
@@ -156,12 +145,10 @@ Route::group([
     Route::get('attributes-val-list', [CategoryController::class, 'getAttributeValList']);
     Route::post('speacialCatSave', [CategoryController::class, 'speacialCatSave']);
 });
-
 Route::group([
     'middleware' => 'api',
     'prefix' => 'product'
 ], function () {
-
     Route::post('save', [ProductController::class, 'save']);
     Route::post('product-update', [ProductController::class, 'productUpdate']);
     Route::post('insertVarient', [ProductController::class, 'insertVarient']);
@@ -186,7 +173,6 @@ Route::group([
     Route::get('addWarranty/{product_id}', [ProductController::class, 'getaddWarranty']);
     Route::get('deletewarranty/{id}', [ProductController::class, 'deletewarranty']);
 });
-
 Route::group([
     //'middleware' => 'api',
     'prefix' => 'manufacturers'
@@ -195,7 +181,6 @@ Route::group([
     Route::get('allmanufacturers', [ManufacturesController::class, 'allmanufacturers']);
     Route::get('manufacturersrow/{id}', [ManufacturesController::class, 'manufacturersrow']);
 });
-
 Route::group([
     //'middleware' => 'api',
     'prefix' => 'brands'
@@ -206,7 +191,6 @@ Route::group([
     Route::get('brandrow/{id}', [BrandsController::class, 'brandrow']);
     // Route::get('searchmodels', [BrandsController::class, 'searchmodels']);
 });
-
 Route::group([
     'middleware' => 'api',
     'prefix' => 'project'
@@ -226,13 +210,12 @@ Route::group([
     Route::get('getAllDocuments', [DocumentsController::class, 'getAllDocuments']);
     Route::get('documents-row/{id}', [DocumentsController::class, 'editId']);
 });
-
 Route::group([
     'prefix' => 'order'
 ], function () {
     //Add to cart 
     Route::post('submitOrder', [OrderSubmit::class, 'submitOrder']);
-   // Route::post('submitOrder', [OrderController::class, 'submitOrder']);
+    // Route::post('submitOrder', [OrderController::class, 'submitOrder']);
     Route::get('getOrder', [OrderController::class, 'getOrder']);
     Route::get('allOrders', [OrderController::class, 'allOrders']);
     Route::get('orderFilterReport', [OrderController::class, 'orderFilterReport']);
@@ -250,7 +233,6 @@ Route::group([
     Route::post('orderTrack', [OrderController::class, 'orderTrackadd']);
     Route::get('orderTrackList/{orderid}', [OrderController::class, 'orderTrackaddList']);
 });
-
 Route::group([
     //'middleware' => 'api',
     'prefix' => 'unauthenticate'
@@ -258,6 +240,7 @@ Route::group([
     //Add to cart 
     Route::get('cart', [CartController::class, 'index']);
     Route::get('getCartData', [CartController::class, 'getCartData']);
+    
     Route::post('addToCart', [CartController::class, 'addToCart']);
     Route::get('searchProductCategory', [UnauthenticatedController::class, 'productCategory']);
     Route::get('showCategoryTwo', [UnauthenticatedController::class, 'showCategoryTwo']);
@@ -283,33 +266,25 @@ Route::group([
     Route::get('allsellers', [UnauthenticatedController::class, 'allsellers']);
     Route::get('countrylist', [UnauthenticatedController::class, 'countrylist']);
     Route::get('allbrandsList', [UnauthenticatedController::class, 'allbrandlist']);
-
     Route::get('allsellerList', [UnauthenticatedController::class, 'getallsellerList']);
     Route::get('allsellerListadmin', [UnauthenticatedController::class, 'allsellerListadmin']);
-
     Route::get('readcoupons', [UnauthenticatedController::class, 'featchcoupon']);
     Route::get('readcoupons/{code}', [UnauthenticatedController::class, 'getCoupon']);
     Route::post('couponDiscount', [UnauthenticatedController::class, 'getcouponDiscount']);
     Route::get('alldealsads', [UnauthenticatedController::class, 'getdealsbannersads']);
     Route::get('headerbanner', [UnauthenticatedController::class, 'getbanner']);
-
     Route::get('getAdsbanner', [UnauthenticatedController::class, 'topadsbanner']);
     Route::get('brandproductList/{slug}', [UnauthenticatedController::class, 'getbrandproductList']);
     Route::get('speacialCategory', [UnauthenticatedController::class, 'getSpeacialCatList']);
     Route::get('checkAttribueDetails', [UnauthenticatedController::class, 'checkAttribueDetails']);
     Route::get('products/search', [UnauthenticatedController::class, 'search']);
-
     //blogs
     Route::get('blogs', [UnauthenticatedController::class, 'getblogs']);
     Route::get('blogCat', [UnauthenticatedController::class, 'blogCat']);
     Route::get('blogdetails', [UnauthenticatedController::class, 'blogdetails']);
-
     Route::get('getsalaryuser', [UnauthenticatedController::class, 'getsalaryuser']);
     Route::get('getsPackUser', [UnauthenticatedController::class, 'getsPackUser']);
 });
-
-
-
 Route::group([
     'middleware' => 'api',
     'prefix' => 'setting'
@@ -329,7 +304,6 @@ Route::group([
     Route::get('checkrowPack/{id}', [SettingController::class, 'checkrowPack']);
     Route::get('getsalary', [SettingController::class, 'getsalary']);
     Route::get('getPack', [SettingController::class, 'getPack']);
-
     //Annual Pay 
     Route::post('insertAnnualPay', [SettingController::class, 'insertAnnualPay']);
     Route::get('getAnnualPayist', [SettingController::class, 'getAnnualPayist']);
@@ -362,35 +336,26 @@ Route::group([
     Route::get('bannerTopget', [SettingController::class, 'getbannerTop']);
     Route::post('bannerTop', [SettingController::class, 'updatebannerTop']);
     Route::post('dealsbannner', [SettingController::class, 'updatedealsbannner']);
-        Route::post('updatedealsbannnerLink', [SettingController::class, 'updatedealsbannnerLink']);
+    Route::post('updatedealsbannnerLink', [SettingController::class, 'updatedealsbannnerLink']);
     Route::get('getdealsbanner', [SettingController::class, 'getdealsbanners']);
     Route::post('sliderLeftads', [SettingController::class, 'updatesliderLeftads']);
-       Route::post('updatesliderLeftadsLink', [SettingController::class, 'updatesliderLeftadsLink']);
+    Route::post('updatesliderLeftadsLink', [SettingController::class, 'updatesliderLeftadsLink']);
     Route::get('getadsbannerreq', [SettingController::class, 'getadsbanner']);
-
     // coupons 
     Route::post('addcoupons', [SettingController::class, 'savecoupons']);
     Route::get('couponsList', [SettingController::class, 'couponsList']);
     Route::post('updatecoupon', [SettingController::class, 'updatecoupon']);
     Route::get('getcoupons/{id}', [SettingController::class, 'getcoupons']);
-
     // seller status 
     Route::get('editseller/{id}', [SettingController::class, 'editseller']);
     Route::post('updateSeller', [SettingController::class, 'updateSeller']);
     // sliders     
     Route::post('addslidersImages', [SettingController::class, 'saveslidersImages']);
     Route::post('deleteSlider', [SettingController::class, 'deleteSliderimage']);
-
     Route::post('companyProfile', [SettingController::class, 'updateCompanyProfile']);
     Route::get('getCompanyData', [SettingController::class, 'getProfileData']);
     Route::get('getcoupons', [SettingController::class, 'getcoupos']);
 });
-
-
-
-
-
-
 Route::group([
     'middleware' => 'api',
     'prefix' => 'holiday'
@@ -434,7 +399,6 @@ Route::group([
     Route::get('adminblogcatlist', [blogController::class, 'adminblogcatlist']);
     Route::get('blogCatdetails/{slug}', [blogController::class, 'blogCatdetails']);
     Route::post('updateBlogCat', [blogController::class, 'updateBlogCat']);
-
     //updateBlog
     Route::post('add-newblog', [blogController::class, 'addblog']);
     Route::get('bloglist', [blogController::class, 'bloglist']);

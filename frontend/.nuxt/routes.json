@@ -63,6 +63,13 @@
     "_name": "_2abdd9f4"
   },
   {
+    "name": "contactus",
+    "path": "/contactus",
+    "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\contactus.vue",
+    "chunkName": "pages/contactus",
+    "_name": "_520d55a3"
+  },
+  {
     "name": "coupons",
     "path": "/coupons",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\coupons.vue",
@@ -91,18 +98,18 @@
     "_name": "_dc1965c0"
   },
   {
+    "name": "liveTracking",
+    "path": "/liveTracking",
+    "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\liveTracking.vue",
+    "chunkName": "pages/liveTracking",
+    "_name": "_109eba6e"
+  },
+  {
     "name": "login",
     "path": "/login",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\login.vue",
     "chunkName": "pages/login",
     "_name": "_5f35fb4e"
-  },
-  {
-    "name": "login-old1.0",
-    "path": "/login-old1.0",
-    "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\login-old1.0.vue",
-    "chunkName": "pages/login-old1.0",
-    "_name": "_08e0d13b"
   },
   {
     "name": "official-store",
@@ -322,11 +329,144 @@
     "_name": "_168377e1"
   },
   {
+    "name": "user-account-statement",
+    "path": "/user/account-statement",
+    "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\account-statement.vue",
+    "chunkName": "pages/user/account-statement",
+    "_name": "_031315c9"
+  },
+  {
+    "name": "user-my-reviews",
+    "path": "/user/my-reviews",
+    "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\my-reviews.vue",
+    "chunkName": "pages/user/my-reviews",
+    "_name": "_60b717f0"
+  },
+  {
+    "name": "user-myPackages",
+    "path": "/user/myPackages",
+    "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\myPackages.vue",
+    "chunkName": "pages/user/myPackages",
+    "_name": "_4f59022f"
+  },
+  {
+    "name": "user-mySalary",
+    "path": "/user/mySalary",
+    "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\mySalary.vue",
+    "chunkName": "pages/user/mySalary",
+    "_name": "_c2c1f9e8"
+  },
+  {
+    "name": "user-old_user-withdrawal copy",
+    "path": "/user/old_user-withdrawal%20copy",
+    "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\old_user-withdrawal copy.vue",
+    "chunkName": "pages/user/old_user-withdrawal copy",
+    "_name": "_63345ce8"
+  },
+  {
+    "name": "user-order-details",
+    "path": "/user/order-details",
+    "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\order-details.vue",
+    "chunkName": "pages/user/order-details",
+    "_name": "_3eb2e9bd"
+  },
+  {
+    "name": "user-track-order",
+    "path": "/user/track-order",
+    "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\track-order.vue",
+    "chunkName": "pages/user/track-order",
+    "_name": "_df2ff174"
+  },
+  {
+    "name": "user-user-affiliate",
+    "path": "/user/user-affiliate",
+    "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\user-affiliate.vue",
+    "chunkName": "pages/user/user-affiliate",
+    "_name": "_6bd97d7e"
+  },
+  {
+    "name": "user-user-bloglist",
+    "path": "/user/user-bloglist",
+    "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\user-bloglist.vue",
+    "chunkName": "pages/user/user-bloglist",
+    "_name": "_520c6e7c"
+  },
+  {
+    "name": "user-user-blogPost",
+    "path": "/user/user-blogPost",
+    "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\user-blogPost.vue",
+    "chunkName": "pages/user/user-blogPost",
+    "_name": "_32d0e99e"
+  },
+  {
+    "name": "user-user-dashborad",
+    "path": "/user/user-dashborad",
+    "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\user-dashborad.vue",
+    "chunkName": "pages/user/user-dashborad",
+    "_name": "_11e237ca"
+  },
+  {
+    "name": "user-user-mlm",
+    "path": "/user/user-mlm",
+    "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\user-mlm.vue",
+    "chunkName": "pages/user/user-mlm",
+    "_name": "_43ffdf22"
+  },
+  {
+    "name": "user-user-orders",
+    "path": "/user/user-orders",
+    "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\user-orders.vue",
+    "chunkName": "pages/user/user-orders",
+    "_name": "_3ec210a1"
+  },
+  {
+    "name": "user-user-profile",
+    "path": "/user/user-profile",
+    "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\user-profile.vue",
+    "chunkName": "pages/user/user-profile",
+    "_name": "_1012fe9d"
+  },
+  {
+    "name": "user-user-requireProduct",
+    "path": "/user/user-requireProduct",
+    "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\user-requireProduct.vue",
+    "chunkName": "pages/user/user-requireProduct",
+    "_name": "_3640c706"
+  },
+  {
+    "name": "user-user-security",
+    "path": "/user/user-security",
+    "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\user-security.vue",
+    "chunkName": "pages/user/user-security",
+    "_name": "_47b2b308"
+  },
+  {
+    "name": "user-user-whichlist",
+    "path": "/user/user-whichlist",
+    "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\user-whichlist.vue",
+    "chunkName": "pages/user/user-whichlist",
+    "_name": "_2ade8da2"
+  },
+  {
+    "name": "user-user-withdrawal",
+    "path": "/user/user-withdrawal",
+    "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\user-withdrawal.vue",
+    "chunkName": "pages/user/user-withdrawal",
+    "_name": "_99f75f1e"
+  },
+  {
     "name": "index",
     "path": "/",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\index.vue",
     "chunkName": "pages/index",
     "_name": "_d4e34f92"
+  },
+  {
+    "name": "user-invite-user-id",
+    "path": "/user/invite-user/:id?",
+    "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\user\\\\invite-user\\\\_id.vue",
+    "chunkName": "pages/user/invite-user/_id",
+    "_name": "_358008fe"
   },
   {
     "name": "business-slug",

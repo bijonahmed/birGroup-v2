@@ -78,29 +78,29 @@
                                                 <div class="text-center">
                                                     <div class="d-flex justify-content-center align-items-center mb-1"
                                                         v-if="item.discount_status == 1">
-                                                        <p class="me-2 mb-0" v-if="item.discount !== 0">BDT {{
+                                                        <p class="me-2 mb-0" v-if="item.discount !== 0">Tk.{{
                                                             item.percent_discount.toFixed(2) }}</p>
-                                                        <p class="me-2 mb-0" v-else>BDT {{ item.price.toFixed(2) }}</p>
+                                                        <p class="me-2 mb-0" v-else>Tk.{{ item.price.toFixed(2) }}</p>
                                                         <p class="mb-0"
                                                             v-if="item.discount !== 0 && item.discount !== ''">
-                                                            <strike>BDT {{ item.price }}</strike>
+                                                            <strike>Tk.{{ item.price }}</strike>
                                                             <span>{{ item.discount }}%</span>
                                                         </p>
                                                     </div>
 
                                                     <div class="d-flex justify-content-center align-items-center mb-1"
                                                         v-else-if="item.discount_status == 2">
-                                                        <p class="me-2 mb-0" v-if="item.discount !== 0">BDT {{
+                                                        <p class="me-2 mb-0" v-if="item.discount !== 0">Tk.{{
                                                             item.fixed_discount.toFixed(2) }}</p>
-                                                        <p class="me-2 mb-0" v-else>BDT {{ item.price.toFixed(2) }}</p>
+                                                        <p class="me-2 mb-0" v-else>Tk.{{ item.price.toFixed(2) }}</p>
                                                         <p class="mb-0"
                                                             v-if="item.discount !== 0 && item.discount !== ''">
-                                                            <strike>BDT {{ item.price }}</strike>
+                                                            <strike>Tk.{{ item.price }}</strike>
                                                             <span>{{ item.discount }}</span>
                                                         </p>
                                                     </div>
 
-                                                    <p v-else class="mb-0">BDT {{ item.price.toFixed(2) }}</p>
+                                                    <p v-else class="mb-0">Tk.{{ item.price.toFixed(2) }}</p>
                                                 </div>
                                                 <!-- Rating -->
                                                 <div class="d-flex align-items-center d-none">

@@ -27,7 +27,7 @@
                         <div class="payment_part d-flex justify-content-center">
 
 
-                            <nuxt-link to="#" :class="{ active: $route.path === '#' }"
+                            <nuxt-link to="/liveTracking" :class="{ active: $route.path === '/liveTracking' }"
                                 class="a_link">
                                 Track Your Orders
                             </nuxt-link>
