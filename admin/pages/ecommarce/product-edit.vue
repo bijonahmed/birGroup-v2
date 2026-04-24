@@ -215,6 +215,17 @@
                                         </select>
                                     </div>
 
+
+                                        <div class="form-group mb-2">
+                                        <label for="input-meta-title-1" class="form-label">Activation
+                                            Status</label>
+                                        <select class="form-select form-select-sm" aria-label=".form-select-sm example" v-model="insertdata.status">
+                                            <option value="1">Active</option>
+                                            <option value="0">Inactive</option>
+                                        </select>
+                                    </div>
+
+
                                 </div>
                             </div>
                         </div>
@@ -381,7 +392,7 @@ export default {
                 vat_status: '',
                 tax: '',
                 tax_status: '',
-                status: '1',
+                status: '',
                 manufacturer: '',
                 download_link: '',
                 brand: '0',
@@ -539,7 +550,9 @@ export default {
             formData.append('tax_status', this.insertdata.tax_status);
             formData.append('cash_dev_status', this.insertdata.cash_dev_status);
             formData.append('shipping_days', this.insertdata.shipping_days);
-            // formData.append('status', this.insertdata.status);
+            formData.append('status', this.insertdata.status);
+            console.log("Status:" + this.insertdata.status);
+           // return false; 
             const headers = {
                 'Content-Type': 'multipart/form-data'
             };

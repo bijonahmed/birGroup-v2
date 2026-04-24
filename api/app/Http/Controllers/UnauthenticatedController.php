@@ -142,6 +142,7 @@ class UnauthenticatedController extends Controller
             )
                 ->leftJoin('brands', 'product.brand', '=', 'brands.id')
                 ->where('product.id', $product->product_id)
+
                 ->first();
 
             if (!$productDetails) {
@@ -235,6 +236,7 @@ class UnauthenticatedController extends Controller
             ->leftJoin('brands', 'brands.id', '=', 'product.brand')
             ->select('produc_categories.product_id', 'product.name', 'product.seller_id', 'product.slug', 'product.thumnail_img', 'product.price', 'product.brand', 'product.discount', 'product.discount_status', 'product.flat_rate_status', 'product.flat_rate_price', 'product.free_shopping', 'product.vat_status', 'product.vat', 'product.stock_qty', 'product.stock_status', 'product.shipping_days', 'categorys.name as cate_name', 'categorys.slug as catslug', 'users.business_name as seller_name', 'users.business_name_slug as seller_slug', 'brands.name as brand_name')
             ->whereIn('produc_categories.category_id', $category_ids)
+            ->where('product.status', 1)
             ->orderByDesc('product.id')->limit(20)->get();
 
         $groupedCategories = $categorys->groupBy('cate_name');
@@ -277,7 +279,7 @@ class UnauthenticatedController extends Controller
                 $products[] = [
                     'product_id' => $v->product_id,
                     'id' => $v->product_id,
-                    'name' => substr($v->name, 0, 12) . '...',
+                    'name' => substr($v->name, 0, 50) . '...',
                     'product_name' => substr($v->name, 0, 12) . '...',
                     'thumnail_img' => !empty($v->thumnail_img) ? url($v->thumnail_img) : '',
                     'thumnail' => !empty($v->thumnail_img) ? url($v->thumnail_img) : '',
@@ -1143,6 +1145,7 @@ class UnauthenticatedController extends Controller
             ->join('product', 'product.id', '=', 'produc_categories.product_id')
             ->leftJoin('users', 'users.id', '=', 'product.seller_id')
             ->leftJoin('brands', 'product.brand', '=', 'brands.id')
+            ->where('product.status', 1)
             ->get();
         //dd($proCategorys);
         // return false;
@@ -1481,8 +1484,8 @@ class UnauthenticatedController extends Controller
         $id = $getbrands->id;
 
         $getProduct = Product::where('brand', $id)
-
             ->join('users', 'product.seller_id', '=', 'users.id')
+            ->where('product.status',1)
             ->get(['product.id', 'product.seller_id', 'product.name', 'product.slug', 'product.description', 'product.short_description', 'product.brand', 'product.sku', 'product.price', 'product.unit', 'product.stock_qty', 'product.stock_mini_qty', 'product.stock_status', 'product.manufacturer', 'product.discount', 'product.discount_status', 'product.shipping_days', 'product.free_shopping', 'product.flat_rate_status', 'product.flat_rate_price', 'product.vat', 'product.vat_status', 'product.tax', 'product.tax_status', 'product.thumnail_img', 'users.business_name as seller_name', 'users.business_name_slug as seller_slug']);
 
         $products = [];

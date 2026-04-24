@@ -45,7 +45,9 @@
                                                 Free Delivery
                                             </span>
 
-                                            <h1 class="mt-2 mb-1">{{ item.name }}</h1>
+
+
+                                            <p class="mt-2 mb-1" style="font-size: 15px;">{{ item.name }}</p>
 
                                             <div v-if="item.discount_status == 1"
                                                 class="d-flex justify-content-center align-items-center gap-2">

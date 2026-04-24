@@ -309,7 +309,7 @@ export default {
             try {
                 // Call API with query params
                 const response = await this.$axios.get(`/unauthenticate/allsellerListadmin`);
-              //  console.log(response.data.data);
+                //  console.log(response.data.data);
                 this.sellersList = response.data.data;
 
             } catch (error) {
@@ -350,7 +350,13 @@ export default {
 
         deleteProduct(id) {
             //alert(id);
+            Swal.fire(
+                'Deleted!',
+                'Sorry delete now allowed.',
+                'error'
+            )
 
+            return false;
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",

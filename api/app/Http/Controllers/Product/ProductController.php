@@ -51,7 +51,7 @@ class ProductController extends Controller
         //dd($request->all());
         $validator = Validator::make($request->all(), [
             'name'           => 'required',
-            //  'category'       => 'required',
+            'status'         => 'required',
             'price'          => 'required',
             'stock_qty'      => 'required|integer',
             'stock_mini_qty' => 'required|integer',
@@ -96,11 +96,11 @@ class ProductController extends Controller
             'vat_status'                 => !empty($request->vat_status) ? $request->vat_status : "",
             'tax'                        => !empty($request->tax) ? $request->tax : 0,
             'tax_status'                 => !empty($request->tax_status) ? $request->tax_status : "",
-            'status'                     => !empty($request->status) ? $request->status : "",
             'seller_id'                  => !empty($request->seller_id) ? $request->seller_id : "",
+            'status'                     => $request->status,
             'entry_by'                   => $this->userid
         );
-        //    dd($data);
+         //  dd($data);
         if (!empty($request->file('files'))) {
             $files = $request->file('files');
             $fileName = Str::random(20);
@@ -434,7 +434,7 @@ class ProductController extends Controller
 
             return [
                 'id'            => $item['id'],
-                'name'          => mb_substr(mb_convert_encoding($item['name'], 'UTF-8', 'UTF-8'), 0, 20),
+                'name'          => mb_substr(mb_convert_encoding($item['name'], 'UTF-8', 'UTF-8'), 0, 500),
                 'stock_qty'     => $item['stock_qty'],
                 'status'        => $item['status'],
                 'brand_id'      => $item['brand'],
@@ -569,6 +569,8 @@ class ProductController extends Controller
 
     public function removeProducts($id)
     {
+         return response()->json("sorry delete not allowed successfully delete product", 200);
+         exit;
         //echo $id;exit; 
         if (!empty($id)) {
             Product::where('id', $id)->delete();

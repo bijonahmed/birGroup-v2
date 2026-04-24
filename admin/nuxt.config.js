@@ -115,7 +115,6 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // baseURL: "http://127.0.0.1:8000/api",
-    // baseURL: "https://api.isumax.com/api/",
     baseURL: process.env.API_BASE_URL || "http://127.0.0.1:8000/api/",
   },
   // router: {

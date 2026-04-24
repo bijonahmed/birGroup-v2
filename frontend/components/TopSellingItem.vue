@@ -9,8 +9,10 @@
                         </div>
                     </div>
 
+
                     <div class="swiper mySwiper pro_slider">
                         <div class="swiper-wrapper">
+
                             <div class="swiper-slide" v-for="item in toproducts" :key="item.id">
                                 <div class="product_grid text-start"
                                     style="border: 1px solid var(--color_Primary); border-radius: 8px; padding: 10px;">
@@ -25,19 +27,23 @@
                                         <img :src="item.thumnail_img" class="img-fluid" loading="lazy">
                                         <span v-if="item.free_shopping == 1">Free Delivery</span>
                                         <!-- <strong>Official Store </strong> -->
-                                        <h1 class="text-center">{{ item.name }}</h1>
+                                        <p class="text-center product-name"
+                                            style="font-size: 16px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; line-height: 1.4; max-height: 2.8em;">
+                                            {{ item.name }}</p>
                                         <div v-if="item.discount_status == 1"
                                             class="d-flex aligh-items-center d-none text-center">
-                                            <p>BDT{{ item.last_price.toFixed(2) }}</p>
-                                            <p class="ms-1" v-if="item.discount !== 0"><strike>${{ item.price.toFixed(2)
+                                            <p>Tk.{{ item.last_price.toFixed(2) }}</p>
+                                            <p class="ms-1" v-if="item.discount !== 0"><strike>Tk.{{
+                                                item.price.toFixed(2)
                                                     }}</strike> <span>{{ item.discount }}%</span> </p>
                                         </div>
                                         <div v-else-if="item.discount_status == 2" class="d-flex aligh-items-center">
-                                            <p>BDT{{ item.last_price.toFixed(2) }}</p>
+                                            <p>Tk.{{ item.last_price.toFixed(2) }}</p>
 
-                                            <p class="ms-1" v-if="item.discount !== 0"><strike>${{ item.price.toFixed(2)
+                                            <p class="ms-1" v-if="item.discount !== 0"><strike>Tk.{{
+                                                item.price.toFixed(2)
                                                     }}</strike>
-                                                <span>BDT{{ item.discount.toFixed(2) }}</span>
+                                                <span>Tk.{{ item.discount.toFixed(2) }}</span>
                                             </p>
                                         </div>
                                         <div v-else class="text-center">

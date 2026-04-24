@@ -68,7 +68,7 @@
                                                 <span v-if="item.free_shopping == 1" class="free_delivery">Free
                                                     Delivery</span>
                                                 <!-- <strong>{{ item.seller_name || 'Admin Seller' }}</strong> -->
-                                                <h1 class="mt-1">{{ item.product_name }}</h1>
+                                                <p class="mt-1" style="font-size: 15px;">{{ item.product_name }}</p>
                                                 <!-- Price & Discount -->
                                                 <div class="text-center">
                                                     <div class="d-flex justify-content-center align-items-center mb-1"
@@ -223,7 +223,7 @@ export default {
             const slug = this.$route.query.slug;
             try {
                 const response = await this.$axios.get(`/unauthenticate/brandproductList/${slug}`).then(response => {
-                    console.log("=-===" + response.data.products);
+                  //  console.log("=-===" + response.data.products);
                     this.products = response.data.products;
                     this.allbrands = response.data.allbrands;
                     this.brandName = response.data.brandName;
