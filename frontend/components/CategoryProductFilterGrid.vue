@@ -164,7 +164,9 @@ export default {
                     this.loadSidebarAndProducts(newSubSlug);
                 }
             }
-        }
+        },
+        
+
     },
     async mounted() {
         this.calculateSubtotal();
@@ -210,10 +212,10 @@ export default {
         },
         async filterByCategory(slug) {
             this.selectedCategory = slug;
-            console.log("Filtering by category slug:", slug);
+          
             this.loading = true;
             try {
-                const response = await this.$axios.get(`/unauthenticate/findSubCategorys/${slug}`);
+                const response = await this.$axios.get(`/unauthenticate/filterbySubcategorys/${slug}`);
                 //        console.log("Products for main category:", response.data);
                 this.prouducts = response.data.result;
                 this.pro_count = response.data.pro_count;
@@ -226,9 +228,10 @@ export default {
         },
         // Original product fetch (for main category)
         async fetchData(slug) {
+              console.log("Filtering by category slug:", slug);
             this.loading = true;
             try {
-                const response = await this.$axios.get(`/unauthenticate/findSubCategorys/${slug}`);
+                const response = await this.$axios.get(`/unauthenticate/filterbySubcategorys/${slug}`);
                 // console.log("Products for main category:", response.data);
                 this.prouducts = response.data.result;
                 this.pro_count = response.data.pro_count;

@@ -149,9 +149,6 @@
   "TopSellingItemBackup": {
     "description": "Auto imported from components/TopSellingItemBackup.vue"
   },
-  "TopSellingItemCopy": {
-    "description": "Auto imported from components/TopSellingItem_copy.vue"
-  },
   "Tutorial": {
     "description": "Auto imported from components/Tutorial.vue"
   },

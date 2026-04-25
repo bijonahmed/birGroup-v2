@@ -1,15 +1,15 @@
 <template>
     <div>
         <LogoAndPayment />
-        <!-- navbar section start here  -->
         <NavbarSecond />
-        <!-- Main section start here  -->
+        
         <div class="loading-indicator" v-if="loading">
             <div class="loader-container">
                 <center class="loader-text">Loading...</center>
                 <img src="/loader/loader.gif" loading="lazy" alt="Loader" />
             </div>
         </div>
+
         <section class="main_content">
             <div class="container">
                 <div class="row">
@@ -18,25 +18,24 @@
                             <div class="all_cat_title">
                                 <h5>All Categories</h5>
                             </div>
-
                             <div class="row">
-                                <div class="col-md-3 col-6 " v-for="category in categories" :key="category.id">
+                                <div class="col-md-3 col-6" v-for="category in categories" :key="category.id">
                                     <h6>{{ category.name }}</h6>
                                     <ul v-for="childCategory in category.children" :key="childCategory.id">
-                                        <li><a :href="`/category/category-filter?slug=${childCategory.slug}`">{{
-                                            childCategory.name
-                                                }}</a></li>
+                                        <li>
+                                            <a :href="`/category/category-filter?slug=${childCategory.slug}`">
+                                                {{ childCategory.name }}
+                                            </a>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </section>
 
-        <!-- back to top button  -->
         <div class="back_top">
             <a href="#top"><i class="fa-solid fa-angle-up"></i></a>
         </div>
@@ -45,17 +44,15 @@
 </template>
 
 <script>
-import $ from 'jquery';
+import NavbarSecond from '../../components/NavbarSecond.vue';
 import Common_MobileSidebar from '~/components/Common_MobileSidebar.vue';
 import Common_MiniTabNavbar from '~/components/Common_MiniTabNavbar.vue';
 import Common_MobileSearchProduct from '~/components/Common_MobileSearchProduct.vue';
 import CategoryProductFilter from '~/components/CategoryProductFilter.vue';
 import ExtraDiscount from '~/components/ExtraDiscount.vue';
 import CategoryMultipleProduct from '~/components/CategoryMultipleProduct.vue';
-import NavbarSecond from '../../components/NavbarSecond.vue';
 
 export default {
-
     components: {
         NavbarSecond,
         Common_MobileSidebar,
@@ -77,34 +74,46 @@ export default {
     },
     async mounted() {
         await this.fetchData();
+        // ✅ Fix: Force recalculate page height after data loads
+        this.$nextTick(() => {
+            window.dispatchEvent(new Event('resize'));
+        });
     },
-
     methods: {
         redirectCategory(slug) {
             this.$router.push({
                 path: '/category/category-grid',
-                query: {
-                    slug: slug
-                }
-            })
+                query: { slug: slug }
+            });
         },
         async fetchData() {
             this.loading = true;
-            await this.$axios.get(`/unauthenticate/getCategoryList`).then(response => {
-                this.categories = response.data;
-            })
+            // ✅ Fix: Prevent body scroll lock during loading
+            document.body.style.overflow = 'hidden';
+            
+            await this.$axios.get(`/unauthenticate/getCategoryList`)
+                .then(response => {
+                    this.categories = response.data;
+                })
                 .catch(error => {
-                    // Handle error
+                    console.error(error);
                 })
                 .finally(() => {
-                    this.loading = false; // Hide loader after response
-                });;
-
-        },
-
-    },
+                    this.loading = false;
+                    // ✅ Fix: Restore body scroll after loading
+                    document.body.style.overflow = '';
+                    document.body.style.height = '';
+                    
+                    // ✅ Fix: Scroll to top so mobile renders full page
+                    this.$nextTick(() => {
+                        window.scrollTo(0, 0);
+                    });
+                });
+        }
+    }
 }
 </script>
+
 <style scoped>
 .loading-indicator {
     position: fixed;
@@ -117,28 +126,20 @@ export default {
     justify-content: center;
     align-items: center;
     z-index: 9999;
+    /* ✅ Fix: Prevent overlay from blocking scroll calculation */
+    pointer-events: none;
 }
 
-/* For Loader */
 .loader-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    position: relative;
+    pointer-events: all;
 }
 
 .loader-text {
     margin: 0;
-    /* Remove default margin */
-}
-
-.loader-top {
-    top: 0;
-}
-
-.loader-bottom {
-    bottom: 0;
 }
 </style>

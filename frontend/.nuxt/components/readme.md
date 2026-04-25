@@ -56,6 +56,5 @@ You can directly use them in pages and other components without the need to impo
 - `<TopDeals>` | `<top-deals>` (components/TopDeals.vue)
 - `<TopSellingItem>` | `<top-selling-item>` (components/TopSellingItem.vue)
 - `<TopSellingItemBackup>` | `<top-selling-item-backup>` (components/TopSellingItemBackup.vue)
-- `<TopSellingItemCopy>` | `<top-selling-item-copy>` (components/TopSellingItem_copy.vue)
 - `<Tutorial>` | `<tutorial>` (components/Tutorial.vue)
 - `<UserSidebar>` | `<user-sidebar>` (components/userSidebar.vue)

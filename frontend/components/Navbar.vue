@@ -55,18 +55,18 @@
                                     <div class="row" v-for="category in categories" :key="category.id">
                                         <div class="col-12">
                                             <div class="sidenav_title">
-                                                <Nuxt-link to="/category/all-categorys">
+                                                <a :href="`/category/category-grid?sub_slug=${category.slug}`">
                                                     <h6>{{ category.name }}</h6>
                                                     <p>See all</p>
-                                                </Nuxt-link>
+                                                </a>
                                             </div>
                                             <ul>
                                                 <li v-for="childCategory in category.children" :key="childCategory.id">
-                                                    <a href="#" @click="redirectCategory(category.slug)"> <i
-                                                            class="fa-solid fa-list" style="font-size: 10px;"></i>{{
-                                                                childCategory.name }}</a>
+                                                    <a :href="`/category/category-filter?slug=${childCategory.slug}`">
+                                                        <i class="fa-solid fa-list" style="font-size: 10px;"></i>
+                                                        {{ childCategory.name }}
+                                                    </a>
                                                 </li>
-
                                             </ul>
                                         </div>
                                     </div>
@@ -236,7 +236,8 @@
                         <ul>
                             <li v-for="(item, key) in searchloop" :key="key">
                                 <nuxt-link v-if="item.type == 'category'"
-                                    :to="`/category/category-grid?sub_slug=${item.catslug}`">{{ item.label }}</nuxt-link>
+                                    :to="`/category/category-grid?sub_slug=${item.catslug}`">{{ item.label
+                                    }}</nuxt-link>
                                 <nuxt-link v-if="item.type == 'product'" :to="`/product-details/${item.slug}`">{{
                                     item.label }}</nuxt-link>
                             </li>
@@ -372,6 +373,13 @@ export default {
         },
     },
     methods: {
+
+        redirectCategory(slug) {
+            this.$router.push({
+                path: '/category/category-grid',
+                query: { sub_slug: slug }
+            });
+        },
         getProfileLink() {
             // Generate the profile link based on the user's role_id
             return this.userRole === 3 ? '/seller/seller-profile' : '/user/user-profile';
@@ -438,7 +446,7 @@ export default {
         },
         async logout() {
             await this.$auth.logout()
-            
+
             const Toast = Swal.mixin({
                 toast: true,
                 position: "top-end",
