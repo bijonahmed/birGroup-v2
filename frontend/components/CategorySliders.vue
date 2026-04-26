@@ -51,7 +51,7 @@
 
                                             <div v-if="item.discount_status == 1"
                                                 class="d-flex justify-content-center align-items-center gap-2">
-                                                <p class="mb-0">Tk.{{ item.last_price.toFixed(2) }}</p>
+                                                <p class="mb-0">Tk.{{ Number(item.last_price) }}</p>
                                                 <p class="mb-0" v-if="item.discount !== 0">
                                                     <strike>Tk.{{ item.price.toFixed(2) }}</strike>
                                                     <span>{{ item.discount }}%</span>

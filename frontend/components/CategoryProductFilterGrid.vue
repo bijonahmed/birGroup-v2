@@ -81,8 +81,8 @@
                                                 <div class="text-center">
                                                     <div class="d-flex justify-content-center align-items-center mb-1"
                                                         v-if="item.discount_status == 1">
-                                                        <p class="me-2 mb-0" v-if="item.discount !== 0">Tk. {{
-                                                            item.percent_discount.toFixed(2) }}</p>
+                                                        <p class="me-2 mb-0" v-if="item.discount !== 0">Tk.{{
+                                                            Number(item.percent_discount) }}</p>
                                                         <p class="me-2 mb-0" v-else>Tk.{{ item.price.toFixed(2) }}</p>
                                                         <p class="mb-0"
                                                             v-if="item.discount !== 0 && item.discount !== ''">

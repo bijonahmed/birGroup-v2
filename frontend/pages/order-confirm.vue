@@ -23,12 +23,13 @@
                                     </svg>
                                 </div>
                                 <h2>Order Confirmed!</h2>
+
                                 <p>Thank you! Your order has been received and is being processed.</p>
                             </div>
 
                             <!-- Body -->
                             <div class="success-card__body" v-if="orderData">
-
+                                <center><h3>Order ID: {{ orderData.order_id }}</h3></center>
                                 <!-- Login Info Box -->
                                 <!-- <h1>====={{ orderData.order_id }}====</h1> -->
                                 <!-- Two Column: Customer Info + Shipping -->

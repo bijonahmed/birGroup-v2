@@ -195,7 +195,7 @@ export default {
             setTimeout(() => {
                 this.loading = false;
                 this.categories = response.data;
-            }, 2000); // Adjust the time as needed
+            }, 0); // Adjust the time as needed
         },
 
         async slidersImg() {

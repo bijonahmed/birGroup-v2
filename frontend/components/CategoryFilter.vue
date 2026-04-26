@@ -24,24 +24,27 @@
                                                 style="cursor:pointer">
                                                 {{ categoryname }}
                                             </span>
-                                           
+
                                         </li>
-                                        
+
 
                                         <!-- Child -->
-                                       <div class="mt-2">
-                                        <div class="category-wrapper" v-for="category in categories" :key="category.id">
-                                            <h6 class="category-title">{{ category.name }}</h6>
+                                        <div class="mt-2">
+                                            <div class="category-wrapper" v-for="category in categories"
+                                                :key="category.id">
+                                                <h6 class="category-title">{{ category.name }}</h6>
 
-                                            <ul class="subcategory-list">
-                                                <li v-for="childCategory in category.children" :key="childCategory.id">
-                                                    <a :href="`/category/category-filter?slug=${childCategory.slug}`">
-                                                        {{ childCategory.name }}
-                                                    </a>
-                                                </li>
-                                            </ul>
+                                                <ul class="subcategory-list">
+                                                    <li v-for="childCategory in category.children"
+                                                        :key="childCategory.id">
+                                                        <a
+                                                            :href="`/category/category-filter?slug=${childCategory.slug}`">
+                                                            {{ childCategory.name }}
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
                                         </div>
-                                       </div>
 
                                     </ul>
 
@@ -80,7 +83,8 @@
                                                         v-if="item.discount_status == 1">
                                                         <p class="me-2 mb-0" v-if="item.discount !== 0">Tk.{{
                                                             item.percent_discount.toFixed(2) }}</p>
-                                                        <p class="me-2 mb-0" v-else>Tk.{{ item.price.toFixed(2) }}</p>
+                                                        <p class="me-2 mb-0" v-else>Tk.{{ Number(item.price.toFixed) }}
+                                                        </p>
                                                         <p class="mb-0"
                                                             v-if="item.discount !== 0 && item.discount !== ''">
                                                             <strike>Tk.{{ item.price }}</strike>
