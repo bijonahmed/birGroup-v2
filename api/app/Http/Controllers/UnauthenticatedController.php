@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use DB;
 use Auth;
 use File;
@@ -27,7 +25,6 @@ use Illuminate\Http\Request;
 use App\Models\AttributeValues;
 //use User;
 use App\Models\ProductCategory;
-
 use App\Models\topHeaderBanner;
 use App\Rules\MatchOldPassword;
 use App\Models\ProductAttributes;
@@ -50,18 +47,15 @@ use App\Models\BlogModel;
 use App\Models\blogCategory;
 use App\Models\OrderStatus;
 use App\Models\Salary;
-
 class UnauthenticatedController extends Controller
 {
     protected $frontend_url;
     protected $userid;
-
     public function allCategory(Request $request)
     {
         $categories = Categorys::with('children.children.children.children.children')->where('parent_id', 0)->where('status', 1)->get();
         return response()->json($categories);
     }
-
     public function limitedProducts()
     {
         $data = Product::orderBy('id', 'desc')->select('id', 'name', 'thumnail_img', 'slug')->limit(12)->get();
@@ -78,7 +72,6 @@ class UnauthenticatedController extends Controller
         //dd($modifiedCollection);
         return response()->json($modifiedCollection, 200);
     }
-
     public function pagniatedProducts(Request $request)
     {
         $perPage = 12; // You can adjust the number of items per page as needed
@@ -86,7 +79,6 @@ class UnauthenticatedController extends Controller
             ->select('id', 'discount', 'name as pro_name', 'description', 'price', 'thumnail_img', 'slug as pro_slug')
             ->orderBy('created_at', 'desc') // Or use the appropriate column
             ->paginate($perPage);
-
         $result = [];
         foreach ($products as $key => $v) {
             $result[] = [
@@ -100,12 +92,10 @@ class UnauthenticatedController extends Controller
                 'pro_slug' => $v->pro_slug,
             ];
         }
-
         $data['result'] = $result;
         $data['pro_count'] = count($result);
         return response()->json($data, 200);
     }
-
     public function topSellProducts()
     {
         // $data = Product::orderBy('id', 'desc')->select('id', 'name', 'thumnail_img', 'slug')->limit(12)->get();
@@ -122,7 +112,6 @@ class UnauthenticatedController extends Controller
             ->orderBy('total_quantity', 'desc')
             ->limit(20)
             ->get();
-
         foreach ($topSellingProducts as $product) {
             $productDetails = Product::select(
                 'product.id',
@@ -142,35 +131,27 @@ class UnauthenticatedController extends Controller
             )
                 ->leftJoin('brands', 'product.brand', '=', 'brands.id')
                 ->where('product.id', $product->product_id)
-
                 ->first();
-
             if (!$productDetails) {
                 // Skip if product does not exist
                 continue;
             }
-
             $arrData = ProductVarrientHistory::where('product_id', $product->product_id)->get();
             $groupData = ProductVarrientHistory::where('product_id', $product->product_id)
                 ->select('id', 'color')
                 ->groupBy('color')
                 ->get();
-
             $processedColors = '';
             $processedSizes = '';
-
             if ($arrData->isNotEmpty()) {
                 // Just take the first variant's color/size
                 $processedColors = $arrData[0]->color ?? '';
                 $processedSizes = $arrData[0]->size ?? '';
             }
-
             $vat = $productDetails->vat ?? 0;
             $price = $productDetails->price ?? 0;
-
             $percent_discount = $price - ($price * ($productDetails->discount ?? 0)) / 100;
             $fixed_discount = $price - ($productDetails->discount ?? 0);
-
             if (($productDetails->discount_status ?? 0) == 1) {
                 $last_price = $percent_discount;
             } elseif (($productDetails->discount_status ?? 0) == 2) {
@@ -178,13 +159,11 @@ class UnauthenticatedController extends Controller
             } else {
                 $last_price = $price;
             }
-
             // Assign safely to $product object
             $product->id = $productDetails->id;
             $product->name = $productDetails->name ?? '';
             $product->slug = $productDetails->slug ?? '';
             $product->thumnail_img = $productDetails->thumnail_img ? url($productDetails->thumnail_img) : '';
-
             $product->price = $price;
             $product->discount = $productDetails->discount ?? 0;
             $product->discount_status = $productDetails->discount_status ?? 0;
@@ -196,22 +175,16 @@ class UnauthenticatedController extends Controller
             $product->vat = $vat;
             $product->brand_name = $productDetails->brand_name ?? '';
             $product->last_price = $last_price;
-
             $product->stock_qty = $productDetails->stock_qty ?? 0;
             $product->stock_status = $productDetails->stock_status ?? 0;
-
             $product->color = $processedColors;
             $product->size = $processedSizes;
         }
-
-
         return response()->json($topSellingProducts, 200);
     }
-
     public function slidersImages()
     {
         $data = Sliders::where('status', 1)->get();
-
         foreach ($data as $v) {
             $result[] = [
                 'id'   => $v->id,
@@ -219,10 +192,8 @@ class UnauthenticatedController extends Controller
                 'images' => !empty($v->images) ? url($v->images) : '',
             ];
         }
-
         return response()->json($result, 200);
     }
-
     public function productCategory(Request $request)
     {
         $catIds = HomeAroductSliderCategory::where('status', 1)->pluck('category_id')->toArray();
@@ -238,7 +209,6 @@ class UnauthenticatedController extends Controller
             ->whereIn('produc_categories.category_id', $category_ids)
             ->where('product.status', 1)
             ->orderByDesc('product.id')->limit(20)->get();
-
         $groupedCategories = $categorys->groupBy('cate_name');
         $categories = [];
         foreach ($groupedCategories as $categoryName => $categoryGroup) {
@@ -249,25 +219,18 @@ class UnauthenticatedController extends Controller
                     ->select('id', 'color')
                     ->groupBy('color')
                     ->get();
-
                 $processedColors = [];
                 $processedSizes = [];
-
                 foreach ($arrData as $Key => $value) {
                     $processedColors = $value->color;
                     $processedSizes = $value->size;
-
                     break;
                 }
-
                 $last_price = 0;
-
                 $vat = $v->vat ? $v->vat : '0';
                 $price = $v->price + ($v->price * $vat) / 100;
-
                 $percent_discount = $price - ($price * $v->discount) / 100;
                 $fixed_discount = $price - $v->discount;
-
                 if ($v->discount_status == 1) {
                     $last_price = $percent_discount;
                 } elseif ($v->discount_status == 2) {
@@ -275,7 +238,6 @@ class UnauthenticatedController extends Controller
                 } else {
                     $last_price = $v->price;
                 }
-
                 $products[] = [
                     'product_id' => $v->product_id,
                     'id' => $v->product_id,
@@ -293,7 +255,6 @@ class UnauthenticatedController extends Controller
                     'free_shopping' => $v->free_shopping,
                     'vat_status' => $v->vat_status,
                     'vat' => $v->vat,
-
                     'product_name' => $v->name,
                     'image' => url($v->thumnail_img),
                     'thumnail_img' => url($v->thumnail_img),
@@ -303,7 +264,6 @@ class UnauthenticatedController extends Controller
                     'percent_discount' => $percent_discount,
                     'fixed_discount' => $fixed_discount,
                     'brand' => $v->brand_name,
-
                     'seller_name' => $v->seller_name,
                     'seller_slug' => $v->seller_slug,
                     'shipping_days' => $v->shipping_days,
@@ -311,7 +271,6 @@ class UnauthenticatedController extends Controller
                     'stock_qty' => $v->stock_qty,
                     'stock_status' => $v->stock_status,
                     // 'vat_include' => $last_price,
-
                     'color' => !empty($processedColors) ? $processedColors : '', //$processedColors,
                     'size' => !empty($processedSizes) ? $processedSizes : '',
                 ];
@@ -323,49 +282,38 @@ class UnauthenticatedController extends Controller
                 'products' => $products,
             ];
         }
-
         // dd($products);
         // return false;
         $data['result'] = !empty($categories) ? $categories : '';
         $data['product'] = !empty($products) ? $products : '';
         return response()->json($data, 200);
     }
-
     public function filterCategory(Request $request)
     {
         $categorys = ProductCategory::join('categorys', 'categorys.id', '=', 'produc_categories.category_id')
             ->select('produc_categories.product_id', 'categorys.name', 'categorys.slug', 'produc_categories.category_id')
             ->where('status', 1)->groupBy('produc_categories.category_id')->orderBy('categorys.name', 'asc')->get();
-
         //dd($categorys);
         // $categorys = Categorys::where('status', 1)->orderBy("name", "asc")->get();;
         return response()->json($categorys);
     }
-
-
-
     public function filterAllSubCategorys(Request $request)
     {
         $categorys = Categorys::where('status', 1)
             ->where('parent_id', '!=', 0)->orderBy('categorys.name', 'asc')->get();
         return response()->json($categorys);
     }
-
-
     public function infilterMainCategory($slug)
     {
         $category = Categorys::where('slug', $slug)
             ->where('status', 1)
             ->with('childrens')
             ->first();
-
         return response()->json($category);
     }
-
     public function getSellerCategoryFilter($category_id)
     {
         $allProducts = ProductCategory::join('product', 'produc_categories.product_id', '=', 'product.id')->where('produc_categories.category_id', $category_id)->select('product.id as product_id', 'product.name as product_name', 'product.thumnail_img', 'product.slug', 'product.price', 'product.discount', 'produc_categories.category_id')->get();
-
         foreach ($allProducts as $v) {
             $products[] = [
                 'id' => $v->product_id,
@@ -377,11 +325,9 @@ class UnauthenticatedController extends Controller
             ];
         }
         $data['products'] = !empty($products) ? $products : '';
-
         // dd($data['products']);
         return response()->json($data);
     }
-
     // Encryption function
     public function encryptText($plaintext, $key, $iv)
     {
@@ -390,7 +336,6 @@ class UnauthenticatedController extends Controller
         $encrypted = openssl_encrypt($plaintext, $cipher, $key, $options, $iv);
         return base64_encode($encrypted);
     }
-
     // Decryption function
     public function decryptText($ciphertext, $key, $iv)
     {
@@ -399,13 +344,11 @@ class UnauthenticatedController extends Controller
         $decrypted = openssl_decrypt(base64_decode($ciphertext), $cipher, $key, $options, $iv);
         return $decrypted;
     }
-
     public function updatePassword(Request $request)
     {
         //  dd($request->all());
         $reset_token = $request->reset_token;
         $chkrem_token = User::where('remember_token', $reset_token)->first();
-
         if (!empty($chkrem_token)) {
             // dd($chkrem_token);
             $id = $chkrem_token->id;
@@ -417,7 +360,6 @@ class UnauthenticatedController extends Controller
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], 422);
             }
-
             $user = User::find($id);
             $user->password = Hash::make($request->password);
             $user->show_password = $request->password;
@@ -426,7 +368,6 @@ class UnauthenticatedController extends Controller
             return response()->json($response);
         }
     }
-
     public function forgetpassword(Request $request)
     {
         $hostname = $request->hostname;
@@ -437,9 +378,7 @@ class UnauthenticatedController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-
         $email = $request->email;
-
         // Example usage
         $originalText = $email;
         $encryptionKey = 'yourSecretKey'; // Replace with your actual encryption key
@@ -447,39 +386,31 @@ class UnauthenticatedController extends Controller
         $encryptedText = $this->encryptText($originalText, $encryptionKey, $iv);
         $cleanedEncryptedText = str_replace(['\\', '/'], '', $encryptedText);
         $resetlink = "$hostname/resetpassword/$cleanedEncryptedText";
-
         $user = User::where('email', $email)->first();
         if (!empty($user)) {
             $user->update(['remember_token' => $cleanedEncryptedText]);
         }
-
         // You can pass data to the email view if needed
         $to = $email;
         $subject = 'Forget Password (Ahmed Ecommarce)';
-
         // Concatenate the message with the reset link text
         $message = "We received a request to reset your password. Click the link below to reset it. If you didn't request this, you can safely ignore this email.\n\n";
         $message .= 'Reset Password: ' . $resetlink;
         //  echo $message;
         //  exit;
-
         // Set additional headers for HTML content
         $headers = 'MIME-Version: 1.0' . "\r\n";
         $headers .= 'Content-type:text/html;charset=UTF-8' . "\r\n";
-
         // Send the email
         mail($to, $subject, $message, $headers);
-
         $response = [
             'message' => "Thank you! We've sent you an email with further instructions. Please check your inbox. If you don't find it there, kindly check your spam or junk folder.",
         ];
         return response()->json($response);
     }
-
     public function getSeller($slug)
     {
         $row = User::where('business_name_slug', $slug)->first();
-
         $sliderImg = Product::where('seller_id', $row->id)
             ->where('status', 1)
             ->limit(12)
@@ -487,7 +418,6 @@ class UnauthenticatedController extends Controller
         $allProducts = Product::where('seller_id', $row->id)
             ->where('status', 1)
             ->get();
-
         $findCategory = $allProducts;
         $categoryList = [];
         foreach ($findCategory as $v) {
@@ -516,7 +446,6 @@ class UnauthenticatedController extends Controller
                 'discount' => $v->discount,
             ];
         }
-
         foreach ($allProducts as $v) {
             $products[] = [
                 'id' => $v->id,
@@ -528,7 +457,6 @@ class UnauthenticatedController extends Controller
                 'discount' => $v->discount,
             ];
         }
-
         $businessLogog = !empty($row) ? url($row->business_logo) : '';
         $data['business_owner_name'] = !empty($row) ? $row->business_owner_name : '';
         $data['business_name'] = !empty($row) ? $row->business_name : '';
@@ -540,7 +468,6 @@ class UnauthenticatedController extends Controller
         $data['slidersImg'] = !empty($slidersImg) ? $slidersImg : '';
         $data['products'] = !empty($products) ? $products : '';
         $data['categoryList'] = !empty($categoryList) ? $categoryList : '';
-
         //ads banner
         $topBanner = SellerAds::where('seller_id', $row->id)
             ->where('position', 'top_banner_img')
@@ -574,12 +501,10 @@ class UnauthenticatedController extends Controller
         //END baner
         return response()->json($data);
     }
-
     public function allsellers()
     {
         $find_sellers = User::where('role_id', 3)->where('status', 1)->where('home_status', 1)->select('id', 'business_name', 'business_logo', 'business_name_slug')->limit(12)->orderBy('id', 'desc')->get();
         $sellercount = User::where('role_id', 3)->where('status', 1)->where('home_status', 1)->count();
-
         foreach ($find_sellers as $v) {
             $results[] = [
                 'id' => $v->id,
@@ -588,7 +513,6 @@ class UnauthenticatedController extends Controller
                 'slug' => $v->business_name_slug,
             ];
         }
-
         return response()->json(
             [
                 'data' => $results,
@@ -631,16 +555,12 @@ class UnauthenticatedController extends Controller
                 'brands.slug as brand_slug',
             )
             ->first();
-
         $last_price = 0;
-
         $v = $data['pro_row'];
         $vat = $v->vat ? $v->vat : '0';
         $price = $v->price + ($v->price * $vat) / 100;
-
         $percent_discount = $price - ($price * $v->discount) / 100;
         $fixed_discount = $price - $v->discount;
-
         if ($v->discount_status == 1) {
             $last_price = $percent_discount;
         } elseif ($v->discount_status == 2) {
@@ -648,29 +568,20 @@ class UnauthenticatedController extends Controller
         } else {
             $last_price = $price;
         }
-
         // Add last_price to the pro_row array
         $data['pro_row']->last_price = $last_price;
-
         //dd($data['pro_row']);
         $product_chk = Product::where('product.slug', $slug)->select('product.id', 'product.id as product_id', 'product.name as pro_name', 'product.slug as pro_slug', 'product.thumnail_img', 'description', 'product.price', 'product.seller_id', 'product.discount_status', 'product.flat_rate_price', 'product.discount', 'product.stock_qty', 'product.stock_mini_qty', 'product.free_shopping', 'product.vat_status', 'product.vat', 'product.shipping_days', 'product.brand', 'product.stock_qty', 'brands.name as brand_name', 'brands.slug as brand_slug', 'users.business_name as seller_name', 'users.business_name_slug as seller_slug')->leftJoin('brands', 'product.brand', '=', 'brands.id')->leftJoin('users', 'users.id', '=', 'product.seller_id')->get();
-
         $products = [];
-
         $warrantyCheck = product_warranty::where('product_id', $data['pro_row']->id)->get();
-
         // dd($warrantyCheck);
         // return false;
-
         foreach ($product_chk as $key => $v) {
             $last_price = 0;
-
             $vat = $v->vat ? $v->vat : '0';
             $price = $v->price + ($v->price * $vat) / 100;
-
             $percent_discount = $price - ($price * $v->discount) / 100;
             $fixed_discount = $price - $v->discount;
-
             if ($v->discount_status == 1) {
                 $last_price = $percent_discount;
             } elseif ($v->discount_status == 2) {
@@ -678,7 +589,6 @@ class UnauthenticatedController extends Controller
             } else {
                 $last_price = $price;
             }
-
             $products[] = [
                 'id' => $v->id,
                 'product_id' => $v->product_id,
@@ -709,17 +619,13 @@ class UnauthenticatedController extends Controller
             ];
         }
         $seller = User::where('id', $findproductrow->seller_id)->first();
-
         // dd($seller);
         // return false;
-
         $data['slider_img'] = !empty($mul_slider_img) ? $mul_slider_img : '';
         $data['featuredImage'] = url($findproductrow->thumnail_img);
         $data['product'] = $products;
-
         // fetch brand
         $brand_id = $data['pro_row']->brand;
-
         $brand = Brands::where('id', $brand_id)->first();
         $formateBrand = [];
         $formateBrand[] = [
@@ -729,7 +635,6 @@ class UnauthenticatedController extends Controller
             'image' => !empty($brand->image) ? url($brand->image) : '',
             'status' => !empty($brand->status) ? $brand->status : '',
         ];
-
         // featc attribute
         $arrData = ProductVarrientHistory::where('product_id', $findproductrow->id)->get();
         $groupData = ProductVarrientHistory::where('product_id', $findproductrow->id)
@@ -756,11 +661,9 @@ class UnauthenticatedController extends Controller
                 'color' => $value->color,
             ];
         }
-
         $pdata['varient'] = $formatedData;
         $pdata['colorGroup'] = $gdata;
         // return response()->json($pdata);
-
         return response()->json(
             [
                 'data' => $data,
@@ -772,10 +675,8 @@ class UnauthenticatedController extends Controller
             200,
         );
     }
-
     public function findCategorys($slug)
     {
-
         //  dd($slug);
         $chkCategory = Categorys::where('slug', $slug)->select('id', 'name')->first();
         $categoryId  = $chkCategory ? $chkCategory->id : 0;
@@ -821,24 +722,18 @@ class UnauthenticatedController extends Controller
                 ->select('id', 'color')
                 ->groupBy('color')
                 ->get();
-
             $processedColors = [];
             $processedSizes = [];
-
             foreach ($arrData as $Key => $value) {
                 $processedColors = $value->color;
                 $processedSizes = $value->size;
-
                 break;
             }
-
             $last_price = 0;
             $vat = $v->vat ? $v->vat : '0';
             $price = $v->price + ($v->price * $vat) / 100;
-
             $percent_discount = $price - ($price * $v->discount) / 100;
             $fixed_discount = $price - $v->discount;
-
             if ($v->discount_status == 1) {
                 $last_price = $percent_discount;
             } elseif ($v->discount_status == 2) {
@@ -846,7 +741,6 @@ class UnauthenticatedController extends Controller
             } else {
                 $last_price = $price;
             }
-
             $result[] = [
                 'id'                => !empty($v->id) ? $v->id : '',
                 'product_id'        => !empty($v->product_id) ? $v->product_id : '',
@@ -876,15 +770,11 @@ class UnauthenticatedController extends Controller
                 'size'              => !empty($processedSizes) ? $processedSizes : '',
             ];
         }
-
         $data['result'] = $result;
         $data['pro_count'] = count($result);
         $data['categoryname'] = $chkCategory->name;
-
         return response()->json($data, 200);
     }
-
-
     public function findByMainCat($slug)
     {
         //  dd($slug);
@@ -932,24 +822,18 @@ class UnauthenticatedController extends Controller
                 ->select('id', 'color')
                 ->groupBy('color')
                 ->get();
-
             $processedColors = [];
             $processedSizes = [];
-
             foreach ($arrData as $Key => $value) {
                 $processedColors = $value->color;
                 $processedSizes = $value->size;
-
                 break;
             }
-
             $last_price = 0;
             $vat = $v->vat ? $v->vat : '0';
             $price = $v->price + ($v->price * $vat) / 100;
-
             $percent_discount = $price - ($price * $v->discount) / 100;
             $fixed_discount = $price - $v->discount;
-
             if ($v->discount_status == 1) {
                 $last_price = $percent_discount;
             } elseif ($v->discount_status == 2) {
@@ -957,7 +841,6 @@ class UnauthenticatedController extends Controller
             } else {
                 $last_price = $price;
             }
-
             $result[] = [
                 'id'                => !empty($v->id) ? $v->id : '',
                 'product_id'        => !empty($v->product_id) ? $v->product_id : '',
@@ -987,18 +870,13 @@ class UnauthenticatedController extends Controller
                 'size'              => !empty($processedSizes) ? $processedSizes : '',
             ];
         }
-
         $data['result'] = $result;
         $data['pro_count'] = count($result);
         $data['categoryname'] = $chkCategory->name;
-
         return response()->json($data, 200);
     }
-
     public function findOnlyCategorys($slug)
     {
-
-
         $chkCategory = Categorys::where('slug', $slug)->select('id', 'name')->first();
         $categoryId  = $chkCategory ? $chkCategory->id : 0;
         //dd($categoryId);
@@ -1035,7 +913,6 @@ class UnauthenticatedController extends Controller
                 'users.name as seller_name'
             )
             ->get();
-
         //   dd($proCategorys);
         // return false;
         $result = [];
@@ -1045,24 +922,18 @@ class UnauthenticatedController extends Controller
                 ->select('id', 'color')
                 ->groupBy('color')
                 ->get();
-
             $processedColors = [];
             $processedSizes = [];
-
             foreach ($arrData as $Key => $value) {
                 $processedColors = $value->color;
                 $processedSizes = $value->size;
-
                 break;
             }
-
             $last_price = 0;
             $vat = $v->vat ? $v->vat : '0';
             $price = $v->price + ($v->price * $vat) / 100;
-
             $percent_discount = $price - ($price * $v->discount) / 100;
             $fixed_discount = $price - $v->discount;
-
             if ($v->discount_status == 1) {
                 $last_price = $percent_discount;
             } elseif ($v->discount_status == 2) {
@@ -1070,7 +941,6 @@ class UnauthenticatedController extends Controller
             } else {
                 $last_price = $price;
             }
-
             $result[] = [
                 'id'                => !empty($v->id) ? $v->id : '',
                 'product_id'        => !empty($v->product_id) ? $v->product_id : '',
@@ -1100,20 +970,13 @@ class UnauthenticatedController extends Controller
                 'size'              => !empty($processedSizes) ? $processedSizes : '',
             ];
         }
-
         $data['result'] = $result;
         $data['pro_count'] = count($result);
         $data['categoryname'] = $chkCategory->name;
-
         return response()->json($data, 200);
     }
-
-
-
-
     public function filterbySubcategorys($slug)
     {
-
         //  dd($slug);
         $chkCategory = Categorys::where('slug', $slug)->select('id', 'name')->first();
         $categoryId  = $chkCategory ? $chkCategory->id : 0;
@@ -1160,24 +1023,18 @@ class UnauthenticatedController extends Controller
                 ->select('id', 'color')
                 ->groupBy('color')
                 ->get();
-
             $processedColors = [];
             $processedSizes = [];
-
             foreach ($arrData as $Key => $value) {
                 $processedColors = $value->color;
                 $processedSizes = $value->size;
-
                 break;
             }
-
             $last_price = 0;
             $vat = $v->vat ? $v->vat : '0';
             $price = $v->price + ($v->price * $vat) / 100;
-
             $percent_discount = $price - ($price * $v->discount) / 100;
             $fixed_discount = $price - $v->discount;
-
             if ($v->discount_status == 1) {
                 $last_price = $percent_discount;
             } elseif ($v->discount_status == 2) {
@@ -1185,7 +1042,6 @@ class UnauthenticatedController extends Controller
             } else {
                 $last_price = $price;
             }
-
             $result[] = [
                 'id'                => !empty($v->id) ? $v->id : '',
                 'product_id'        => !empty($v->product_id) ? $v->product_id : '',
@@ -1215,17 +1071,13 @@ class UnauthenticatedController extends Controller
                 'size'              => !empty($processedSizes) ? $processedSizes : '',
             ];
         }
-
         $data['result'] = $result;
         $data['pro_count'] = count($result);
         $data['categoryname'] = $chkCategory->name;
-
         return response()->json($data, 200);
     }
-
     public function findSubCategorys($slug)
     {
-
         //  dd($slug);
         $chkCategory = Categorys::where('slug', $slug)->select('id', 'name')->first();
         $categoryId  = $chkCategory ? $chkCategory->id : 0;
@@ -1272,24 +1124,18 @@ class UnauthenticatedController extends Controller
                 ->select('id', 'color')
                 ->groupBy('color')
                 ->get();
-
             $processedColors = [];
             $processedSizes = [];
-
             foreach ($arrData as $Key => $value) {
                 $processedColors = $value->color;
                 $processedSizes = $value->size;
-
                 break;
             }
-
             $last_price = 0;
             $vat = $v->vat ? $v->vat : '0';
             $price = $v->price + ($v->price * $vat) / 100;
-
             $percent_discount = $price - ($price * $v->discount) / 100;
             $fixed_discount = $price - $v->discount;
-
             if ($v->discount_status == 1) {
                 $last_price = $percent_discount;
             } elseif ($v->discount_status == 2) {
@@ -1297,7 +1143,6 @@ class UnauthenticatedController extends Controller
             } else {
                 $last_price = $price;
             }
-
             $result[] = [
                 'id'                => !empty($v->id) ? $v->id : '',
                 'product_id'        => !empty($v->product_id) ? $v->product_id : '',
@@ -1327,19 +1172,11 @@ class UnauthenticatedController extends Controller
                 'size'              => !empty($processedSizes) ? $processedSizes : '',
             ];
         }
-
         $data['result'] = $result;
         $data['pro_count'] = count($result);
         $data['categoryname'] = $chkCategory->name;
-
         return response()->json($data, 200);
     }
-
-
-
-
-
-
     public function countrylist()
     {
         $countries = Country::all();
@@ -1368,7 +1205,6 @@ class UnauthenticatedController extends Controller
     public function getdealsbannersads()
     {
         $dealbanner = dealsbanner::all();
-
         $formatedData = [];
         foreach ($dealbanner as $Key => $value) {
             $formatedData[] = [
@@ -1404,9 +1240,7 @@ class UnauthenticatedController extends Controller
     public function allsellerListadmin(Request $request)
     {
         $sellershop = User::where('role_id', 3)->get();
-
         $activeData = User::where('home_status', 1)->count();
-
         $formatedData = [];
         foreach ($sellershop as $Key => $value) {
             $formatedData[] = [
@@ -1428,7 +1262,6 @@ class UnauthenticatedController extends Controller
             200,
         );
     }
-
     public function featchcoupon()
     {
         $coupons = coupons::all();
@@ -1451,7 +1284,6 @@ class UnauthenticatedController extends Controller
     public function getCoupon(request $request, $code)
     {
         $coupons = coupons::where('promocode', $code)->where('status', 1)->first();
-
         // Check if coupon is not found or not active
         if (!$coupons) {
             // Send error response
@@ -1463,7 +1295,6 @@ class UnauthenticatedController extends Controller
                 404,
             ); // You can use any appropriate HTTP status code
         }
-
         return response()->json([
             'status' => true,
             'data' => $coupons,
@@ -1485,22 +1316,17 @@ class UnauthenticatedController extends Controller
                 'price.required' => 'Price is Invalid.',
             ],
         );
-
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-
         $couponCode = $request->couponCode;
         $pro_price = $request->price;
         $user_id = $request->user_id;
-
         $coupon = coupons::where('promocode', $couponCode)->where('status', 1)->first();
-
         if ($coupon) {
             $usageCheck = CouponUseHistory::where('user_id', $user_id)
                 ->where('coupon_id', $coupon->id)
                 ->first();
-
             if ($usageCheck) {
                 return response()->json(['errors' => ['coupon' => ['This coupon has already been used.']]], 422);
             } else {
@@ -1540,7 +1366,6 @@ class UnauthenticatedController extends Controller
     public function getbanner()
     {
         $banner = topHeaderBanner::first();
-
         if ($banner->count() > 0) {
             $image = $banner->image ? url($banner->image) : null;
             return response()->json(
@@ -1563,14 +1388,11 @@ class UnauthenticatedController extends Controller
     public function topadsbanner()
     {
         $adsBannder = sliderSideAdsModel::first();
-
         if ($adsBannder->count() > 0) {
             $image1 = $adsBannder->adsOne ? url($adsBannder->adsOne) : null;
             $image2 = $adsBannder->adsTwo ? url($adsBannder->adsTwo) : null;
-
             $image1Link = $adsBannder->adsOneLink ? url($adsBannder->adsOneLink) : null;
             $image2Link = $adsBannder->adsTwoLink ? url($adsBannder->adsTwoLink) : null;
-
             return response()->json(
                 [
                     'status' => 200,
@@ -1596,23 +1418,18 @@ class UnauthenticatedController extends Controller
         // $getbrands = $request->slug;
         $getbrands = Brands::where('slug', $slug)->first();
         $brands = Brands::where('status', 1)->get();
-
         $id = $getbrands->id;
-
         $getProduct = Product::where('brand', $id)
             ->join('users', 'product.seller_id', '=', 'users.id')
             ->where('product.status', 1)
             ->get(['product.id', 'product.seller_id', 'product.name', 'product.slug', 'product.description', 'product.short_description', 'product.brand', 'product.sku', 'product.price', 'product.unit', 'product.stock_qty', 'product.stock_mini_qty', 'product.stock_status', 'product.manufacturer', 'product.discount', 'product.discount_status', 'product.shipping_days', 'product.free_shopping', 'product.flat_rate_status', 'product.flat_rate_price', 'product.vat', 'product.vat_status', 'product.tax', 'product.tax_status', 'product.thumnail_img', 'users.business_name as seller_name', 'users.business_name_slug as seller_slug']);
-
         $products = [];
         foreach ($getProduct as $v) {
             $last_price = 0;
             $vat = $v->vat ? $v->vat : '0';
             $price = $v->price + ($v->price * $vat) / 100;
-
             $percent_discount = $v->price - ($price * $v->discount) / 100;
             $fixed_discount = $price - $v->discount;
-
             if ($v->discount_status == 1) {
                 $last_price = $percent_discount;
             } elseif ($v->discount_status == 2) {
@@ -1620,7 +1437,6 @@ class UnauthenticatedController extends Controller
             } else {
                 $last_price = $v->price;
             }
-
             $products[] = [
                 'id'        => $v->id,
                 'seller_id' => $v->seller_id,
@@ -1635,13 +1451,11 @@ class UnauthenticatedController extends Controller
                 'discount'      => $v->discount,
                 'stock_quantity' => $v->stock_qty,
                 'mini_quantity' => $v->stock_mini_qty,
-
                 'discount_status'   => !empty($v->discount_status) ? $v->discount_status : '',
                 'shipping_days'     => !empty($v->shipping_days) ? $v->shipping_days : '',
                 'free_shopping'     => !empty($v->free_shopping) ? $v->free_shopping : '',
                 'flat_rate_status'  => !empty($v->flat_rate_status) ? $v->flat_rate_status : '',
                 'flat_rate_price'   => !empty($v->flat_rate_price) ? $v->flat_rate_price : '',
-
                 'seller_name'       => !empty($v->seller_name) ? $v->seller_name : '',
                 'seller_slug'       => !empty($v->seller_slug) ? $v->seller_slug : '',
                 'percent_discount'  => $percent_discount,
@@ -1651,21 +1465,17 @@ class UnauthenticatedController extends Controller
                 'stock_status'      => $v->stock_status,
             ];
         }
-
         $data['products']  = !empty($products) ? $products : '';
         $data['allbrands'] = $brands;
         $data['brandName'] = $getbrands ? $getbrands->name : "";
-
         // dd($data['products']);
         return response()->json($data);
     }
-
     public function getSpeacialCatList(Request $request)
     {
         try {
             $categories = Categorys::with('children.children.children.children.children')->where('speacial_status', 1)->where('parent_id', 0)->get();
             $count = Categorys::where('speacial_status', 1)->count();
-
             $products = [];
             foreach ($categories as $v) {
                 $products[] = [
@@ -1676,7 +1486,6 @@ class UnauthenticatedController extends Controller
                     'speacial_status' => $v->speacial_status,
                 ];
             }
-
             return response()->json([
                 'data' => $products,
                 'count' => $count,
@@ -1687,14 +1496,10 @@ class UnauthenticatedController extends Controller
     }
     public function checkAttribueDetails(Request $request)
     {
-
         // dd($request->all());
-
         try {
-
             $ckhProduct  = Product::where('slug', $request->slug)->first();
             $product_id  = !empty($ckhProduct) ? $ckhProduct->id : "";
-
             $data['attribute'] = ProductVarrientHistory::where('product_id', $product_id)
                 ->get();
             $variantData = $data['attribute'];
@@ -1722,8 +1527,8 @@ class UnauthenticatedController extends Controller
     public function search(Request $request)
     {
         $searchTerm = $request->input('term');
-
         $productResults = Product::where('name', 'like', '%' . $searchTerm . '%')
+            ->where('product.status', 1)
             ->limit(20)
             ->get(['name', 'slug'])
             ->map(function ($product) {
@@ -1733,7 +1538,6 @@ class UnauthenticatedController extends Controller
                     'type'  => 'product'
                 ];
             });
-
         return response()->json($productResults);
     }
     //blogCat
@@ -1742,34 +1546,27 @@ class UnauthenticatedController extends Controller
         $category = blogCategory::all();
         return response()->json($category);
     }
-
     public function getblogs(Request $request)
     {
         $categorySlug = $request->input('category_slug');
-
         // Initialize the query to retrieve blogs data
         $blogsQuery = BlogModel::orderBy('id', 'desc')->where('status', 1);
-
         // Check if a category slug is provided
         if ($categorySlug) {
             // Find the category by slug
             $category = blogCategory::where('slug', $categorySlug)->first();
-
             // If the category exists, filter blogs by category
             if ($category) {
                 $blogsQuery->where('category', $category->id);
             }
         }
-
         // Retrieve blogs data
         $blogsData = $blogsQuery->get();
-
         // Format the data
         $formattedData = $blogsData->map(function ($blog) {
             $category = blogCategory::find($blog->category);
             $categoryName = $category ? $category->name : '';
             $createdAtFormatted = date('d F Y', strtotime($blog->created_at));
-
             return [
                 'id' => $blog->id,
                 'title' => $blog->title,
@@ -1783,23 +1580,18 @@ class UnauthenticatedController extends Controller
                 'updated_at' => $blog->updated_at,
             ];
         });
-
         // Return the formatted data as JSON response
         return response()->json($formattedData);
     }
-
     public function blogdetails(request $request)
     {
         $slug = $request->input('slug');
         $blogData = BlogModel::where('slug', $slug)->first();
-
         // Format created_at date
         $createdAtFormatted = date('d F Y', strtotime($blogData->created_at));
-
         // Get the category name
         $category = blogCategory::where('id', $blogData->category)->first();
         $categoryName = $category ? $category->name : '';
-
         // Format the data
         $formattedData = [
             'id' => $blogData->id,
@@ -1813,18 +1605,15 @@ class UnauthenticatedController extends Controller
             'created_at' => $createdAtFormatted,
             'updated_at' => $blogData->updated_at,
         ];
-
         // Return the formatted data as JSON response
         return response()->json($formattedData);
     }
-
     public function getsalaryuser()
     {
         $data = Salary::where('status', 1)->get();
         // dd($data);
         return response()->json($data);
     }
-
     public function getsPackUser()
     {
         $data = Packages::where('status', 1)->get();

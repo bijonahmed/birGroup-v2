@@ -117,14 +117,14 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // baseURL: "http://127.0.0.1:8000/api",
-    // baseURL: "https://api.isumax.com/api/",
+    // baseURL: "https://birv2.api.production.futuregenit.com/api",
     baseURL:
       process.env.NODE_ENV === "production"
         ? "https://birv2.api.production.futuregenit.com/api"
-        : "http://127.0.0.1:8000/api/",
-    //process.env.NODE_ENV === "production" ? "https://birv2.api.futuregenit.com/api" : "http://127.0.0.1:8000/api/",
+        : "https://birv2.api.production.futuregenit.com/api",
+    //process.env.NODE_ENV === "production" ? "https://birv2.api.production.futuregenit.com/api" : "http://127.0.0.1:8000/api/",
 
-    //baseURL: process.env.NODE_ENV === 'production' ? 'https://api.isumax.com/api/' : 'http://127.0.0.1:8000/api/',
+    //baseURL: process.env.NODE_ENV === 'production' ? 'https://birv2.api.production.futuregenit.com/api' : 'http://127.0.0.1:8000/api/',
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

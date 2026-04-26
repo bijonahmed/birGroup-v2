@@ -26,30 +26,33 @@
                                     <nuxt-link :to="`/product-details/${item.slug}`">
                                         <img :src="item.thumnail_img" class="img-fluid" loading="lazy">
                                         <span v-if="item.free_shopping == 1">Free Delivery</span>
-                                        <!-- <strong>Official Store </strong> -->
                                         <p class="text-center product-name"
                                             style="font-size: 16px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; line-height: 1.4; max-height: 2.8em;">
-                                            {{ item.name }}</p>
-                                        <div v-if="item.discount_status == 1"
-                                            class="d-flex aligh-items-center d-none text-center">
-                                            <p>Tk.{{ item.last_price.toFixed(2) }}</p>
-                                            <p class="ms-1" v-if="item.discount !== 0"><strike>Tk.{{
-                                                item.price.toFixed(2)
-                                                    }}</strike> <span>{{ item.discount }}%</span> </p>
-                                        </div>
-                                        <div v-else-if="item.discount_status == 2" class="d-flex aligh-items-center">
-                                            <p>Tk.{{ item.last_price.toFixed(2) }}</p>
+                                            {{ item.name }}
+                                        </p>
 
-                                            <p class="ms-1" v-if="item.discount !== 0"><strike>Tk.{{
-                                                item.price.toFixed(2)
-                                                    }}</strike>
-                                                <span>Tk.{{ item.discount.toFixed(2) }}</span>
+                                        <div v-if="item.discount_status == 1"
+                                            class="d-flex align-items-center justify-content-center text-center">
+                                            <p>Tk.{{ Number(item.last_price).toFixed(2) }}</p>
+                                            <p class="ms-1" v-if="item.discount !== 0">
+                                                <strike>Tk.{{ Number(item.price).toFixed(2) }}</strike>
+                                                <span>{{ item.discount }}%</span>
                                             </p>
                                         </div>
-                                        <div v-else class="text-center">
-                                            <p>BDT{{ item.last_price.toFixed(2) }}</p>
+
+                                        <div v-else-if="item.discount_status == 2"
+                                            class="d-flex align-items-center justify-content-center">
+                                            <p>Tk.{{ Number(item.last_price).toFixed(2) }}</p>
+                                            <p class="ms-1" v-if="item.discount !== 0">
+                                                <strike>Tk.{{ Number(item.price).toFixed(2) }}</strike>
+                                                <span>Tk.{{ Number(item.discount).toFixed(2) }}</span>
+                                            </p>
                                         </div>
-                                    </Nuxt-link>
+
+                                        <div v-else class="text-center">
+                                            <p>BDT {{ Number(item.last_price).toFixed(2) }}</p>
+                                        </div>
+                                    </nuxt-link>
 
                                     <div class="d-flex align-items-center justify-content-center gap-2">
                                         <div class="rating">
@@ -247,6 +250,7 @@ export default {
             this.loading = true;
             await this.$axios.get(`/unauthenticate/topSellingProducts`).then(response => {
                 this.toproducts = response.data;
+                console.log("TopProducts" + this.toproducts);
                 this.products = response.data;
                 this.product = response.data;
                 console.log(response.data);
