@@ -98,9 +98,6 @@
                           </span>
                         </div>
                         <p style="margin:0;font-size:13px;">
-                          <!-- <del class="me-1" v-if="item.product.discount !== 0" style="color:#999;">
-                            BDT {{ item.product.price.toFixed(2) }}
-                          </del> -->
                           <b style="color:#0C356A;font-size:13px;">
                             BDT {{ item.product.last_price.toFixed(2) }}
                           </b>
@@ -152,15 +149,38 @@
                         <td><strong>Delivery Fee </strong></td>
                         <td class="text-end">BDT {{ sumOfFlatRatePrices.toFixed(2) }}</td>
                       </tr>
-                      <tr id="discount">
-                        <td><strong class="text-success">Coupon Discount</strong></td>
-                        <td class="text-end text-success">-${{ typeof discount === 'number' ? discount.toFixed(2) : ''
-                        }}</td>
+
+                      <!-- ✅ Coupon Discount Row — shown only if a coupon is applied from sessionStorage -->
+                      <tr v-if="appliedCoupon && appliedCoupon.couponDiscount">
+                        <td>
+                          <strong class="text-success">Coupon Discount</strong>
+                          <span class="badge bg-success ms-1" style="font-size:10px;vertical-align:middle;">
+                            {{ appliedCoupon.couponCode }}
+                          </span>
+                        </td>
+                        <td class="text-end text-success">
+                          - BDT {{ parseFloat(appliedCoupon.couponDiscount).toFixed(2) }}
+                        </td>
                       </tr>
+
+                      <!-- ✅ Old coupon discount row (manual coupon entry) — kept for backward compat -->
+                      <tr id="discount" v-if="!appliedCoupon && discount">
+                        <td><strong class="text-success">Coupon Discount</strong></td>
+                        <td class="text-end text-success">
+                          - BDT {{ typeof discount === 'number' ? discount.toFixed(2) : '' }}
+                        </td>
+                      </tr>
+
                       <tr>
                         <td><strong>Total Payment</strong></td>
-                        <td class="text-end">BDT {{ totalSum.toFixed(2) }}</td>
+                        <!-- ✅ Shows subtotal (after coupon) if coupon applied, else totalSum -->
+                        <td class="text-end">
+                          <strong style="color:#0C356A;font-size:15px;">
+                            BDT {{ finalTotalPayment.toFixed(2) }}
+                          </strong>
+                        </td>
                       </tr>
+
                       <tr class="border-0" id="#Paymethod" v-if="this.selectedPayment == 'COD'">
                         <td class="border-0"><strong>Payment method</strong></td>
                         <td class="text-end border-0">
@@ -176,35 +196,32 @@
                       </tr>
                     </tbody>
                   </table>
-                  
-                 <div class="cart_summary">
-  <div class="side_title">
-    <h5>Payment method</h5>
-  </div>
-  <div class="payment-buttons d-flex flex-wrap gap-3 mb-3" style="justify-content:flex-start;">
 
-    <!-- Cash on Delivery (only option shown) -->
-    <div class="payment-option-inline" :class="{ active: paymentMethod === 'cod' }"
-      @click="selectPayment('cod')"
-      style="cursor:pointer; border:1px solid #e4e6eb; border-radius:12px; padding:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; width:120px; height:120px; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,0.08); transition:0.3s; position:relative; flex:1 1 100px;">
-      <img
-        src="https://t3.ftcdn.net/jpg/06/04/86/68/360_F_604866832_5i9b2mnlQV1Ocgn6OQes0NsANhEEGW95.jpg"
-        style="width:60px;height:60px;object-fit:contain;" alt="Cash">
-      <span style="margin-top:8px; font-size:14px; font-weight:500;">Cash on Delivery</span>
+                  <div class="cart_summary">
+                    <div class="side_title">
+                      <h5>Payment method</h5>
+                    </div>
+                    <div class="payment-buttons d-flex flex-wrap gap-3 mb-3" style="justify-content:flex-start;">
 
-      <!-- Check mark -->
-      <span v-if="paymentMethod === 'cod'"
-        style="position:absolute; top:5px; right:5px; color:#0C356A; font-size:20px;">✔</span>
-    </div>
+                      <!-- Cash on Delivery (only option shown) -->
+                      <div class="payment-option-inline" :class="{ active: paymentMethod === 'cod' }"
+                        @click="selectPayment('cod')"
+                        style="cursor:pointer; border:1px solid #e4e6eb; border-radius:12px; padding:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; width:120px; height:120px; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,0.08); transition:0.3s; position:relative; flex:1 1 100px;">
+                        <img
+                          src="https://t3.ftcdn.net/jpg/06/04/86/68/360_F_604866832_5i9b2mnlQV1Ocgn6OQes0NsANhEEGW95.jpg"
+                          style="width:60px;height:60px;object-fit:contain;" alt="Cash">
+                        <span style="margin-top:8px; font-size:14px; font-weight:500;">Cash on Delivery</span>
 
-    <!-- Online Payment (hidden) -->
-    <!-- <div v-show="false" ...></div> -->
+                        <!-- Check mark -->
+                        <span v-if="paymentMethod === 'cod'"
+                          style="position:absolute; top:5px; right:5px; color:#0C356A; font-size:20px;">✔</span>
+                      </div>
 
-  </div>
+                    </div>
 
-  <!-- Hidden input to capture value if needed -->
-  <input type="hidden" v-model="paymentMethod">
-</div>
+                    <!-- Hidden input to capture value if needed -->
+                    <input type="hidden" v-model="paymentMethod">
+                  </div>
 
 
 
@@ -234,10 +251,10 @@
     <div class="back_top">
       <a href="#top"><i class="fa-solid fa-angle-up"></i></a>
     </div>
-    <!-- {{ companyData.transaction_fee }} -->
     <Footer />
   </div>
 </template>
+
 <script>
 import $ from "jquery";
 import axios from "axios";
@@ -246,8 +263,8 @@ import Common_MiniTabNavbar from "~/components/Common_MiniTabNavbar.vue";
 import Common_MobileSearchProduct from "~/components/Common_MobileSearchProduct.vue";
 import RecentView from "~/components/RecentView.vue";
 import NavbarSecond from "../components/NavbarSecond.vue";
+
 export default {
-  //middleware: "auth",
   components: {
     NavbarSecond,
     Common_MobileSidebar,
@@ -266,7 +283,7 @@ export default {
         card_number: '',
         expiry_date: '',
       },
-      selectedShipping: 60, // default active — Inside Dhaka
+      selectedShipping: 60,
       shippingOptions: [
         { id: 1, name: "Inside Dhaka", price: 60 },
         { id: 2, name: "Outside Dhaka", price: 130 }
@@ -305,7 +322,6 @@ export default {
         password: "123456",
         country: "",
         city: "",
-        //ship
         shipper_name: "",
         shipper_email: "",
         shipper_phone_number: "",
@@ -329,7 +345,7 @@ export default {
       loading: false,
       email: "",
       showDifferentAddress: false,
-      differentAddressField: "", // Initialize different address field if needed
+      differentAddressField: "",
       cart: [],
       notifmsg: "",
       invidecodeError: "",
@@ -350,8 +366,12 @@ export default {
       Dcouponlist: '',
       couponModal: '',
       address: [],
+
+      // ✅ NEW: holds the coupon applied from sessionStorage
+      appliedCoupon: null,
     };
   },
+
   computed: {
     loggedIn() {
       if (!$auth.loggedIn) {
@@ -361,22 +381,39 @@ export default {
       }
       return this.$auth.loggedIn;
     },
+
+    // ✅ NEW computed: returns the correct final total to display
+    // If a coupon from sessionStorage is applied, use its subtotal + delivery fee
+    // Otherwise fall back to the regular totalSum
+    finalTotalPayment() {
+      if (this.appliedCoupon && this.appliedCoupon.subtotal) {
+        const couponSubtotal = parseFloat(this.appliedCoupon.subtotal);
+        const deliveryFee = parseFloat(this.sumOfFlatRatePrices || 0);
+        const codFee = (this.selectedPayment === 'COD') ? parseFloat(this.COD_fee || 0) : 0;
+        return couponSubtotal + deliveryFee + codFee;
+      }
+      return this.totalSum;
+    },
   },
+
   watch: {
-    // ✅ Watch selectedShipping — recalculate totals whenever delivery option changes
     selectedShipping(newVal) {
       this.calculateSumOfLastPrices();
     },
-    // ✅ Watch selectedPayment — recalculate when COD toggled (COD fee affects total)
     selectedPayment(newVal) {
       this.calculateSumOfLastPrices();
     },
   },
+
   mounted() {
     this.openPromo();
     this.cart.forEach((item) => {
       item.shippingDate = this.calculateShippingDate(item.product.shipping_days);
     });
+
+    // ✅ Load applied coupon from sessionStorage on mount
+    this.loadAppliedCoupon();
+
     if (process.client) {
       this.addCard();
       this.defaultLoadingData();
@@ -392,21 +429,31 @@ export default {
           $(".filter_modal").hide();
         });
       });
-      // Now you can work with myElement
     }
-    this.getcompanyData();
     this.openModal();
-    this.getQuponList();
     this.calculateSumOfLastPrices();
   },
+
   methods: {
+    // ✅ NEW: load appliedCoupon from sessionStorage
+    loadAppliedCoupon() {
+      try {
+        const raw = sessionStorage.getItem('appliedCoupon');
+        if (raw) {
+          this.appliedCoupon = JSON.parse(raw);
+        } else {
+          this.appliedCoupon = null;
+        }
+      } catch (e) {
+        this.appliedCoupon = null;
+      }
+    },
+
     onlyNumber(e) {
-      // remove everything except digits
       this.insertdata.phone_number = e.target.value.replace(/[^0-9]/g, '')
     },
 
     onlyNumbership(e) {
-      // remove everything except digits
       this.shipp_phoneNumber = e.target.value.replace(/[^0-9]/g, '')
     },
 
@@ -443,11 +490,7 @@ export default {
       });
     },
     handlePaymentSelection() {
-      if (this.selectedPayment === 'COD') {
-        this.calculateSumOfLastPrices();
-      } else {
-        this.calculateSumOfLastPrices();
-      }
+      this.calculateSumOfLastPrices();
     },
     openModal() {
       $('.billing_address').click(function () {
@@ -463,10 +506,8 @@ export default {
       formData.append('holder_name', this.cardData.holder_name);
       formData.append('card_number', this.cardData.card_number);
       formData.append('expiry_date', this.cardData.expiry_date);
-      // console.log(formData);
       this.$axios.post('/user/saveCard', formData)
         .then(response => {
-          // console.log(response.data);
           const Toast = Swal.mixin({
             toast: true,
             position: "top-end",
@@ -488,7 +529,6 @@ export default {
           if (error.response.status === 422) {
             this.errors = error.response.data.errors;
             const errorMessages = Object.values(this.errors).flat();
-            // Concatenate error messages into a single string
             const errorMessage = errorMessages.join("<br>");
             const Toast = Swal.mixin({
               toast: true,
@@ -534,9 +574,7 @@ export default {
           }
         });
 
-        // ✅ Use selectedShipping directly as the delivery fee
         let sumOfFlatRatePrices = parseFloat(this.selectedShipping || 0);
-
         let subsum = sumOfLastPrices + sumOfFlatRatePrices;
 
         let allsum;
@@ -548,17 +586,14 @@ export default {
 
         this.coupons.price = allsum;
         this.sumOfLastPrices = sumOfLastPrices;
-        this.sumOfFlatRatePrices = sumOfFlatRatePrices; // ✅ Now reflects selected shipping option
-        this.totalSum = allsum;                          // ✅ Total = items + selected delivery fee
+        this.sumOfFlatRatePrices = sumOfFlatRatePrices;
+        this.totalSum = allsum;
       }
     },
-    updateSelectedData() {
-      // console.log("Selected data:", this.shipp_address, "BilTo:", this.billAddress);
-    },
+    updateSelectedData() { },
     getPrice(item) {
       let final_price = 0;
       const price = item.quantity * item.product.last_price;
-      // console.log(item.product.warrantyamt);
       if (item.product.warrantyamt) {
         final_price = price + item.quantity * item.product.warrantyamt;
       } else {
@@ -569,7 +604,6 @@ export default {
     getSave(item) {
       const save =
         item.quantity * item.product.price - item.quantity * item.product.last_price;
-      // console.log(save);
       return save;
     },
     calculateShippingDate(shippingDays) {
@@ -593,7 +627,6 @@ export default {
         price: this.coupons.price,
         user_id: this.insertdata.id,
       };
-      // console.log(formData);
       this.$axios
         .post(`/unauthenticate/couponDiscount`, formData)
         .then((response) => {
@@ -604,10 +637,8 @@ export default {
           $("#discount").fadeIn();
           $("#discount_msg").fadeIn();
           $("#errorDiscount").fadeOut();
-          // console.log(response.data.coupon_data.last_discount_price);
         })
         .catch((error) => {
-          // console.error("Error fetching coupon data:", error);
           $("#errorDiscount").fadeIn();
           this.errors = error.response.data.errors;
           const errorMessages = Object.values(this.errors).flat();
@@ -646,21 +677,17 @@ export default {
     },
     defaultLoadingData() {
       this.$axios.get("/auth/showProfileData").then((response) => {
-        // console.log("Data=======" + response.data.address);
         this.insertdata.id = response.data.data.id;
-        // this.user_id = response.data.data.id;
         this.insertdata.name = response.data.data.name;
         this.getDatas = response.data.data;
         this.insertdata.email = response.data.data.email;
         this.insertdata.phone_number = response.data.data.phone_number;
         this.address = response.data.address;
         if (this.address.length > 0) {
-          this.shipp_address = "";//this.address[0];
-          this.billAddress = "";//this.address[0];
+          this.shipp_address = "";
+          this.billAddress = "";
         }
         this.user_id = response.data.data.id;
-        //this.defaultLoading();
-        // this.getQuponList();
       });
     },
     getcompanyData() {
@@ -670,19 +697,12 @@ export default {
           this.COD_fee = response.data.transaction_fee;
         });
     },
-
     defaultLoading() {
-      // console.log(this.insertdata.id);
       const id = this.insertdata.id;
       this.$axios.get(`/user/cardlist/${id}`).then(response => {
         this.cardList = response.data;
-        // console.log(response.data);
-      }).catch(error => {
-        // console.error('Error fetching card list:', error);
-      });
+      }).catch(error => { });
     },
-
-
     clearCart() {
       this.loading = true;
       localStorage.removeItem("cart");
@@ -692,60 +712,61 @@ export default {
         this.loading = false;
       }, 2000);
     },
+
+
     placeOrder() {
-      // 1️⃣ Validate payment method
       if (!this.paymentMethod) {
-        Swal.fire({
-          icon: "error",
-          title: "Please select a payment method.",
-        });
+        Swal.fire({ icon: "error", title: "Please select a payment method." });
         return;
       }
 
-      // 2️⃣ Validate required billing/shipping fields
       if (!this.insertdata.name || !this.insertdata.email || !this.insertdata.phone_number) {
-        Swal.fire({
-          icon: "error",
-          title: "Please fill in all billing details.",
-        });
+        Swal.fire({ icon: "error", title: "Please fill in all billing details." });
         return;
       }
 
       if (!this.shipp_phoneNumber || !this.shipp_address) {
-        Swal.fire({
-          icon: "error",
-          title: "Please fill in all shipping details.",
-        });
+        Swal.fire({ icon: "error", title: "Please fill in all shipping details." });
         return;
       }
 
-      // Assign selectedPayment before sending
       this.selectedPayment = this.paymentMethod;
 
-      // Prepare FormData
       const formData = new FormData();
       formData.append("cart", JSON.stringify(this.cart));
-      formData.append("subTotal", this.totalSum);
+
+      // Send the coupon-adjusted total as subTotal if coupon is applied
+      formData.append("subTotal", this.finalTotalPayment.toFixed(2));
       formData.append("item_total", this.sumOfLastPrices);
       formData.append("delivery_fee", this.sumOfFlatRatePrices);
 
-      // Shipping Address
+
+      // ✅ Find the selected shipping option and append its name
+      const selectedOption = this.shippingOptions.find(
+        option => option.price === this.selectedShipping
+      );
+      formData.append("delivery_type", selectedOption ? selectedOption.name : '');
+
+
+
+      // Send coupon info if present
+      if (this.appliedCoupon) {
+        formData.append("coupon_id", this.appliedCoupon.coupon_id);
+        formData.append("coupon_code", this.appliedCoupon.couponCode);
+        formData.append("coupon_discount", this.appliedCoupon.couponDiscount);
+      }
+
       formData.append("shipp_phoneNumber", this.shipp_phoneNumber);
       formData.append("shipp_address", this.shipp_address);
-      // Billing Details
       formData.append("Cutomer_name", this.insertdata.name);
       formData.append("Cutomer_email", this.insertdata.email);
       formData.append("Cutomer_phone_number", this.insertdata.phone_number);
-      // Payment method
       formData.append("payment_staus", this.selectedPayment);
 
-      // 5️⃣ Submit form via Axios
       const headers = { "Content-Type": "multipart/form-data" };
       this.$axios
         .post("/order/submitOrder", formData, { headers })
         .then((response) => {
-          console.log("Order submission response:", response.data.order_id);
-          //  return false; 
           const order_id = response.data.order_id;
           const orderConfirmData = {
             order_id: order_id,
@@ -756,13 +777,17 @@ export default {
             shippingAddress: this.shipp_address,
             shippingPhone: this.shipp_phoneNumber,
             paymentMethod: this.paymentMethod,
-            cartItems: JSON.parse(JSON.stringify(this.cart)), // snapshot before cart clears
+            cartItems: JSON.parse(JSON.stringify(this.cart)),
             itemTotal: this.sumOfLastPrices.toFixed(2),
             deliveryFee: this.sumOfFlatRatePrices.toFixed(2),
-            total: this.totalSum.toFixed(2),
+            couponDiscount: this.appliedCoupon ? this.appliedCoupon.couponDiscount : 0,
+            total: this.finalTotalPayment.toFixed(2),
             date: new Date().toLocaleDateString('en-GB'),
           };
           sessionStorage.setItem('lastOrderData', JSON.stringify(orderConfirmData));
+
+          // ✅ Clear the applied coupon after order is placed
+          sessionStorage.removeItem('appliedCoupon');
 
           Swal.fire({
             icon: "success",
@@ -799,10 +824,8 @@ export default {
       if (index !== -1) {
         this.cart[index].quantity = newQuantity;
         this.saveCart();
-        this.calculateSubtotal(); // Optionally recalculate subtotal after updating quantity
-        setTimeout(() => {
-          this.loading = false;
-        }, 2000);
+        this.calculateSubtotal();
+        setTimeout(() => { this.loading = false; }, 2000);
       }
     },
     loadCart() {
@@ -813,19 +836,14 @@ export default {
       }
       let itemCount = 0;
       this.cart.forEach((item) => {
-        if (item.product) { // Add a check to ensure item.product is defined
+        if (item.product) {
           itemCount += parseInt(item.quantity);
         }
       });
       this.itemCount = itemCount;
-      setTimeout(() => {
-        this.loading = false;
-      }, 2000);
+      setTimeout(() => { this.loading = false; }, 2000);
     },
     handleCartItemCountUpdated(itemCount) {
-      // This method will be called when the event is emitted from ComponentA
-      // console.log('Received  DesktopViewOptions Com.:', itemCount);
-      // Update the local data property with the received itemCount
       this.itemCount = itemCount;
     },
     removeFromCart(product) {
@@ -841,9 +859,7 @@ export default {
         this.calculateSubtotal();
         this.cartItemCount();
         this.calculateSumOfLastPrices();
-        setTimeout(() => {
-          this.loading = false;
-        }, 1000);
+        setTimeout(() => { this.loading = false; }, 1000);
       }
     },
     saveCart() {
@@ -852,35 +868,25 @@ export default {
     addToCart(productId) {
       const productToAdd = this.prouducts.find((product) => product.id === productId);
       const existingItem = this.cart.find((item) => item.product.id === productId);
-      if (existingItem) {
-        // existingItem.quantity += 1;
-      } else {
-        this.cart.push({
-          product: productToAdd,
-          quantity: 1,
-        });
+      if (!existingItem) {
+        this.cart.push({ product: productToAdd, quantity: 1 });
       }
       this.saveCart();
       this.cartItemCount();
       this.calculateSubtotal();
     },
     cartItemCount() {
-      //  this.loading = true;
       let itemCount = 0;
       this.cart.forEach((item) => {
         itemCount += parseInt(item.quantity);
       });
       this.itemCount = itemCount;
-      // console.log("Emitting cartItemCountUpdated event with itemCount:", this.itemCount);
       this.$eventBus.$emit("cartItemCountUpdated", this.itemCount);
     },
     calculateSubtotal() {
-      //  this.loading = true;
       let subtotal = 0;
       this.cart.forEach((item) => {
         const product = item.product;
-        // console.log(`Quantity: ${item.quantity}, Price: ${product.price}`);
-        // const priceWithoutCommas = product.price.replace(/,/g, '');
         const priceWithoutCommas = product.price;
         const priceAsNumber = parseFloat(priceWithoutCommas);
         if (!isNaN(item.quantity) && !isNaN(priceAsNumber)) {
@@ -888,20 +894,13 @@ export default {
         } else {
           console.error("Invalid quantity or price:", item.quantity, product.price);
         }
-        // console.log(`Intermediate Subtotal: ${subtotal}`);
       });
-      //console.log(`Final Subtotal: ${subtotal}`);
       return (this.subtotal = subtotal);
-      //return subtotal;
     },
     async getQuponList() {
       const minShop = this.totalSum;
       const user_id = this.user_id;
-      console.log(user_id);
-      const queryParams = {
-        minShop: minShop,
-        user_id: user_id
-      };
+      const queryParams = { minShop, user_id };
       this.$axios.get('/setting/getcoupons', { params: queryParams })
         .then(response => {
           this.Dcouponlist = response.data.couponList;
@@ -913,6 +912,7 @@ export default {
   },
 };
 </script>
+
 <style>
 .btn-check:checked+.btn,
 .btn.active,
@@ -1008,11 +1008,6 @@ export default {
 
 .delivery-option.active {
   border-color: #0C356A;
-  background: #f4f7fb;
-}
-
-.payment-option-inline.active {
-  border: 2px solid #0C356A;
   background: #f4f7fb;
 }
 

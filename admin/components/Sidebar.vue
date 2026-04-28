@@ -93,7 +93,7 @@
                         </ul>
                     </div>
                 </li>
-                <li class="mb-1 d-none">
+                <li class="mb-1">
                     <a class="btn has-arrow align-items-center rounded collapsed  dropdown-toggle"
                         data-bs-toggle="collapse" data-bs-target="#Coupons-collapse" aria-expanded="false">
                         <i class="bx bx-category"></i>

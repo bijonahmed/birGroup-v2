@@ -14,31 +14,39 @@
                         <div class="row px-2">
                             <div class="col-md-3 mt-3">
                                 <div class="category-menu">
-
                                     <ul class="list-group">
 
-                                        <!-- Root -->
-                                        <li v-if="categoryname"
+                                        <!-- Matched category at TOP -->
+                                        <li v-if="activeCategory"
                                             class="list-group-item list-group-item-primary text-center root-category">
-                                            <span @click="onClickCategory(null, activeSlug, categoryname)"
-                                                style="cursor:pointer">
-                                                {{ categoryname }}
+                                            <span style="cursor:pointer; font-weight:600;">
+                                                {{ activeCategory.name }}
                                             </span>
-
                                         </li>
 
+                                        <!-- Matched category's children directly below top label -->
+                                        <div v-if="activeCategory && activeCategory.children && activeCategory.children.length"
+                                            class="mt-2 mb-3">
+                                            <ul class="subcategory-list">
+                                                <li v-for="child in activeCategory.children" :key="child.id">
+                                                    <a :href="`/category/category-filter?slug=${child.slug}`"
+                                                        :class="{ 'active': child.slug === activeSubSlug }">
+                                                        {{ child.name }}
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
 
-                                        <!-- Child -->
+                                        <!-- Rest of categories below -->
                                         <div class="mt-2">
                                             <div class="category-wrapper" v-for="category in categories"
                                                 :key="category.id">
                                                 <h6 class="category-title">{{ category.name }}</h6>
-
                                                 <ul class="subcategory-list">
                                                     <li v-for="childCategory in category.children"
                                                         :key="childCategory.id">
-                                                        <a
-                                                            :href="`/category/category-filter?slug=${childCategory.slug}`">
+                                                        <a :href="`/category/category-filter?slug=${childCategory.slug}`"
+                                                            :class="{ 'active': childCategory.slug === activeSubSlug }">
                                                             {{ childCategory.name }}
                                                         </a>
                                                     </li>
@@ -47,7 +55,6 @@
                                         </div>
 
                                     </ul>
-
                                 </div>
                             </div>
                             <!-- PRODUCT LIST -->
@@ -90,7 +97,6 @@
                                                             <span>{{ item.discount }}%</span>
                                                         </p>
                                                     </div>
-
                                                     <div class="d-flex justify-content-center align-items-center mb-1"
                                                         v-else-if="item.discount_status == 2">
                                                         <p class="me-2 mb-0" v-if="item.discount !== 0">Tk. {{
@@ -102,7 +108,6 @@
                                                             <span>{{ item.discount }}%</span>
                                                         </p>
                                                     </div>
-
                                                     <p v-else class="mb-0">Tk.{{ item.price.toFixed(2) }}</p>
                                                 </div>
                                                 <!-- Rating -->
@@ -150,7 +155,9 @@ export default {
             categoryname: '',
             activeSlug: null,
             selectedCategory: null, // <-- added this
+            activeCategory: null, // Will hold the matched category info
             limit: 9,
+            activeCategory: null, // Will hold the matched category info
         };
     },
     watch: {
@@ -165,10 +172,9 @@ export default {
                 }
             }
         },
-        
-
     },
     async mounted() {
+        this.activeSubSlug = this.$route.query.sub_slug || null;
         this.calculateSubtotal();
         this.loadCart();
         this.cartItemCount();
@@ -182,17 +188,14 @@ export default {
     methods: {
         // Click subcategory from sidebar
         async onClickSubCategory(categoryId, slug) {
-
             this.selectedCategory = categoryId
             this.activeSlug = slug
-
             if (this.$route.query.sub_slug !== slug) {
                 this.$router.push({
                     path: this.$route.path,
                     query: { sub_slug: slug }
                 })
             }
-
             await this.loadSidebarAndProducts(slug)
         },
         // Fetch both sidebar categories and products dynamically
@@ -212,7 +215,6 @@ export default {
         },
         async filterByCategory(slug) {
             this.selectedCategory = slug;
-          
             this.loading = true;
             try {
                 const response = await this.$axios.get(`/unauthenticate/filterbySubcategorys/${slug}`);
@@ -228,7 +230,7 @@ export default {
         },
         // Original product fetch (for main category)
         async fetchData(slug) {
-              console.log("Filtering by category slug:", slug);
+            console.log("Filtering by category slug:", slug);
             this.loading = true;
             try {
                 const response = await this.$axios.get(`/unauthenticate/filterbySubcategorys/${slug}`);
@@ -246,19 +248,29 @@ export default {
         async fetchDataCategory() {
             this.loading = true;
             try {
-                const response = await this.$axios.get(`/unauthenticate/getCategoryList`);
-                this.categories = response.data;
+                const response = await this.$axios.get(`/unauthenticate/getCategoryListFilter`, {
+                    params: { sub_slug: this.activeSubSlug }
+                });
+
+                // ✅ activeCategory shows at top label
+                this.activeCategory = response.data.activeCategory || null;
+
+                // ✅ remaining categories show in sidebar list below
+                this.categories = response.data.categories || [];
+
             } catch (err) {
                 console.error(err);
             } finally {
                 this.loading = false;
             }
         },
+
         // Other helper methods
         selectCategory(slug) {
             this.activeSlug = slug;
             this.fetchSubCategoryData(slug);
         },
+
         async fetchSubCategoryData(slug) {
             this.loading = true;
             try {
@@ -289,7 +301,6 @@ export default {
                 }
             }
         },
-
         saveCart() {
             this.loading = true;
             localStorage.setItem('cart', JSON.stringify(this.cart));
@@ -305,14 +316,12 @@ export default {
             this.itemCount = itemCount;
             console.log('Emitting cartItemCountUpdated event with itemCount:', this.itemCount);
             this.$eventBus.$emit('cartItemCountUpdated', this.itemCount);
-
         },
         calculateSubtotal() {
             return 0;
         },
         updateQuantity(productId, newQuantity) {
             const index = this.cart.findIndex((item) => item.product.id === productId);
-
             if (index !== -1) {
                 this.cart[index].quantity = newQuantity;
                 this.saveCart();
@@ -320,10 +329,8 @@ export default {
             }
         },
         addToCart(productId) {
-
             const productToAdd = this.prouducts.find((product) => product.id === productId);
             const existingItem = this.cart.find((item) => item.product.id === productId);
-
             if (existingItem) {
                 //existingItem.quantity += 1;
             } else {
@@ -347,28 +354,23 @@ export default {
                     title: "Product successfully Added to cart"
                 });
             }
-
             this.saveCart();
             this.cartItemCount();
             this.calculateSubtotal();
         },
-
         removeFromCart(product) {
             const index = this.cart.findIndex((item) => item.product.id === product.id);
-
             if (index !== -1) {
                 if (this.cart[index].quantity > 1) {
                     this.cart[index].quantity -= 1;
                 } else {
                     this.cart.splice(index, 1);
                 }
-
                 this.saveCart();
                 this.calculateSubtotal();
                 this.cartItemCount();
             }
         },
-
     },
 }
 </script>

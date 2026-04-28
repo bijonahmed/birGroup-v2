@@ -1,27 +1,27 @@
 <?php
-
 namespace App\Models;
-
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
 class Order extends Model
 {
     use HasFactory;
-
     public $table = "orders";
     protected $fillable = [
         'orderId',
         'total',
         'subtotal',
         'order_status',
+        'coupon_id',
+        'coupon_code',
+        'coupon_discount',
+        'delivery_charge',
+        'delivery_type',
         'billing_name',
         'customer_id',
         'billing_email',
         'billing_phone_number',
         'billing_address',
-        'billing_country', 
+        'billing_country',
         'billing_city',
         'shipper_name',
         'shipper_email',

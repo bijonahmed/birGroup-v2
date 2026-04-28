@@ -2,15 +2,12 @@
     <div>
         <LogoAndPayment />
         <NavbarSecond />
-
         <section class="main_content py-5">
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-md-10 col-lg-8">
-
                         <!-- Success Card -->
                         <div class="success-card">
-
                             <!-- Header -->
                             <div class="success-card__header">
                                 <div class="success-icon">
@@ -23,18 +20,15 @@
                                     </svg>
                                 </div>
                                 <h2>Order Confirmed!</h2>
-
                                 <p>Thank you! Your order has been received and is being processed.</p>
                             </div>
-
                             <!-- Body -->
                             <div class="success-card__body" v-if="orderData">
-                                <center><h3>Order ID: {{ orderData.order_id }}</h3></center>
-                                <!-- Login Info Box -->
-                                <!-- <h1>====={{ orderData.order_id }}====</h1> -->
+                                <center>
+                                    <h3>Order ID: {{ orderData.order_id }}</h3>
+                                </center>
                                 <!-- Two Column: Customer Info + Shipping -->
                                 <div class="info-grid">
-
                                     <!-- Customer Info -->
                                     <div class="info-section">
                                         <div class="info-section__title">
@@ -70,7 +64,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <!-- Shipping Info -->
                                     <div class="info-section">
                                         <div class="info-section__title">
@@ -92,9 +85,7 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
-
                                 <!-- Order Items Table -->
                                 <div class="order-table-wrap">
                                     <div class="order-table-wrap__title">
@@ -105,7 +96,6 @@
                                         </svg>
                                         Order Summary
                                     </div>
-                                    <!-- ====<pre>{{ productsList }}</pre>=== -->
                                     <table class="order-table">
                                         <thead>
                                             <tr>
@@ -120,12 +110,11 @@
                                                 <td class="text-center">
                                                     <span class="qty-badge">{{ item.quantity }}</span>
                                                 </td>
-                                                <td class="text-right">BDT {{ (item.price *
-                                                    item.quantity).toFixed(2) }}</td>
+                                                <td class="text-right">BDT {{ (item.price * item.quantity).toFixed(2) }}
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
-
                                     <!-- Totals -->
                                     <div class="order-totals">
                                         <div class="order-totals__row">
@@ -133,18 +122,37 @@
                                             <span>BDT {{ orderData.itemTotal }}</span>
                                         </div>
                                         <div class="order-totals__row">
-                                            <span>Delivery Fee</span>
+                                            <span>Delivery Charge
+                                                <span v-if="orderData.delivery_type">({{ orderData.delivery_type
+                                                    }})</span>
+
+                                            </span>
                                             <span>BDT {{ orderData.deliveryFee }}</span>
                                         </div>
+
+                                        <!-- ✅ Coupon Discount row — only shown if coupon was applied -->
+                                        <div class="order-totals__row order-totals__row--coupon"
+                                            v-if="orderData.couponDiscount && parseFloat(orderData.couponDiscount) > 0">
+                                            <span class="coupon-label">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                                    fill="currentColor" viewBox="0 0 24 24"
+                                                    style="margin-right:4px;vertical-align:middle;">
+                                                    <path
+                                                        d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58s1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41s-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z" />
+                                                </svg>
+                                                Coupon Discount
+                                            </span>
+                                            <span class="coupon-amount">- BDT {{
+                                                parseFloat(orderData.couponDiscount).toFixed(2) }}</span>
+                                        </div>
+
                                         <div class="order-totals__row order-totals__row--total">
                                             <span>Total</span>
                                             <span>BDT {{ orderData.total }}</span>
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
-
                             <!-- Fallback -->
                             <div v-if="!orderData" class="no-order">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#ccc"
@@ -154,7 +162,6 @@
                                 </svg>
                                 <p>No order information found.</p>
                             </div>
-
                             <!-- Footer CTA -->
                             <div class="success-card__footer">
                                 <nuxt-link to="/" class="btn-continue">
@@ -165,20 +172,17 @@
                                     Continue Shopping
                                 </nuxt-link>
                             </div>
-
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-
         <div class="back_top">
             <a href="#top"><i class="fa-solid fa-angle-up"></i></a>
         </div>
         <Footer />
     </div>
 </template>
-
 
 <script>
 import NavbarSecond from '~/components/NavbarSecond.vue';
@@ -193,13 +197,11 @@ export default {
         Common_MiniTabNavbar,
         Common_MobileSearchProduct,
     },
-
     head() {
         return {
             title: 'Order Confirmed - Bir Group',
         };
     },
-
     data() {
         return {
             orderData: null,
@@ -208,7 +210,6 @@ export default {
             productsList: [],
         };
     },
-
     mounted() {
         if (process.client) {
             const saved = sessionStorage.getItem('lastOrderData');
@@ -218,14 +219,12 @@ export default {
             }
         }
     },
-
     computed: {
         paymentLabel() {
             if (!this.orderData) return '';
             return this.orderData.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment';
         },
     },
-
     methods: {
         getproductsList() {
             this.$axios.get('/unauthenticate/getCartData?order_id=' + this.orderData.order_id)
@@ -233,11 +232,9 @@ export default {
                     this.productsList = response.data.data;
                 });
         },
-
     },
 };
 </script>
-
 
 <style scoped>
 /* ── Outer Card ── */
@@ -275,107 +272,6 @@ export default {
 /* ── Body ── */
 .success-card__body {
     padding: 28px 28px 8px;
-}
-
-/* ── Login Info Box ── */
-.login-info-box {
-    border: 1.5px solid #4a6cf7;
-    border-radius: 10px;
-    overflow: hidden;
-    margin-bottom: 24px;
-}
-
-.login-info-box__title {
-    background: #4a6cf7;
-    color: #fff;
-    font-weight: 700;
-    font-size: 0.9rem;
-    padding: 11px 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.login-info-box__body {
-    background: #f5f7ff;
-    padding: 14px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.login-info-box__row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #fff;
-    border: 1px solid #e0e6ff;
-    border-radius: 7px;
-    padding: 10px 14px;
-}
-
-.login-info-box__label {
-    font-weight: 600;
-    font-size: 0.82rem;
-    color: #666;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.login-info-box__value {
-    font-size: 0.88rem;
-    color: #222;
-    font-weight: 500;
-}
-
-.login-info-box__value--password {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.password-text {
-    font-family: monospace;
-    letter-spacing: 1px;
-}
-
-.toggle-password-btn,
-.copy-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 4px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    transition: background 0.15s;
-}
-
-.toggle-password-btn {
-    color: #4a6cf7;
-}
-
-.copy-btn {
-    color: #888;
-}
-
-.toggle-password-btn:hover {
-    background: #eef0ff;
-}
-
-.copy-btn:hover {
-    background: #f0f0f0;
-    color: #25a244;
-}
-
-.login-info-box__note {
-    font-size: 0.76rem;
-    color: #999;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 5px;
 }
 
 /* ── Info Grid ── */
@@ -532,6 +428,27 @@ export default {
     justify-content: space-between;
     font-size: 0.88rem;
     color: #555;
+}
+
+/* ✅ Coupon discount row styling */
+.order-totals__row--coupon {
+    background: #f0faf4;
+    border: 1px dashed #28a745;
+    border-radius: 6px;
+    padding: 7px 10px;
+    margin: 2px 0;
+}
+
+.coupon-label {
+    color: #1a7a3a;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.coupon-amount {
+    color: #1a7a3a;
+    font-weight: 700;
 }
 
 .order-totals__row--total {

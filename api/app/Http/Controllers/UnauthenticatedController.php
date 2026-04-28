@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use DB;
 use Auth;
 use File;
@@ -46,7 +48,9 @@ use Workbench\App\Models\User as AppModelsUser;
 use App\Models\BlogModel;
 use App\Models\blogCategory;
 use App\Models\OrderStatus;
+use App\Models\ProModels;
 use App\Models\Salary;
+
 class UnauthenticatedController extends Controller
 {
     protected $frontend_url;
@@ -55,6 +59,27 @@ class UnauthenticatedController extends Controller
     {
         $categories = Categorys::with('children.children.children.children.children')->where('parent_id', 0)->where('status', 1)->get();
         return response()->json($categories);
+    }
+    public function allCategoryFilter(Request $request)
+    {
+        $sub_slug = $request->sub_slug;
+        // ✅ Find matched category with its children
+        $matchedCategory = Categorys::with('children.children.children.children.children')
+            ->where('slug', $sub_slug)
+            ->where('status', 1)
+            ->first();
+        // ✅ All other root categories EXCLUDING the matched one
+        $otherCategories = Categorys::with('children.children.children.children.children')
+            ->where('parent_id', 0)
+            ->where('status', 1)
+            ->when($matchedCategory, function ($query) use ($matchedCategory) {
+                $query->where('id', '!=', $matchedCategory->id);
+            })
+            ->get();
+        return response()->json([
+            'activeCategory' => $matchedCategory,
+            'categories'     => $otherCategories,
+        ]);
     }
     public function limitedProducts()
     {
@@ -1300,69 +1325,58 @@ class UnauthenticatedController extends Controller
             'data' => $coupons,
         ]);
     }
-    public function getcouponDiscount(request $request)
+    public function getcouponDiscount(Request $request)
     {
-        // dd($request->couponCode,$request->price,$request->user_id);
         $validator = Validator::make(
             $request->all(),
             [
-                'user_id' => 'required',
                 'couponCode' => 'required',
-                'price' => 'required',
+                'price'      => 'required|numeric|min:0',
             ],
             [
-                'user_id.required' => 'User id is Invalid.',
-                'couponCode.required' => 'Coupon code is Invalid.',
-                'price.required' => 'Price is Invalid.',
-            ],
+                'couponCode.required' => 'Coupon code is required.',
+                'price.required'      => 'Price is required.',
+                'price.numeric'       => 'Price must be a valid number.',
+            ]
         );
+
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-        $couponCode = $request->couponCode;
-        $pro_price = $request->price;
-        $user_id = $request->user_id;
-        $coupon = coupons::where('promocode', $couponCode)->where('status', 1)->first();
-        if ($coupon) {
-            $usageCheck = CouponUseHistory::where('user_id', $user_id)
-                ->where('coupon_id', $coupon->id)
-                ->first();
-            if ($usageCheck) {
-                return response()->json(['errors' => ['coupon' => ['This coupon has already been used.']]], 422);
-            } else {
-                if ($pro_price >= $coupon->min_shopping) {
-                    $dis_value = 0;
-                    $last_price = 0;
-                    if ($coupon->code_type == 'percentage') {
-                        $last_price = $pro_price - ($pro_price * $coupon->d_percent) / 100;
-                        $dis_value = ($pro_price * $coupon->d_percent) / 100;
-                    } elseif ($coupon->code_type == 'fixed') {
-                        $last_price = $pro_price - $coupon->d_fvalue;
-                        $dis_value = $coupon->d_fvalue;
-                    }
-                    $couponData = [
-                        'id' => $coupon->id,
-                        'name' => $coupon->name,
-                        'PRICE' => $pro_price,
-                        'discount' => $dis_value,
-                        'last_discount_price' => $last_price,
-                        'promocode' => $coupon->promocode,
-                        'code_type' => $coupon->code_type,
-                        'min_shopping' => $coupon->min_shopping,
-                        'd_percent' => $coupon->d_percent,
-                        'd_fvalue' => $coupon->d_fvalue,
-                        'status' => $coupon->status,
-                        'user_id' => $request->user_id,
-                    ];
-                    return response()->json(['coupon_data' => $couponData], 200);
-                } else {
-                    return response()->json(['errors' => ['coupon' => ['Please shop for a minimum amount.']]], 422);
-                }
-            }
-        } else {
-            return response()->json(['errors' => ['coupon' => ['Coupon not found.']]], 422);
+        $getrow = coupons::where('promocode', $request->couponCode)
+            ->where('status', 1)
+            ->first();
+
+        // Return error if coupon not found or inactive
+        if (!$getrow) {
+            return response()->json([
+                'message' => 'Invalid or expired promo code.'
+            ], 422);
         }
+
+        $price    = (float) $request->price;
+        $percent  = (float) $getrow->d_percent;
+
+        //  Calculate discount amount from percentage
+        $discountAmount     = round(($price * $percent) / 100, 2);
+
+        $lastDiscountPrice  = max(0, round($price - $discountAmount, 2));
+
+        $couponData = [
+            'id'                  => $getrow->id,
+            'name'                => $getrow->name,
+            'promocode'           => $getrow->promocode,
+            'discount'            => $discountAmount,       // ✅ actual BDT amount saved
+            'discount_percent'    => $percent,              // ✅ percentage (e.g. 10)
+            'original_price'      => $price,                // ✅ price before discount
+            'last_discount_price' => $lastDiscountPrice,    // ✅ price after discount
+        ];
+
+        return response()->json(['coupon_data' => $couponData], 200);
     }
+
+
+
     public function getbanner()
     {
         $banner = topHeaderBanner::first();

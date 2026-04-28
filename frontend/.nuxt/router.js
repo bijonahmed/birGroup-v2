@@ -9,6 +9,7 @@ const _4c2761bc = () => interopDefault(import('..\\pages\\allshop.vue' /* webpac
 const _f7eac466 = () => interopDefault(import('..\\pages\\blog.vue' /* webpackChunkName: "pages/blog" */))
 const _4606abc2 = () => interopDefault(import('..\\pages\\blog-details.vue' /* webpackChunkName: "pages/blog-details" */))
 const _a8460b6a = () => interopDefault(import('..\\pages\\cart.vue' /* webpackChunkName: "pages/cart" */))
+const _f853e04c = () => interopDefault(import('..\\pages\\cart copy.vue' /* webpackChunkName: "pages/cart copy" */))
 const _1f869794 = () => interopDefault(import('..\\pages\\changepassword.vue' /* webpackChunkName: "pages/changepassword" */))
 const _1be65abd = () => interopDefault(import('..\\pages\\charity.vue' /* webpackChunkName: "pages/charity" */))
 const _4631c7f1 = () => interopDefault(import('..\\pages\\checkout.vue' /* webpackChunkName: "pages/checkout" */))
@@ -106,6 +107,10 @@ export const routerOptions = {
     path: "/cart",
     component: _a8460b6a,
     name: "cart"
+  }, {
+    path: "/cart%20copy",
+    component: _f853e04c,
+    name: "cart copy"
   }, {
     path: "/changepassword",
     component: _1f869794,

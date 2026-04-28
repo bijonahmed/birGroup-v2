@@ -43,11 +43,8 @@ class ProductController extends Controller
         $user = User::find($id->id);
         $this->userid = $user->id;
     }
-
     public function productUpdate(Request $request)
     {
-
-
         //dd($request->all());
         $validator = Validator::make($request->all(), [
             'name'           => 'required',
@@ -100,7 +97,7 @@ class ProductController extends Controller
             'status'                     => $request->status,
             'entry_by'                   => $this->userid
         );
-         //  dd($data);
+        //  dd($data);
         if (!empty($request->file('files'))) {
             $files = $request->file('files');
             $fileName = Str::random(20);
@@ -149,10 +146,8 @@ class ProductController extends Controller
         return response()->json($resdata);
         ///return response()->json(['message' => 'Product updated successfully'], 200);
     }
-
     public function save(Request $request)
     {
-
         // dd($formattedData);
         // return false;
         $validator = Validator::make($request->all(), [
@@ -170,7 +165,6 @@ class ProductController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
         $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $request->input('name'))));
-
         $data = array(
             'seller_id'                  => $this->userid,
             'name'                       => $request->name,
@@ -221,7 +215,6 @@ class ProductController extends Controller
         if (empty($request->id)) {
             //INSERT PRODUCT
             $product_id = Product::insertGetId($data);
-
             if (!empty($product_id)) {
                 $slug                  = "$slug-$product_id";
                 DB::table('product')->where('id', $product_id)->update(['slug' => $slug]);
@@ -264,17 +257,13 @@ class ProductController extends Controller
             //update
         }
     }
-
     function generateUnique4DigitNumber($existingNumbers = [])
     {
         do {
             $uniqueNumber = str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
         } while (in_array($uniqueNumber, $existingNumbers));
-
         return $uniqueNumber;
     }
-
-
     public function getVarientHistory(Request $request)
     {
         $product_id         = $request->product_id;
@@ -290,15 +279,12 @@ class ProductController extends Controller
                 'product_id'       => $value->product_id,
             ];
         }
-
         $pdata['varient']    = $formatedData;
         //   $pdata['colorGroup'] = $gdata;
         return response()->json($pdata);
     }
-
     public function attributeValRows($attributes_id)
     {
-
         $attrValues = AttributeValues::where('attributes_id', $attributes_id)->select('id', 'attributes_id', 'name')->get();
         $collection = collect($attrValues);
         $modifiedCollection = $collection->map(function ($item) {
@@ -307,10 +293,8 @@ class ProductController extends Controller
                 'name' => $item['name'],
             ];
         });
-
         return response()->json($modifiedCollection, 200);
     }
-
     public function getAttrHistory($id)
     {
         $product_id = (int) $id;
@@ -331,21 +315,17 @@ class ProductController extends Controller
     }
     public function deleteValrient(Request $request)
     {
-
         $data = ProductVarrient::find($request->varient_id);
         $data->delete();
-
         ProductVarrientHistory::where('pro_varient_id', $request->varient_id)->delete();
         return response()->json("Delete Varient");
     }
-
     public function additionaIMagesDelete(Request $request)
     {
         $images_id =  $request->images_id;
         ProductAdditionalImg::where('id', $images_id)->delete();
         return response()->json("Delete Images");
     }
-
     public function deleteCategory(Request $request)
     {
         // dd($request->all());
@@ -353,16 +333,21 @@ class ProductController extends Controller
         $lastElement  = trim(end($dynamicArray));
         $category_id  = Categorys::where('name', $lastElement)->select('id')->first();
         $row          = ProductCategory::where('category_id', $category_id->id)->where('product_id', $request->product_id)->first();
-
         if (!empty($row->category_id)) {
             ProductCategory::where('category_id', $row->category_id)->delete();
         }
         return response()->json("Delete Category Category ID: $row->category_id ");
     }
 
-    public function productrow($id)
+    public function allparentCategory()
     {
 
+        $all_main_category                 = Categorys::select('id', 'name', 'slug')->where('parent_id', 0)->where('status', 1)->get();
+        $responseData['main_categorys']    = $all_main_category;
+        return response()->json($responseData);
+    }
+    public function productrow($id)
+    {
         $produCategory = ProductCategory::where('product_id', $id)->get();
         $prodimages    = ProductAdditionalImg::where('product_id', $id)->select('images', 'id')->get();
         $prodImages    = Product::find($id);
@@ -373,34 +358,98 @@ class ProductController extends Controller
                 'id'           => $v->id,
             ];
         }
+        /*
         $returnData = [];
         foreach ($produCategory as $key => $val) {
             $returnData[] = DB::select("SELECT GROUP_CONCAT(name SEPARATOR ', ') AS name,id FROM categorys WHERE id IN ($val->parent_id)");
         }
         $concatenated_names = [];
+        $get_main_cat_id = null; // ✅ reset
         foreach ($returnData as $inner_array) {
             foreach ($inner_array as $obj) {
                 $concatenated_names[] = $obj->name;
+                $get_main_cat_id = $obj->id;
             }
         }
-        $resulting_string = implode("<br/>", $concatenated_names);
-        $show_edit_cat = $concatenated_names; //implode("<br/>", $concatenated_names);
+        $resulting_string  = implode("<br/>", $concatenated_names);
+        $show_edit_cat     = $concatenated_names; //implode("<br/>", $concatenated_names);
+        $get_main_cat_id   = $get_main_cat_id;
+        */
+        $returnData = [];
+        foreach ($produCategory as $key => $val) {
+            $parentIds = explode(',', $val->parent_id);
+            $parentIds = array_map('trim', $parentIds);
+            $mainCatId   = null;
+            $subCatId    = null;
+            $inSubCatId  = null;
+            if (count($parentIds) == 3) {
+                $mainCatId  = $parentIds[0]; // 1  → Main Category
+                $subCatId   = $parentIds[1]; // 6  → Sub Category
+                $inSubCatId = $parentIds[2]; // 45 → In-Sub Category
+            } elseif (count($parentIds) == 2) {
+                $mainCatId = $parentIds[0];  // → Main Category
+                $subCatId  = $parentIds[1];  // → Sub Category
+            } elseif (count($parentIds) == 1) {
+                $mainCatId = $parentIds[0];  // → Main Category only
+            }
+            // Fetch all needed category names in one query
+            $ids          = array_filter([$mainCatId, $subCatId, $inSubCatId]);
+            $placeholders = implode(',', array_fill(0, count($ids), '?'));
+            $categories   = DB::select("SELECT id, name FROM categorys WHERE id IN ($placeholders)", array_values($ids));
+            // Map id => name
+            $catMap = [];
+            foreach ($categories as $cat) {
+                $catMap[$cat->id] = $cat->name;
+            }
+            $returnData[] = [
+                'main_cat_id'    => $mainCatId,
+                'sub_cat_id'     => $subCatId,
+                'insub_cat_id'   => $inSubCatId,
+                'main_cat_name'  => $catMap[$mainCatId]  ?? null,
+                'sub_cat_name'   => $catMap[$subCatId]   ?? null,
+                'insub_cat_name' => $catMap[$inSubCatId] ?? null,
+            ];
+        }
+        // ✅ Your required variables
+        $concatenated_names = [];
+        $get_main_cat_id    = null;
+        $get_sub_cat_id     = null;
+        $get_in_sub_cat_id  = null;
+        foreach ($returnData as $item) {
+            $parts = array_filter([
+                $item['main_cat_name'],
+                $item['sub_cat_name'],
+                $item['insub_cat_name'],
+            ]);
+            $concatenated_names[] = implode(' > ', $parts);
+            $get_main_cat_id   = $item['main_cat_id'];
+            $get_sub_cat_id    = $item['sub_cat_id'];
+            $get_in_sub_cat_id = $item['insub_cat_id'];
+        }
+        $resulting_string  = implode("<br/>", $concatenated_names);
+        $show_edit_cat     = $concatenated_names;
+        $get_main_cat_id   = $get_main_cat_id;
+        $get_sub_cat_id    = $get_sub_cat_id;
+        $get_in_sub_cat_id = $get_in_sub_cat_id;
         //dd($resulting_string);
         $responseData['productImg']        = !empty($prodImages) ? url($prodImages->thumnail_img) : "";
         $responseData['product']           = Product::leftjoin('brands', 'brands.id', '=', 'product.brand')
             ->leftjoin('manufacturers', 'manufacturers.id', '=', 'product.manufacturer')
             ->select('product.*', 'brands.name as brand_name', 'manufacturers.name as manufac_name')
             ->where('product.id', $id)->first();
-
+        $all_main_category = Categorys::select('id', 'name', 'slug')->where('parent_id', 0)->where('status', 1)->get();
         $responseData['seller_name'] = !empty($responseData['product']->seller_id) ? User::where('id', $responseData['product']->seller_id)->first()->name : "";
         //dd($responseData['product']);
         $responseData['product_cat']       = $resulting_string;
         $responseData['product_edit_cat']  = $show_edit_cat;
         $responseData['product_imgs']      = $addiImg;
+        $responseData['main_categorys']    = $all_main_category;
+        $responseData['main_cat_id']       = $get_main_cat_id;
+        $responseData['sub_category_id']   = $get_sub_cat_id;
+        $responseData['in_sub_cat_id']     = $get_in_sub_cat_id;
         // dd($responseData);
         return response()->json($responseData);
     }
-
     public function getProductList()
     {
         // Get all products with brand info
@@ -408,9 +457,7 @@ class ProductController extends Controller
             ->leftJoin('brands', 'brands.id', '=', 'product.brand')  // join brand
             ->select('product.*', 'brands.name AS brand_name')       // select all product columns + brand name
             ->get();
-
         $collection = collect($data);
-
         $modifiedCollection = $collection->map(function ($item) {
             $chkProductCategory = ProductCategory::where('product_id', $item['id'])
                 ->orderBy('id', 'asc')  // ensure always first row
@@ -423,7 +470,6 @@ class ProductController extends Controller
             } else {
                 $pcategory = 0;
             }
-
             if (!empty($pcategory) && $pcategory != 0) {
                 $chkCatName = Categorys::where('id', $pcategory)->first();
                 $catName = !empty($chkCatName->name) ? $chkCatName->name : "";
@@ -431,7 +477,6 @@ class ProductController extends Controller
                 $catName = "";
             }
             $chkseller = User::where('id', $item['seller_id'])->where('role_id', 3)->first();
-
             return [
                 'id'            => $item['id'],
                 'name'          => mb_substr(mb_convert_encoding($item['name'], 'UTF-8', 'UTF-8'), 0, 500),
@@ -449,54 +494,43 @@ class ProductController extends Controller
                 'brand_name'    => mb_convert_encoding($item['brand_name'], 'UTF-8', 'UTF-8'),
             ];
         });
-
         // Get top-level categories (parent_id = 0) for filter dropdown
         $categoryList   = Categorys::where('status', 1)->where('parent_id', 0)->get();
         $brandsList     = Brands::where('status', 1)->get();
-
         return response()->json([
             'products'     => $modifiedCollection,
             'categoryList' => $categoryList,
             'brandsList'   => $brandsList
         ], 200);
     }
-
     public function sellerOrderProductList(Request $request)
     {
-
         $seller_id = $this->userid;
         $query = OrderHistory::leftJoin('orders', 'orders.id', '=', 'order_history.order_id')
             ->select('order_id', 'orderId', 'seller_id', 'orders.total', 'order_status')
             ->where('seller_id', $seller_id);
-
         // Apply filters
         if ($request->has('orderId')) {
             $query->where('orderId', $request->input('orderId'));
         }
-
         if ($request->has('productName')) {
             $productName = $request->input('productName');
             $query->whereHas('product', function ($subQuery) use ($productName) {
                 $subQuery->where('name', 'like', '%' . $productName . '%');
             });
         }
-
         if ($request->has('sku')) {
             $sku = $request->input('sku');
             $query->whereHas('product', function ($subQuery) use ($sku) {
                 $subQuery->where('sku', 'like', '%' . $sku . '%');
             });
         }
-
         $query->groupBy('orders.orderId');
-
         $perPage = 12;
         $page = $request->input('page', 1);
         $orders = $query->paginate($perPage, ['*'], 'page', $page);
-
         $modifiedCollection = $orders->getCollection()->map(function ($item) {
             $statusCheck =  OrderStatus::where('id', $item->order_status)->first();
-
             return [
                 'order_id'    => $item->order_id,
                 'orderId'     => $item->orderId,
@@ -506,7 +540,6 @@ class ProductController extends Controller
                 'order_status' => !empty($statusCheck->name) ? $statusCheck->name : "",
             ];
         });
-
         $response = new LengthAwarePaginator(
             $modifiedCollection,
             $orders->total(),
@@ -514,10 +547,8 @@ class ProductController extends Controller
             $page,
             ['path' => url()->current()]
         );
-
         return response()->json($response, 200);
     }
-
     public function sellerProductList(Request $request)
     {
         $seller_id = $this->userid;
@@ -526,23 +557,18 @@ class ProductController extends Controller
         if ($request->has('productId')) {
             $query->where('id', $request->input('productId'));
         }
-
         if ($request->has('productName')) {
             $productName = $request->input('productName');
             $query->where('name', 'like', '%' . $productName . '%');
         }
-
         if ($request->has('sku')) {
             $sku = $request->input('sku');
             $query->where('sku', 'like', '%' . $sku . '%');
         }
-
         $query->where('seller_id', $seller_id);
-
         $perPage = 12;
         $page = $request->input('page', 1);
         $products = $query->paginate($perPage, ['*'], 'page', $page);
-
         $modifiedCollection = $products->getCollection()->map(function ($item) {
             return [
                 'id'        => $item->id,
@@ -555,7 +581,6 @@ class ProductController extends Controller
                 'image'     => url($item->thumnail_img),
             ];
         });
-
         $response = new LengthAwarePaginator(
             $modifiedCollection,
             $products->total(),
@@ -563,14 +588,12 @@ class ProductController extends Controller
             $page,
             ['path' => url()->current()]
         );
-
         return response()->json($response, 200);
     }
-
     public function removeProducts($id)
     {
-         return response()->json("sorry delete not allowed successfully delete product", 200);
-         exit;
+        return response()->json("sorry delete not allowed successfully delete product", 200);
+        exit;
         //echo $id;exit; 
         if (!empty($id)) {
             Product::where('id', $id)->delete();
@@ -583,22 +606,17 @@ class ProductController extends Controller
         }
         return response()->json("successfully delete product", 200);
     }
-
     public function insertVarient(Request $request)
     {
-
         //dd($request->all());
         $names      = $request->name;
         $qtys       = $request->qty;
         $prices     = $request->price;
         $product_id = $request->product_id;
-
         // Step 1: Delete all existing variants of this product
         ProductVarrientHistory::where('product_id', $product_id)->delete();
-
         // Step 2: Insert new variants
         foreach ($names as $key => $name) {
-
             ProductVarrientHistory::create([
                 'product_id' => $product_id,
                 'name'       => $name,
@@ -606,16 +624,11 @@ class ProductController extends Controller
                 'price'      => $prices[$key],
             ]);
         }
-
         return response()->json([
             'status'  => 200,
             'message' => 'Variant updated successfully'
         ]);
-
-
-
         exit;
-
         $validator = Validator::make($request->all(), [
             'id' => 'required|array',
             'id.*' => 'required',
@@ -627,11 +640,9 @@ class ProductController extends Controller
             'price.*' => 'required|numeric',
             'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Adjust file validation as needed
         ]);
-
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-
         $data = [
             'id' => $request->id,
             'sku' => $request->sku,
@@ -642,7 +653,6 @@ class ProductController extends Controller
         ];
         // dd($data);
         // return false;
-
         if (
             isset($request->id) && is_array($request->id) &&
             isset($request->sku) && is_array($request->sku) &&
@@ -651,9 +661,7 @@ class ProductController extends Controller
             count($request->id) === count($request->sku) &&
             count($request->id) === count($request->qty) &&
             count($request->id) === count($request->price)
-
         ) {
-
             //  dd($request->all());
             // Loop through the arrays and update records
             foreach ($request->id as $index => $id) {
@@ -663,11 +671,9 @@ class ProductController extends Controller
                     $request->hasFile('images.' . $index)
                 ) {
                     // Update records based on $id
-
                     $image = $request->file('images.' . $index); // Retrieve the image file
                     $imageName = time() . '_' . $image->getClientOriginalName(); // Generate unique image name
                     $image->move(public_path('/backend/files/'), $imageName); // Move image to storage
-
                     ProductVarrientHistory::where('id', $id)->update([
                         'sku'   => !empty($request->sku[$index]) ? $request->sku[$index] : "",
                         'qty'   => !empty($request->qty[$index]) ? $request->qty[$index] : "", //$request->qty[$index],
@@ -677,7 +683,6 @@ class ProductController extends Controller
                 } else if (
                     !empty($request->sku[$index]) && !empty($request->qty[$index]) && !empty($request->price[$index])
                 ) {
-
                     ProductVarrientHistory::where('id', $id)->update([
                         'sku'   => !empty($request->sku[$index]) ? $request->sku[$index] : "",
                         'qty'   => !empty($request->qty[$index]) ? $request->qty[$index] : "", //$request->qty[$index],
@@ -686,14 +691,10 @@ class ProductController extends Controller
                 }
             }
         }
-
         return response()->json(['message' => 'Data updated successfully'], 200);
     }
-
-
     public function checkAttribue(Request $request)
     {
-
         try {
             $data['attribute'] = ProductVarrientHistory::where('color', $request->color)
                 ->where('product_id', $request->product_id)
@@ -704,7 +705,6 @@ class ProductController extends Controller
             return response()->json(['error' => 'Query exception occurred'], 500);
         }
     }
-
     public function varientList($product_id)
     {
         $pdata['varient'] = ProductVarrientHistory::where('product_id', $product_id)->get();
@@ -712,22 +712,18 @@ class ProductController extends Controller
     }
     public function deleteVarient(Request $request)
     {
-
         $id         = $request->input('id');
         $product_id = $request->input('product_id');
         //echo "ID: $id----ProductID: $product_id";
-
         try {
             ProductVarrientHistory::where('product_id', $product_id)
                 ->where('id', $id)
                 ->delete();
-
             $pdata['varient'] = ProductVarrientHistory::where('product_id', $product_id)->get();
             return response()->json($pdata);
         } catch (QueryException $e) {
             // Log the error
             \Log::error('Error deleting product variant history: ' . $e->getMessage());
-
             // Return an error response
             return response()->json(['error' => 'Failed to delete product variant history'], 500);
         }
@@ -735,9 +731,7 @@ class ProductController extends Controller
     }
     public function generateCombinations(Request $request)
     {
-
         //  dd($request->all());
-
         $product_id = $request->input('product_id');
         $colors     = $request->input('colors');
         $sizes      = $request->input('sizes');
@@ -766,11 +760,9 @@ class ProductController extends Controller
                 'product_id'    => $product_id,
                 'price'         => !empty($product) ? $product->price : "",
             ];
-
             // Insert the data into the database
             ProductVarrientHistory::create($data);
         }
-
         $pdata['varient'] = ProductVarrientHistory::where('product_id', $product_id)->get();
         // Return combinations as JSON response
         return response()->json($pdata);
@@ -779,13 +771,9 @@ class ProductController extends Controller
     {
         // dd($request->all());
         // return false;
-
         $product_id = $request->product_id;
-
         $warrantyData = $request->input('warranty');
-
         // $formattedData = [];
-
         foreach ($warrantyData as $item) {
             $formattedItem = [
                 'product_id' => $product_id,
@@ -795,13 +783,11 @@ class ProductController extends Controller
             ];
             product_warranty::create($formattedItem);
         }
-
         return response()->json(['msg' => 'add succfully', 200]);
     }
     public function getaddWarranty(Request $request, int $id)
     {
         // dd($id);
-
         $getData = product_warranty::where('product_id', $id)->get();
         // dd($getData);
         return response()->json($getData);
@@ -809,18 +795,14 @@ class ProductController extends Controller
     public function deletewarranty(Request $request, $id)
     {
         try {
-
             $warranty = product_warranty::find($id);
             if ($warranty) {
                 $warranty->delete();
-
                 return response()->json(['message' => 'Warranty deleted successfully'], 200);
             } else {
-
                 return response()->json(['message' => 'Warranty not found'], 404);
             }
         } catch (\Exception $e) {
-
             return response()->json(['message' => 'Failed to delete warranty', 'error' => $e->getMessage()], 500);
         }
     }

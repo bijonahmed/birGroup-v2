@@ -1,4 +1,5 @@
 <?php
+
 use App\Http\Controllers\Admin\AdminController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +33,7 @@ use App\Http\Controllers\Chat\ChatController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
 Route::post('messages', [ChatController::class, 'message']);
 Route::post('customerSendMessages', [ChatController::class, 'customerSendMessages']);
 Route::post('sellerSendMessages', [ChatController::class, 'sellerSendMessages']);
@@ -129,11 +131,16 @@ Route::group([
     Route::post('saveAttribute', [CategoryController::class, 'saveAttribute']);
     Route::post('saveAttributeVal', [CategoryController::class, 'saveAttributeVal']);
     Route::get('getCategoryList', [CategoryController::class, 'allCategory']);
+
     Route::get('getSpeacialCategoryList', [CategoryController::class, 'getSpeacialCategoryList']);
     Route::get('getInacCategoryList', [CategoryController::class, 'allInacCategory']);
     Route::get('getProductCategoryList', [CategoryController::class, 'getProductCategoryList']);
     Route::get('removeProctCategory', [CategoryController::class, 'removeProctCategory']);
     Route::get('categoryRow/{id}', [CategoryController::class, 'findCategoryRow']);
+
+    Route::get('subcategories/{id}', [CategoryController::class, 'findsubCategoryRow']);
+    Route::get('insubcategories/{id}', [CategoryController::class, 'findInsubCategoryRow']);
+
     Route::get('getCategoryListParent', [CategoryController::class, 'getCategoryListParent']);
     Route::get('getSubCategoryChild/{id}', [CategoryController::class, 'getSubCategoryChild']);
     Route::get('attributeRow/{id}', [CategoryController::class, 'attributeRow']);
@@ -161,6 +168,7 @@ Route::group([
     Route::get('deleteValrient', [ProductController::class, 'deleteValrient']);
     Route::get('getAttrHistory/{id}', [ProductController::class, 'getAttrHistory']);
     Route::get('productrow/{id}', [ProductController::class, 'productrow']);
+    Route::get('allparentCategory', [ProductController::class, 'allparentCategory']);
     Route::get('additionaIMagesDelete', [ProductController::class, 'additionaIMagesDelete']);
     Route::get('deleteCategory', [ProductController::class, 'deleteCategory']);
     Route::get('getVarientHistory', [ProductController::class, 'getVarientHistory']);
@@ -240,7 +248,7 @@ Route::group([
     //Add to cart 
     Route::get('cart', [CartController::class, 'index']);
     Route::get('getCartData', [CartController::class, 'getCartData']);
-    
+  //  Route::post('couponDiscount', [CartController::class, 'couponDiscount']);
     Route::post('addToCart', [CartController::class, 'addToCart']);
     Route::get('searchProductCategory', [UnauthenticatedController::class, 'productCategory']);
     Route::get('showCategoryTwo', [UnauthenticatedController::class, 'showCategoryTwo']);
@@ -252,6 +260,7 @@ Route::group([
     Route::get('filterCategorys', [UnauthenticatedController::class, 'filterCategory']);
     Route::get('filterMainCategorys/{slug}', [UnauthenticatedController::class, 'infilterMainCategory']);
     Route::get('getCategoryList', [UnauthenticatedController::class, 'allCategory']);
+    Route::get('getCategoryListFilter', [UnauthenticatedController::class, 'allCategoryFilter']);
     Route::get('findCategorys/{slug}', [UnauthenticatedController::class, 'findCategorys']);
     Route::get('filterAllSubCategorys', [UnauthenticatedController::class, 'filterAllSubCategorys']);
     Route::get('findSubCategorys/{slug}', [UnauthenticatedController::class, 'findSubCategorys']);

@@ -14,7 +14,7 @@
                                 <li class="breadcrumb-item" aria-current="page">
                                     <router-link to="/ecommarce/product-list">Product List </router-link>
                                 </li>
-                                <li class="breadcrumb-item active" aria-current="page">New Product</li>
+                                <li class="breadcrumb-item active" aria-current="page">Edit Product</li>
                             </ol>
                         </nav>
                     </div>
@@ -46,8 +46,32 @@
                                             </option>
                                         </select>
                                     </div>
-
                                     <div class="form-group mb-2">
+                                        <label for="input-meta-title-1" class=" form-label">Main Categoryies</label>
+                                        <select v-model="insertdata.main_category_id"  @change="getSubCategories(insertdata.main_category_id)"  class="form-select model">
+                                            <option value="0" selected>All Categories</option>
+                                            <option v-for='data in mainCategory' :value='data.id'>{{data.name}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                     <div class="form-group mb-2">
+                                        <label for="input-meta-title-1" class=" form-label">Sub Categoryies</label>
+                                        <select v-model="insertdata.sub_category_id" @change="getInSubCategories(insertdata.sub_category_id)" class="form-select model">
+                                            <option value="0" selected>Sub Categories</option>
+                                            <option v-for='data in subCategories' :value='data.id'>{{data.name}}
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                     <div class="form-group mb-2">
+                                        <label for="input-meta-title-1" class=" form-label">In Sub Categoryies</label>
+                                        <select v-model="insertdata.in_sub_category_id" class="form-select model">
+                                            <option value="0" selected>In Sub Categories</option>
+                                            <option v-for='data in insubCategories' :value='data.id'>{{data.name}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group mb-2 d-none">
                                         <label for="input-meta-description-1"
                                             class="col-sm-2 col-form-label required-label">Categories</label>
                                         <div>
@@ -69,7 +93,6 @@
                                                     <span v-html="item">{{ item }}</span> <button type="button" class="btn bg-danger-light " style="background-color: transparent !important; " @click="removeCategory(item)"><i class="lni lni-circle-minus " style="font-size: 12px;"></i></button>
                                                 </li>
                                             </ul>
-
                                             <span class="text-danger" v-if="errors.category">{{ errors.category[0] }}</span>
                                             <span class="d-none">
                                                 <textarea v-model="multi_categories" placeholder="Selected Value" class="w-100"></textarea>
@@ -95,10 +118,6 @@
                                     </select>
                                         </client-only>
                                     </div>
-
-
-
-
                                     <div class="form-group mb-2">
                                         <label for="input-description-1" class="">Short
                                             Description</label>
@@ -107,11 +126,6 @@
                                                 class="form-control" />
                                         </client-only>
                                     </div>
-
-
-
-
-
                                     <div class="form-group mb-2 " style="min-height: 100px;">
                                         <label for="input-description-1" class="">Description</label>
                                         <client-only placeholder="loading...">
@@ -121,7 +135,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="card">
                                 <div class="card-header">
                                     <h5>Basic information</h5>
@@ -214,8 +227,6 @@
                                             <option value="5">Others</option>
                                         </select>
                                     </div>
-
-
                                         <div class="form-group mb-2">
                                         <label for="input-meta-title-1" class="form-label">Activation
                                             Status</label>
@@ -224,8 +235,6 @@
                                             <option value="0">Inactive</option>
                                         </select>
                                     </div>
-
-
                                 </div>
                             </div>
                         </div>
@@ -302,8 +311,6 @@
                                             Image<span class="text-danger">*(1000x1000)</span></label>
                                         <input type="file" multiple class="form-control" accept="image/png,image/jpeg"
                                             @change="handleImageUpload" ref="images" />
-
-
                                         <div class="row mt-3">
                                             <div class="col-md-3" v-for="(data, index) in productAddImgs" :key="index">
                                                 <img :src="data.images" alt="N/A" class=" img-thumbnail" />
@@ -333,7 +340,6 @@
         <!--end page wrapper -->
     </div>
 </template>
-
 <script>
 export default {
     directives: {
@@ -372,6 +378,9 @@ export default {
                 parent_id: 0,
                 mobile_view_class: '',
                 flat_rate_price: '',
+                main_category_id: '',
+                sub_category_id: 0,
+                in_sub_category_id: 0,
                 cash_dev_status: '',
                 product_tag: '',
                 discount: '',
@@ -396,7 +405,6 @@ export default {
                 manufacturer: '',
                 download_link: '',
                 brand: '0',
-
             },
             product_cat: [],
             arr_his_val: [],
@@ -433,6 +441,10 @@ export default {
             modelresults: [],
             manufrresults: [],
             sellersList: [],
+            mainCategory: [],
+            insubCategories: [],
+            subCategories: [],
+
             product_tag_msg: '',
             //end 
             file: '',
@@ -446,7 +458,6 @@ export default {
         this.searchmanuf();
         await this.loadCKEditor();
         await this.getSellerAdmin();
-
         CKEDITOR.replace('editor');
     },
     methods: {
@@ -463,7 +474,6 @@ export default {
             } else {
                 $(".vat_").fadeOut();
             }
-
         },
         async searchModels() {
             try {
@@ -473,7 +483,6 @@ export default {
             } catch (error) {
                 console.error(error);
             }
-
         },
         async searchmanuf() {
             try {
@@ -483,7 +492,6 @@ export default {
             } catch (error) {
                 console.error(error);
             }
-
         },
         removeCategory(item) {
             let product_id = this.$route.query.parameter;
@@ -496,7 +504,6 @@ export default {
                 //console.log(`Varient History: ${response.data}`);
                 this.productDetails();
             });
-
         },
         removeImages(id) {
             this.$axios.get(`/product/additionaIMagesDelete`, {
@@ -510,14 +517,30 @@ export default {
         },
         saveData() {
             const formData = new FormData();
+
+            const main_category_id = this.insertdata.main_category_id;
+            const sub_category_id = this.insertdata.sub_category_id;
+            const in_sub_category_id = this.insertdata.in_sub_category_id;
+
+            const finalCategory = [
+                main_category_id || '',
+                sub_category_id || '',
+                in_sub_category_id || '',
+            ].join(',');
+
+
             const input = this.$refs.images;
             for (let i = 0; i < input.files.length; i++) {
                 formData.append('images[]', input.files[i]);
             }
+
+
             formData.append('id', this.insertdata.id);
             formData.append('files', this.files);
-            // formData.append('images', this.images); //multiple
-            formData.append('category', this.multi_categories);
+            //formData.append('category', this.multi_categories);
+            formData.append('category', finalCategory);
+            // console.log("multiple category: " + finalCategory);
+            // return false;
             formData.append('name', this.insertdata.name);
             formData.append('description', this.insertdata.description);
             formData.append('short_description', this.insertdata.short_description);
@@ -552,7 +575,7 @@ export default {
             formData.append('shipping_days', this.insertdata.shipping_days);
             formData.append('status', this.insertdata.status);
             console.log("Status:" + this.insertdata.status);
-           // return false; 
+            // return false; 
             const headers = {
                 'Content-Type': 'multipart/form-data'
             };
@@ -610,7 +633,6 @@ export default {
                 this.insertdata.tax = this.insertdata.tax.slice(0, -1);
             }
         },
-
         addCommas() {
             this.product_tag_msg = this.insertdata.ptag.replace(/\s+/g, ', ');
             this.insertdata.product_tag = this.product_tag_msg;
@@ -701,6 +723,29 @@ export default {
                 this.searchResults = [];
             }
         },
+        getSubCategories(main_category_id) {
+            // console.log("Selected Main Category ID:", main_category_id);
+            this.$axios.get(`/category/subcategories/${main_category_id}`)
+                .then(res => {
+                    this.subCategories = res.data.data;
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        },
+
+
+        getInSubCategories(sub_category_id) {
+            console.log("Selected sub_category_id ID:", sub_category_id);
+            this.$axios.get(`/category/insubcategories/${sub_category_id}`)
+                .then(res => {
+                    this.insubCategories = res.data.data;
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        },
+
         onFileSelected() {
             //this.file = this.$refs.file.files[0];
             this.files = this.$refs.files.files[0];
@@ -730,19 +775,15 @@ export default {
             });
         },
         async getSellerAdmin() {
-
             try {
                 // Call API with query params
                 const response = await this.$axios.get(`/unauthenticate/allsellerListadmin`);
                 //  console.log(response.data.data);
                 this.sellersList = response.data.data;
-
             } catch (error) {
                 console.error(error);
-
             }
         },
-
         async productDetails() {
             let product_id = this.$route.query.parameter;
             //  alert(product_id);
@@ -777,6 +818,13 @@ export default {
                 this.insertdata.tax_status = response.data.product.tax_status;
                 this.insertdata.cash_dev_status = response.data.product.cash_dev_status;
                 this.insertdata.status = response.data.product.status;
+
+                //Category Filter
+                this.insertdata.main_category_id = response.data.main_cat_id;
+                this.insertdata.sub_category_id = response.data.sub_category_id;
+                this.insertdata.in_sub_category_id = response.data.in_sub_cat_id;
+                //end
+
                 this.insertdata.manufacturer = response.data.product.manufacturer;
                 this.insertdata.download_link = response.data.product.download_link;
                 this.insertdata.brand = response.data.product.brand;
@@ -784,11 +832,23 @@ export default {
                 this.productImg = response.data.productImg;
                 this.productAddImgs = response.data.product_imgs;
                 this.showProCategories = response.data.product_edit_cat;
-                // = response.data.product_cat;
+                this.mainCategory = response.data.main_categorys;
 
+                if (response.data.main_cat_id && response.data.main_cat_id != 0) {
+                    this.getSubCategories(response.data.main_cat_id);
+                } else {
+                    this.getSubCategories(0); // pass 0 if empty
+                }
+
+                if (response.data.sub_category_id && response.data.sub_category_id != 0) {
+                    this.getInSubCategories(response.data.sub_category_id);
+                } else {
+                    this.getInSubCategories(0); // pass 0 if empty
+                }
+                //console.log("Main categoryes: " + response.data.main_categorys);
+                // = response.data.product_cat;
             });
         },
-
     },
 }
 </script>

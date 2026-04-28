@@ -1,6 +1,5 @@
 <template>
     <div id="_top">
-
         <body class="bgBackground mainContent">
             <TopBannarDesktopView />
             <LogoAndPayment />
@@ -15,8 +14,6 @@
                     <DelasForYour />
                     <CategorySliders />
                     <!-- <OfficalStore/> -->
-
-
                 </div>
             </section>
             <div class="back_top">
@@ -29,12 +26,10 @@
         </body>
     </div>
 </template>
-
 <script>
 export default {
     data() {
         return {
-
         }
     },
     mounted() {
@@ -56,18 +51,14 @@ export default {
                 // Add more options as needed
             });
         },
-
     }
 }
 </script>
-
 <style>
 .bgBackground {
     background-color: #fcf9ff !important;
     /* background-color: #b077d8 !important; */
-
 }
-
 .mainContent {
     /* background-image: url('/images/ECOMMERCE-cover-you-bg.jpeg'); */
     background-size: contain;

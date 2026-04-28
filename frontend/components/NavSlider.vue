@@ -18,7 +18,6 @@
                                     @click="redirectMainCategory(category.slug)">
                                     <div class="d-flex align-items-center">
                                         <i class="fa-solid fa-list" style="font-size: 10px;"></i>
-
                                         {{ category.name }}
                                     </div> <i class="fa-solid fa-angle-right"></i>
                                 </a>
@@ -175,12 +174,15 @@ export default {
             }
         },
         redirectMainCategory(slug) {
+            window.location.href = `/category/category-grid?sub_slug=${slug}`;
+            /*
             this.$router.push({
                 path: '/category/categoryProducts',
                 query: {
                     slug: slug
                 }
             })
+                */
         },
         redirectCategory(slug) {
             this.$router.push({

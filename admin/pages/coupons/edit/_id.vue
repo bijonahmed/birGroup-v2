@@ -3,82 +3,96 @@
         <!--start page wrapper -->
         <div class="page-wrapper">
             <div class="page-content">
-
+            <!--breadcrumb-->
+                <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+                    <div class="ps-3">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb mb-0 p-0">
+                                <li class="breadcrumb-item">
+                                    <router-link to="/"><a href="javascript:;"><i
+                                                class="bx bx-home-alt"></i></a></router-link>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">Update Coupons</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="ms-auto">
+                        <div class="btn-group">
+                            <Nuxt-link to="/coupons/all-coupons"><button type="button" class="btn btn-primary"><i
+                                        class="bx bx-plus"></i>Back to List</button></Nuxt-link>
+                        </div>
+                    </div>
+                </div>
+                <!--end breadcrumb-->
                 <!--top header banner row-->
                 <div class="row">
                     <div class="col-md-8 m-auto">
-                        <div class="form_container bg-white p-3">
-                            <h5>Update Coupons</h5>
+
+                        <!-- ✅ Loader -->
+                        <div v-if="loading" class="text-center py-5">
+                            <div class="spinner-border text-success" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-2 text-muted">Please wait...</p>
+                        </div>
+
+                        <div v-else class="form_container bg-white p-3">
+                         
                             <form @submit.prevent="updatecoupon()" id="couponform" class="forms-sample"
                                 enctype="multipart/form-data">
                                 <div class="form-group mb-2">
-                                    <label for="" class="text-dark fs-6">Promo Name <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="text" name="name" id="" v-model="insertdata.name" class="form-control"
-                                        ref="name">
-                                    <input type="text" name="id" id="" v-model="insertdata.id"
-                                        class="form-control d-none" ref="id">
+                                    <label class="text-dark fs-6">Promo Name <span class="text-danger">*</span></label>
+                                    <input type="text" name="name" v-model="insertdata.name" class="form-control" ref="name">
+                                    <input type="text" name="id" v-model="insertdata.id" class="form-control d-none" ref="id">
+                                    <p v-if="errors.name" class="text-danger mt-1">{{ errors.name[0] }}</p>
                                 </div>
+
                                 <div class="form-group mb-2">
-                                    <label for="" class="text-dark fs-6">Promo Code <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="text" name="promocode" v-model="insertdata.promocode" id=""
-                                        class="form-control" ref="promocode">
+                                    <label class="text-dark fs-6">Promo Code <span class="text-danger">*</span></label>
+                                    <input type="text" name="promocode" v-model="insertdata.promocode" class="form-control" ref="promocode">
+                                    <p v-if="errors.promocode" class="text-danger mt-1">{{ errors.promocode[0] }}</p>
                                 </div>
+
                                 <div class="form-group mb-2">
-                                    <label for="" class="text-dark fs-6">Coupon type <span
-                                            class="text-danger">*</span></label>
-                                    <select name="code_type" v-model="insertdata.code_type" ref="code_type" id=""
-                                        class="form-control">
-                                        <option value="percentage">In percentage</option>
-                                        <option value="fixed">Fixed Amount</option>
-                                    </select>
-                                </div>
-                                <div class="form-group mb-2">
-                                    <label for="" class="text-dark fs-6">Min. Shopping Amount <span
-                                            class="text-danger">*</span></label>
-                                    <input type="text" v-model="insertdata.min_shopping" name="min_shopping" id=""
-                                        class="form-control" ref="min_shopping">
-                                </div>
-                                <div class="form-group mb-2">
-                                    <label for="" class="text-dark fs-6">Discount in percentage(%) <span
-                                            class="text-secondary" style="font-size: 12px;">(If coupon type
-                                            "Percentage")</span></label>
-                                    <input type="text" name="d_percent" v-model="insertdata.d_percent" id=""
+                                    <label class="text-dark fs-6">Discount in percentage(%)</label>
+                                    <input type="text" name="d_percent" v-model="insertdata.d_percent"
+                                        @keypress="onlyNumber" @input="validateNumber"
                                         class="form-control" ref="d_percent">
+                                    <p v-if="verrors" class="text-danger mt-1">{{ verrors }}</p>
                                 </div>
+
                                 <div class="form-group mb-2">
-                                    <label for="" class="text-dark fs-6">Discount in Fixed amount($) <span
-                                            class="text-secondary" style="font-size: 12px;">(If coupon type "Fiexed
-                                            Amount")</span></label>
-                                    <input type="text" name="d_fvalue" v-model="insertdata.d_fvalue" id=""
-                                        class="form-control" ref="d_fvalue">
-                                </div>
-                                <div class="form-group mb-2">
-                                    <label for="" class="text-dark fs-6">Status <span
-                                            class="text-danger">*</span></label>
-                                    <select name="status" v-model="insertdata.status" ref="status" id=""
-                                        class="form-control">
+                                    <label class="text-dark fs-6">Status <span class="text-danger">*</span></label>
+                                    <select name="status" v-model="insertdata.status" ref="status" class="form-control">
                                         <option value="1">Active</option>
                                         <option value="2">Inactive</option>
                                     </select>
                                 </div>
+
                                 <div class="form-group mb-2">
-                                    <button type="submit" class="btn-success w-100 py-1 border-0">
-                                        <i class="bx bx-check-circle mr-1"></i>Submit
+                                    <button type="submit" :disabled="submitting || !!verrors"
+                                        class="btn-success w-100 py-1 border-0">
+                                        <!-- ✅ Submit button loader -->
+                                        <span v-if="submitting">
+                                            <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                                            Saving...
+                                        </span>
+                                        <span v-else>
+                                            <i class="bx bx-check-circle mr-1"></i>Submit
+                                        </span>
                                     </button>
                                 </div>
                             </form>
                         </div>
+
                     </div>
                 </div>
-                <!--top header banner row-->
+                <!--end row-->
             </div>
         </div>
         <!--end page wrapper -->
     </div>
 </template>
-
 
 <script>
 export default {
@@ -95,11 +109,12 @@ export default {
                 status: '',
                 d_percent: null,
                 d_fvalue: null,
+                min_shopping: null,
             },
-            promocode: null,
-            status: "1",
             errors: {},
-            cid: '',
+            verrors: '',
+            loading: false, 
+            submitting: false, 
         };
     },
     created() {
@@ -107,29 +122,62 @@ export default {
     },
     methods: {
 
-        updatecoupon() {
-            // const formData = new FormData();
+        onlyNumber(event) {
+            const char = String.fromCharCode(event.keyCode);
+            if (!/^[0-9.]$/.test(char)) {
+                event.preventDefault();
+            }
+        },
 
+        validateNumber() {
+            let value = this.insertdata.d_percent;
+            value = value.toString().replace(/[^0-9.]/g, '');
+
+            // Prevent multiple dots
+            const parts = value.split('.');
+            if (parts.length > 2) {
+                value = parts[0] + '.' + parts[1];
+            }
+
+            // Validate range 1–100
+            const numeric = parseFloat(value);
+            if (isNaN(numeric) || numeric < 1 || numeric > 100) {
+                this.verrors = 'Percentage must be between 1 and 100.';
+            } else {
+                this.verrors = '';
+            }
+
+            this.insertdata.d_percent = value;
+        },
+
+        updatecoupon() {
+            // ✅ Client-side validation
+            if (!this.insertdata.name.trim()) {
+                this.errors = { name: ['Promo Name is required.'] };
+                return;
+            }
+            if (!this.insertdata.promocode.trim()) {
+                this.errors = { promocode: ['Promo Code is required.'] };
+                return;
+            }
+            if (this.verrors) return;
+
+            this.submitting = true; // ✅ Start submit loader
+            this.errors = {};
+
+            const cid = this.insertdata.id;
             const formData = new FormData();
-            const cid = this.insertdata.id
             formData.append('id', this.insertdata.id);
             formData.append('name', this.insertdata.name);
             formData.append('promocode', this.insertdata.promocode);
-            formData.append('code_type', this.insertdata.code_type);
-            formData.append('min_shopping', this.insertdata.min_shopping);
             formData.append('d_percent', this.insertdata.d_percent);
-            formData.append('d_fvalue', this.insertdata.d_fvalue);
             formData.append('status', this.insertdata.status);
-            const headers = {
-                'Content-Type': 'multipart/form-data'
-            };
-            this.$axios.post('/setting/updatecoupon?id=${cid}',
-                formData, {
-                headers
+
+            // ✅ Fixed: was using single quotes so ${cid} was not interpolated
+            this.$axios.post(`/setting/updatecoupon?id=${cid}`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
             })
-                .then((res) => {
-                    // $('#formrest')[0].reset();
-                    // this.success_noti();
+                .then(() => {
                     Lobibox.notify('success', {
                         pauseDelayOnHover: true,
                         continueDelayOnInactiveTab: false,
@@ -138,35 +186,62 @@ export default {
                         msg: 'Your Coupon has been successfully Updated.'
                     });
                     this.$router.push('/coupons/all-coupons');
-
                 })
                 .catch(error => {
-                    if (error.response.status === 422) {
+                    if (error.response?.status === 422) {
                         this.errors = error.response.data.errors;
-                        // this.errors = error.response.data.id;
+                    } else {
+                        Lobibox.notify('error', {
+                            pauseDelayOnHover: true,
+                            continueDelayOnInactiveTab: false,
+                            position: 'top right',
+                            icon: 'bx bx-error-circle',
+                            msg: error.response?.data?.message || 'An error occurred while updating.'
+                        });
                     }
+                })
+                .finally(() => {
+                    this.submitting = false; // ✅ Stop submit loader
                 });
-            // console.log(cid);
-
         },
+
         getData() {
-            console.log(this.$route.params.id);
-            let id = this.$route.params.id;
-            this.$axios.get(`/setting/getcoupons/${id}`).then(response => {
-                // console.log(response.data.data.id)
-                this.insertdata.id = response.data.data.id;
-                this.insertdata.name = response.data.data.name;
-                this.insertdata.promocode = response.data.data.promocode;
-                this.insertdata.code_type = response.data.data.code_type;
-                this.insertdata.status = response.data.data.status;
-                this.insertdata.d_percent = response.data.data.d_percent;
-                this.insertdata.d_fvalue = response.data.data.d_fvalue;
-                this.insertdata.min_shopping = response.data.data.min_shopping;
-            });
+            this.loading = true; // ✅ Start fetch loader
+            const id = this.$route.params.id;
 
+            this.$axios.get(`/setting/getcoupons/${id}`)
+                .then(response => {
+                    const data = response.data.data;
+                    this.insertdata.id          = data.id;
+                    this.insertdata.name        = data.name;
+                    this.insertdata.promocode   = data.promocode;
+                    this.insertdata.code_type   = data.code_type;
+                    this.insertdata.status      = data.status;
+                    this.insertdata.d_percent   = data.d_percent;
+                    this.insertdata.d_fvalue    = data.d_fvalue;
+                    this.insertdata.min_shopping = data.min_shopping;
+                })
+                .catch(() => {
+                    Lobibox.notify('error', {
+                        pauseDelayOnHover: true,
+                        continueDelayOnInactiveTab: false,
+                        position: 'top right',
+                        icon: 'bx bx-error-circle',
+                        msg: 'Failed to load coupon data.'
+                    });
+                })
+                .finally(() => {
+                    this.loading = false; // ✅ Stop fetch loader
+                });
         },
-
-
     }
 };
 </script>
+
+<style>
+.subBTN:disabled,
+button:disabled {
+    background-color: lightgray;
+    cursor: not-allowed;
+}
+</style>

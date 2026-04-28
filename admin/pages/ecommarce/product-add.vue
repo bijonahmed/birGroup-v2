@@ -104,6 +104,34 @@
                                                 </select>
                                             </div>
 
+
+                                    <div class="form-group mb-2">
+                                        <label for="input-meta-title-1" class=" form-label">Main Categoryies</label>
+                                        <select v-model="insertdata.main_category_id"  @change="getSubCategories(insertdata.main_category_id)"  class="form-select model">
+                                            <option value="0" selected>All Categories</option>
+                                            <option v-for='data in mainCategory' :value='data.id'>{{data.name}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                     <div class="form-group mb-2">
+                                        <label for="input-meta-title-1" class=" form-label">Sub Categoryies</label>
+                                        <select v-model="insertdata.sub_category_id" @change="getInSubCategories(insertdata.sub_category_id)" class="form-select model">
+                                            <option value="0" selected>Sub Categories</option>
+                                            <option v-for='data in subCategories' :value='data.id'>{{data.name}}
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                     <div class="form-group mb-2">
+                                        <label for="input-meta-title-1" class=" form-label">In Sub Categoryies</label>
+                                        <select v-model="insertdata.in_sub_category_id" class="form-select model">
+                                            <option value="0" selected>In Sub Categories</option>
+                                            <option v-for='data in insubCategories' :value='data.id'>{{data.name}}
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    
                                             <div class="form-group mb-2">
                                                 <label for="input-meta-description-1"
                                                     class="col-sm-2 col-form-label required-label">Categories</label>
@@ -418,6 +446,9 @@ export default {
                 sku: '',
                 external_link: '',
                 cash_dev_status: 2,
+                main_category_id: 0,
+                sub_category_id: 0,
+                in_sub_category_id: 0,
                 price: '',
                 unit: '',
                 stock_qty: 1,
@@ -459,6 +490,10 @@ export default {
             product_tag_msg: '',
             modelresults: [],
             manufrresults: [],
+            mainCategory: [],
+            insubCategories: [],
+            subCategories: [],
+
             //this for attribue select
             // options: [],
             // showDropdown: false,
@@ -473,6 +508,7 @@ export default {
         }
     },
     async mounted() {
+        await this.getMainCategory();
         await this.loadCKEditor();
         this.searchModels();
         this.searchmanuf();
@@ -483,14 +519,14 @@ export default {
         shippingHandaller() {
             if (this.insertdata.free_shopping === "1") {
                 $(".sflatRate").fadeOut();
-            }else{
+            } else {
                 $(".sflatRate").fadeIn();
             }
         },
-        vathandaller(){
+        vathandaller() {
             if (this.insertdata.vat_status === "1") {
                 $(".vat_").fadeIn();
-            }else{
+            } else {
                 $(".vat_").fadeOut();
             }
 
@@ -658,10 +694,26 @@ export default {
             for (let i = 0; i < input.files.length; i++) {
                 formData.append('images[]', input.files[i]);
             }
+
+            const main_category_id = this.insertdata.main_category_id;
+            const sub_category_id = this.insertdata.sub_category_id;
+            const in_sub_category_id = this.insertdata.in_sub_category_id;
+
+            const finalCategory = [
+                main_category_id || '',
+                sub_category_id || '',
+                in_sub_category_id || '',
+            ].join(',');
+
+
             formData.append('id', this.insertdata.id);
             formData.append('files', this.files);
             // formData.append('images', this.images); //multiple
-            formData.append('category', this.multi_categories);
+            //formData.append('category', this.multi_categories);
+
+            formData.append('category', finalCategory);
+
+
             formData.append('name', this.insertdata.name);
             formData.append('description', this.insertdata.description);
             formData.append('short_description', this.insertdata.short_description);
@@ -718,6 +770,40 @@ export default {
                 }
             });
         },
+
+        async getMainCategory() {
+            try {
+                // Call API with query params
+                const response = await this.$axios.get(`/product/allparentCategory`);
+                //  console.log(response.data.data);
+                this.mainCategory = response.data.main_categorys;
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        getSubCategories(main_category_id) {
+            // console.log("Selected Main Category ID:", main_category_id);
+            this.$axios.get(`/category/subcategories/${main_category_id}`)
+                .then(res => {
+                    this.subCategories = res.data.data;
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        },
+
+
+        getInSubCategories(sub_category_id) {
+            console.log("Selected sub_category_id ID:", sub_category_id);
+            this.$axios.get(`/category/insubcategories/${sub_category_id}`)
+                .then(res => {
+                    this.insubCategories = res.data.data;
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        },
+
         success_noti() {
             Lobibox.notify('success', {
                 pauseDelayOnHover: true,
@@ -732,79 +818,79 @@ export default {
 </script>
 
 <style scoped>
-    .required-label::after {
-        content: "\2605";
-        color: red;
-        margin-right: 4px;
-    }
+.required-label::after {
+    content: "\2605";
+    color: red;
+    margin-right: 4px;
+}
 
-    .vat_ {
-        display: none;
-    }
+.vat_ {
+    display: none;
+}
 
-    /* CSS */
-    ol,
-    ul {
-        padding-left: 0rem;
-    }
+/* CSS */
+ol,
+ul {
+    padding-left: 0rem;
+}
 
-    ul {
-        list-style: none;
-    }
+ul {
+    list-style: none;
+}
 
-    .bgColor {
-        background-color: #c8c8c8;
-        padding: 1px;
-        border-radius: 2px;
-    }
+.bgColor {
+    background-color: #c8c8c8;
+    padding: 1px;
+    border-radius: 2px;
+}
 
-    .img-fluid {
-        width: 300px;
-        height: 150px;
-    }
+.img-fluid {
+    width: 300px;
+    height: 150px;
+}
 
-    .img-fluids {
-        margin-top: 10px;
-        width: 300px;
-        height: 300px;
-    }
+.img-fluids {
+    margin-top: 10px;
+    width: 300px;
+    height: 300px;
+}
 
-    /* for checkbox */
-    .multiselect {
-        position: relative;
-        font-family: Arial, sans-serif;
-        width: 100%;
-    }
+/* for checkbox */
+.multiselect {
+    position: relative;
+    font-family: Arial, sans-serif;
+    width: 100%;
+}
 
-    .select-box {
-        border: 1px solid #ccc;
-        padding: 8px;
-        cursor: pointer;
-        background-color: #fff;
-    }
+.select-box {
+    border: 1px solid #ccc;
+    padding: 8px;
+    cursor: pointer;
+    background-color: #fff;
+}
 
-    .dropdown {
-        border: 1px solid #ccc;
-        border-top: none;
-        max-height: 400px;
-        overflow-y: auto;
-        position: absolute;
-        top: 100%;
-        width: 100%;
-        background-color: #fff;
-        z-index: 1;
-    }
+.dropdown {
+    border: 1px solid #ccc;
+    border-top: none;
+    max-height: 400px;
+    overflow-y: auto;
+    position: absolute;
+    top: 100%;
+    width: 100%;
+    background-color: #fff;
+    z-index: 1;
+}
 
-    label {
-        display: block;
-        padding: 5px;
-    }
+label {
+    display: block;
+    padding: 5px;
+}
 
-    input[type="checkbox"] {
-        margin-right: 8px;
-    }
+input[type="checkbox"] {
+    margin-right: 8px;
+}
 
-    .widthtxtbox {
-        width: 50px;
-    }
+.widthtxtbox {
+    width: 50px;
+}
 </style>

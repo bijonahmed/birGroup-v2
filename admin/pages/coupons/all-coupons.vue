@@ -9,8 +9,7 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb mb-0 p-0">
                                 <li class="breadcrumb-item">
-                                    <router-link to="/"><a href="javascript:;"><i
-                                                class="bx bx-home-alt"></i></a></router-link>
+                                    <router-link to="/"><a href="javascript:;"><i class="bx bx-home-alt"></i></a></router-link>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">Coupon List</li>
                             </ol>
@@ -18,26 +17,29 @@
                     </div>
                     <div class="ms-auto">
                         <div class="btn-group">
-                            <Nuxt-link to="/coupons/new-coupons"><button type="button" class="btn btn-primary"><i
-                                        class="bx bx-plus"></i>New</button></Nuxt-link>
+                            <Nuxt-link to="/coupons/new-coupons">
+                                <button type="button" class="btn btn-primary">
+                                    <i class="bx bx-plus"></i>New
+                                </button>
+                            </Nuxt-link>
                         </div>
                     </div>
                 </div>
                 <!--end breadcrumb-->
-                <!-- <span class="loader"></span> -->
+
                 <div class="card">
                     <div class="card-body">
+                        <!-- Search Row -->
                         <div class="row">
                             <div class="col-md-7">
                                 <div class="input-group mb-3">
-                                    <input type="text" class="form-control name" placeholder="Coupon Name"
+                                    <input type="text" class="form-control" placeholder="Coupon Name"
                                         v-model="searchQuery.name" @input="handleSearch">
                                 </div>
                             </div>
-
                             <div class="col-md-3">
                                 <div class="input-group mb-3">
-                                    <select class="form-select form-select-solid status" v-model="searchQuery.status"
+                                    <select class="form-select form-select-solid" v-model="searchQuery.status"
                                         @change="handleSearch">
                                         <option value="">All Status</option>
                                         <option value="1">Active</option>
@@ -47,79 +49,87 @@
                             </div>
                             <div class="col-md-2">
                                 <div class="input-group mb-3">
+                                    <!-- ✅ Button shows spinner while loading -->
                                     <button class="btn btn-primary w-100" type="button"
-                                        @click="fetchData">Search</button>
+                                        :disabled="loading" @click="fetchData">
+                                        <span v-if="loading">
+                                            <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                                            Searching...
+                                        </span>
+                                        <span v-else>Search</span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                        <div style="display: none;" class="customerSpinner">
-                            <div class="d-flex justify-content-center">
-                                <div class="spinner-border" role="status">
+
+                        <!-- ✅ Full table loader overlay -->
+                        <div v-if="loading" class="d-flex justify-content-center align-items-center py-5">
+                            <div class="text-center">
+                                <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
                                     <span class="visually-hidden">Loading...</span>
                                 </div>
+                                <p class="mt-2 text-muted">Fetching coupons...</p>
                             </div>
                         </div>
-                        <div class="table-responsive">
-                            <table class="table table-hover table-sm">
-                                <thead>
-                                    <tr>
-                                        <th>Coupon Name </th>
-                                        <th>Promo Code </th>
-                                        <th>Min. Shopping amount</th>
-                                        <th>Coupon Type </th>
-                                        <th>Discount</th>
-                                        <th class="text-center">Status</th>
-                                        <th class="text-center">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="item in paginatedData" :key="item.id">
-                                        <td>{{ item.name }}</td>
-                                        <td>{{ item.promocode }}</td>
-                                        <td><span class="fw-bold">$</span>{{ item.min_shopping }}</td>
-                                        <td>
-                                            <!-- {{ item.code_type }} -->
-                                            <p class="badge bg-primary" v-if="item.code_type === 'percentage'">In
-                                                Percentage</p>
-                                            <p class="badge bg-dark" v-else>Fixed Amount</p>
 
-                                        </td>
-                                        <td>
-                                            <strong v-if="item.d_percent !== undefined && item.d_percent !== null"
-                                                style="color: #f37623;">{{
-                                            item.d_percent }}%</strong>
-                                            <strong v-else-if="item.d_fvalue !== undefined && item.d_fvalue !== null"
-                                                style="color: darkblue;">${{
-                                            item.d_fvalue }}</strong>
-                                        </td>
-                                        <td class="text-center">
-                                            <span v-if="(item.status == 1)" class="badge bg-success-light"> Active </span>
-                                            <span v-else class="badge bg-danger-light"> Inactive </span>
-                                        </td>
-                                        <td>
-                                            <nuxt-link :to="`/coupons/edit/${item.id}`" class="btn btn-warning bg-history-light"  variant="warning" size="sm"><i
-                                                    class="bx bx-edit"></i>EDIT
-                                            </nuxt-link>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="pagenation">
-                            <div style="text-align: right;">
-                                <button @click="previousPage" :disabled="currentPage === 1"
-                                    class="btn btn-primary btn-sm">
-                                    <center><i class="lni lni-angle-double-left"></i></center>
-                                </button>
-                                <span>Page {{ currentPage }} of {{ totalPages }}</span>
-                                <button @click="nextPage" :disabled="currentPage === totalPages"
-                                    class="btn btn-primary btn-sm">
-                                    <center><i class="lni lni-angle-double-right"></i></center>
-                                </button>
+                        <!-- ✅ Table shown only when not loading -->
+                        <div v-else>
+                            <div class="table-responsive">
+                                <table class="table table-hover table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Coupon Name</th>
+                                            <th>Promo Code</th>
+                                            <th>Discount</th>
+                                            <th class="text-center">Status</th>
+                                            <th class="text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- ✅ Empty state message -->
+                                        <tr v-if="paginatedData.length === 0">
+                                            <td colspan="5" class="text-center text-muted py-4">
+                                                No coupons found.
+                                            </td>
+                                        </tr>
+                                        <tr v-for="item in paginatedData" :key="item.id">
+                                            <td>{{ item.name }}</td>
+                                            <td>{{ item.promocode }}</td>
+                                            <td>{{ item.d_percent }}<span>%</span></td>
+                                            <td class="text-center">
+                                                <span v-if="item.status == 1" class="badge bg-success-light">Active</span>
+                                                <span v-else class="badge bg-danger-light">Inactive</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <nuxt-link :to="`/coupons/edit/${item.id}`"
+                                                    class="btn btn-warning btn-sm">
+                                                    <i class="bx bx-edit"></i> EDIT
+                                                </nuxt-link>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Pagination -->
+                            <div class="pagenation">
+                                <div style="text-align: right;">
+                                    <button @click="previousPage" :disabled="currentPage === 1"
+                                        class="btn btn-primary btn-sm">
+                                        <i class="lni lni-angle-double-left"></i>
+                                    </button>
+                                    <span class="mx-2">Page {{ currentPage }} of {{ totalPages }}</span>
+                                    <button @click="nextPage" :disabled="currentPage === totalPages"
+                                        class="btn btn-primary btn-sm">
+                                        <i class="lni lni-angle-double-right"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
+
             </div>
         </div>
         <!--end page wrapper -->
@@ -134,16 +144,14 @@ export default {
     },
     data() {
         return {
-            // percentage: "percentage",
             data: [],
+            loading: false, // ✅ Single reactive loader flag
             searchQuery: {
                 name: '',
-                phone: '',
                 status: ''
             },
-            searchQueryPhone: '',
             currentPage: 1,
-            perPage: 10, // Number of items per page
+            perPage: 10,
         };
     },
     async mounted() {
@@ -151,7 +159,7 @@ export default {
     },
     computed: {
         totalPages() {
-            return Math.ceil(this.filteredData.length / this.perPage);
+            return Math.ceil(this.filteredData.length / this.perPage) || 1;
         },
         filteredData() {
             let result = this.data;
@@ -160,13 +168,11 @@ export default {
                     item.name.toLowerCase().includes(this.searchQuery.name.toLowerCase())
                 );
             }
-
             if (this.searchQuery.status) {
                 result = result.filter(item =>
                     item.status == this.searchQuery.status
                 );
             }
-
             return result;
         },
         paginatedData() {
@@ -176,29 +182,33 @@ export default {
     },
     methods: {
         async fetchData() {
-            // $(".customerSpinner").show();
+            this.loading = true; // ✅ Start loader
             try {
                 const response = await this.$axios.get(`/setting/couponsList`);
                 this.data = response.data.reverse();
-                console.log(response.data.code_type);
-                // $(".customerSpinner").hide();
+                this.currentPage = 1; // ✅ Reset to page 1 on each fetch
             } catch (error) {
                 console.error(error);
+                Lobibox.notify('error', {
+                    pauseDelayOnHover: true,
+                    continueDelayOnInactiveTab: false,
+                    position: 'top right',
+                    icon: 'bx bx-error-circle',
+                    msg: 'Failed to load coupons. Please try again.'
+                });
+            } finally {
+                this.loading = false; // ✅ Always stop loader
             }
         },
         handleSearch() {
             this.currentPage = 1;
         },
         previousPage() {
-            this.currentPage--;
+            if (this.currentPage > 1) this.currentPage--;
         },
         nextPage() {
-            this.currentPage++;
+            if (this.currentPage < this.totalPages) this.currentPage++;
         },
-
-        editCustomer(id) {
-            this.$router.push({ path: `/edit/${id}` });
-        }
     },
 };
 </script>
@@ -207,13 +217,6 @@ export default {
 .pagenation {
     margin-top: 10px;
 }
-
-.pagination {
-    /*! display: flex; */
-    padding-left: 0;
-    list-style: none
-}
-
 thead tr th,
 tbody tr td {
     text-align: center !important;

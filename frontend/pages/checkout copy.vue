@@ -68,7 +68,7 @@
                             <img :src="item.product.thumnail_img" class="img-fluid" alt=""
                               style="height:80px;width:80px;border:1px solid #e5e5e5;padding:5px;border-radius:8px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,0.08);" />
                           </div>
-                          <div style="width:45%">
+                          <div style="width:45%" class="d-none">
                             <b style="font-size:12px;color:#222;">
                               {{ item.product.name }}
                             </b>
@@ -171,49 +171,43 @@
                         v-if="this.selectedPayment !== '' && this.selectedPayment !== 'COD'">
                         <td class="border-0"><strong>Payment method</strong></td>
                         <td class="text-end border-0">
-                          <p class="badge bg-success-light">CARD</p>
+                          <p class="badge bg-success-light">Cash on Delivery</p>
                         </td>
                       </tr>
                     </tbody>
                   </table>
-                  <div class="cart_summary">
-                    <div class="side_title">
-                      <h5>Payment method</h5>
-                    </div>
-                    <div class="payment-buttons d-flex flex-wrap gap-3 mb-3" style="justify-content:flex-start;">
+                  
+                 <div class="cart_summary">
+  <div class="side_title">
+    <h5>Payment method</h5>
+  </div>
+  <div class="payment-buttons d-flex flex-wrap gap-3 mb-3" style="justify-content:flex-start;">
 
-                      <!-- Cash on Delivery -->
-                      <div class="payment-option-inline" :class="{ active: paymentMethod === 'cod' }"
-                        @click="selectPayment('cod')"
-                        style="cursor:pointer; border:1px solid #e4e6eb; border-radius:12px; padding:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; width:120px; height:120px; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,0.08); transition:0.3s; position:relative; flex:1 1 100px;">
-                        <img
-                          src="https://t3.ftcdn.net/jpg/06/04/86/68/360_F_604866832_5i9b2mnlQV1Ocgn6OQes0NsANhEEGW95.jpg"
-                          style="width:60px;height:60px;object-fit:contain;" alt="Cash">
-                        <span style="margin-top:8px; font-size:14px; font-weight:500;">Cash on Delivery</span>
+    <!-- Cash on Delivery (only option shown) -->
+    <div class="payment-option-inline" :class="{ active: paymentMethod === 'cod' }"
+      @click="selectPayment('cod')"
+      style="cursor:pointer; border:1px solid #e4e6eb; border-radius:12px; padding:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; width:120px; height:120px; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,0.08); transition:0.3s; position:relative; flex:1 1 100px;">
+      <img
+        src="https://t3.ftcdn.net/jpg/06/04/86/68/360_F_604866832_5i9b2mnlQV1Ocgn6OQes0NsANhEEGW95.jpg"
+        style="width:60px;height:60px;object-fit:contain;" alt="Cash">
+      <span style="margin-top:8px; font-size:14px; font-weight:500;">Cash on Delivery</span>
 
-                        <!-- Check mark -->
-                        <span v-if="paymentMethod === 'cod'"
-                          style="position:absolute; top:5px; right:5px; color:#0C356A; font-size:20px;">✔</span>
-                      </div>
+      <!-- Check mark -->
+      <span v-if="paymentMethod === 'cod'"
+        style="position:absolute; top:5px; right:5px; color:#0C356A; font-size:20px;">✔</span>
+    </div>
 
-                      <!-- Online Payment -->
-                      <div class="payment-option-inline" :class="{ active: paymentMethod === 'online' }"
-                        @click="selectPayment('online')"
-                        style="cursor:pointer; border:1px solid #e4e6eb; border-radius:12px; padding:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; width:120px; height:120px; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,0.08); transition:0.3s; position:relative; flex:1 1 100px;">
-                        <img src="https://www.csinow.edu/wp-content/uploads/2022/01/online-payment-registration.jpg"
-                          style="width:60px;height:60px;object-fit:contain;" alt="Online">
-                        <span style="margin-top:8px; font-size:14px; font-weight:500;">Online Payment</span>
+    <!-- Online Payment (hidden) -->
+    <!-- <div v-show="false" ...></div> -->
 
-                        <!-- Check mark -->
-                        <span v-if="paymentMethod === 'online'"
-                          style="position:absolute; top:5px; right:5px; color:#0C356A; font-size:20px;">✔</span>
-                      </div>
+  </div>
 
-                    </div>
+  <!-- Hidden input to capture value if needed -->
+  <input type="hidden" v-model="paymentMethod">
+</div>
 
-                    <!-- Hidden input to capture value if needed -->
-                    <input type="hidden" v-model="paymentMethod">
-                  </div>
+
+
                   <span v-if="cart.length > 0">
                     <button type="submit" class="btn_cart text-center" style="
                         visibility: unset;
@@ -280,7 +274,7 @@ export default {
       billAddress: "",
       shipp_address: "",
       shipp_phoneNumber: "",
-      paymentMethod: '',
+      paymentMethod: 'cod',
       user_id: 0,
       userdata: {
         name: "",

@@ -40,7 +40,6 @@ class CategoryController extends Controller
         $categories = Categorys::with('children.children.children.children.children')->select('name')->where('parent_id', 0)->get();
         return response()->json($categories);
     }
-
     public function removeProctCategory(Request $request)
     {
         // dd($request->all());
@@ -50,10 +49,8 @@ class CategoryController extends Controller
         ];
         return response()->json($response);
     }
-
     public function categoryProSlidersave(Request $request)
     {
-
         $validator = Validator::make(
             $request->all(),
             [
@@ -65,13 +62,10 @@ class CategoryController extends Controller
                 'status' => 'Status is required',
             ]
         );
-
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-
         $existingRecord = HomeAroductSliderCategory::where('category_id', $request->category_id)->first();
-
         if (!empty($existingRecord)) {
             HomeAroductSliderCategory::where('category_id', $request->category_id)->delete();
         }
@@ -80,14 +74,12 @@ class CategoryController extends Controller
             'status' => $request->status,
             // Add other fields as needed
         ];
-
         if (empty($request->id)) {
             // Insert new record
             HomeAroductSliderCategory::create($data);
         } else {
             // Update existing record if ID is provided
             $existingRecord = HomeAroductSliderCategory::find($request->id);
-
             if ($existingRecord) {
                 $existingRecord->update($data);
             } else {
@@ -99,7 +91,6 @@ class CategoryController extends Controller
         ];
         return response()->json($response);
     }
-
     public function saveAttribute(Request $request)
     {
         $validator = Validator::make(
@@ -160,7 +151,6 @@ class CategoryController extends Controller
         ];
         return response()->json($response);
     }
-
     public function save(Request $request)
     {
         //dd($request->all());
@@ -179,10 +169,6 @@ class CategoryController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-
-
-
-
         if (empty($request->id)) {
             $validator = Validator::make(
                 $request->all(),
@@ -257,14 +243,13 @@ class CategoryController extends Controller
             $data->meta_keyword      =  $request->input('meta_keyword');
             $data->parent_id         =  $request->input('parent_id');
             $data->status            =  $request->input('status');
-          //  $data->home_status       =  $request->home_status;
+            //  $data->home_status       =  $request->home_status;
             $data->commission        =  $request->input('commission');
             $data->fixcommission     =  $request->input('fixcommission');
             $data->keyword           =  $request->input('keyword');
             $data->mobile_view_class =  $request->input('mobile_view_class');
             $data->save();
         }
-
         $response = [
             'message' => 'Successfull',
         ];
@@ -288,32 +273,24 @@ class CategoryController extends Controller
             $categories = Categorys::with('children.children.children.children.children')->where('parent_id', 0)->get();
             // $categoriesList = Categorys::with('children.children.children.children.children')->where('parent_id', 0)->where('speacial_status', 1)->get();
             $count = Categorys::where('speacial_status', 1)->count();
-
             $products = [];
             foreach ($categories as $v) {
                 $products[] = [
-
                     'id'                => $v->id,
                     'name'              => $v->name,
                     'image'             => url($v->file),
                     'speacial_status'   => $v->speacial_status,
-
                 ];
             }
-
             return response()->json([
                 'data'  => $products,
                 'count' => $count,
                 // 'catList' => $categoriesList,
-
             ]);
-
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
-    } 
-
-
+    }
     public function allInacCategory(Request $request)
     {
         try {
@@ -323,27 +300,21 @@ class CategoryController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
     public function getProductCategoryList(Request $request)
     {
         try {
             $categories = HomeAroductSliderCategory::join('categorys', 'home_product_slider_category.category_id', '=', 'categorys.id')
                 ->select('categorys.name', 'categorys.status', 'home_product_slider_category.id', 'home_product_slider_category.category_id')
                 ->get();
-
             //dd($categories);
-
             $subcategories = Categorys::select('name', 'id')->where('parent_id', '!=', 0)->get();
-
             $data['category'] = $categories;
             $data['subcategories'] = $subcategories;
-
             return response()->json($data);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
     public function getAttribute(Request $request)
     {
         $attribute = Attribute::where('status', 1)->get();
@@ -396,6 +367,34 @@ class CategoryController extends Controller
         ];
         return response()->json($response, 200);
     }
+
+
+    public function findsubCategoryRow($id)
+    {
+        //dd($id);
+        $data = Categorys::where('parent_id', $id)->where('status', 1)->get();
+        $response = [
+            'data' => $data,
+            'message' => 'success'
+        ];
+        return response()->json($response, 200);
+    }
+
+
+    public function findInsubCategoryRow($id)
+    {
+        //dd($id);
+        $data = Categorys::where('parent_id', $id)->where('status', 1)->get();
+        $response = [
+            'data' => $data,
+            'message' => 'success'
+        ];
+        return response()->json($response, 200);
+    }
+
+
+
+
     public function attributeRow($id)
     {
         $data = Attribute::find($id);
@@ -417,8 +416,7 @@ class CategoryController extends Controller
     }
     public function attributeValRows($attributes_id)
     {
-//dd($attributes_id);
-
+        //dd($attributes_id);
         $attrValues = AttributeValues::where('attributes_id', $attributes_id)->select('id', 'attributes_id', 'name')->get();
         $collection = collect($attrValues);
         $modifiedCollection = $collection->map(function ($item) {
@@ -427,7 +425,6 @@ class CategoryController extends Controller
                 'name' => $item['name'],
             ];
         });
-
         return response()->json($modifiedCollection, 200);
     }
     public function getSubCategoryChild($id)
@@ -461,7 +458,6 @@ class CategoryController extends Controller
         $results = Categorys::where('name', 'like', '%' . $term . '%')
             ->where('status', 1)
             // ->orWhere('category', 'like', '%' . $term . '%')
-
             ->get();
         $formattedResults = [];
         foreach ($results as $result) {
@@ -479,14 +475,11 @@ class CategoryController extends Controller
         }
         return response()->json($formattedResults);
     }
-
     public function speacialCatSave(request $request)
     {
         $id = $request->category_id;
         $category = Categorys::find($id);
-
         if ($request->hasFile("image")) {
-
             $validator =  Validator::make(
                 $request->all(),
                 [
@@ -499,24 +492,18 @@ class CategoryController extends Controller
             $image = $request->image;
             $imageName = "/upload/" . time() . "." . $image->getClientOriginalExtension();
             $image->move(public_path("upload"), $imageName);
-
             if (!empty($category->file) && File::exists(public_path($category->file))) {
                 File::delete(public_path($category->file));
             }
-
             $category->update([
                 'file' => $imageName,
                 'speacial_status' => $request->speacial_status,
             ]);
-
             if ($category) {
-
                 $images = url($imageName);
-
                 return response()->json([
                     "status" => 200,
                     "images" => $images,
-
                 ], 200);
             } else {
                 return response()->json([
@@ -524,8 +511,7 @@ class CategoryController extends Controller
                     "errors" => "Something went wrong"
                 ], 500);
             }
-        } else{
-
+        } else {
             $validator =  Validator::make(
                 $request->all(),
                 [
@@ -535,17 +521,13 @@ class CategoryController extends Controller
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], 422);
             }
-            
             $category->update([
                 'speacial_status' => $request->speacial_status,
             ]);
-
             if ($category) {
-
                 return response()->json([
                     "status" => 200,
                     "message" => "success",
-
                 ], 200);
             } else {
                 return response()->json([

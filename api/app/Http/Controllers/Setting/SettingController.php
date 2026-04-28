@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers\Setting;
-
 use DB;
 use Auth;
 use Helper;
@@ -23,7 +21,6 @@ use App\Models\couponUseHistory;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-
 class SettingController extends Controller
 {
     protected $userid;
@@ -111,8 +108,6 @@ class SettingController extends Controller
         ];
         return response()->json($response);
     }
-
-
     public function insertSalary(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -133,7 +128,6 @@ class SettingController extends Controller
             'number_of_blogs'           => !empty($request->number_of_blogs) ? $request->number_of_blogs : "",
             'salary_amount'             => !empty($request->salary_amount) ? $request->salary_amount : "",
             'status'                    => !empty($request->status) ? $request->status : "",
-
         );
         // dd($data);
         if (empty($request->id)) {
@@ -146,9 +140,6 @@ class SettingController extends Controller
         ];
         return response()->json($response);
     }
-
-
-
     public function insertPack(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -169,7 +160,6 @@ class SettingController extends Controller
             'number_of_blogs'           => !empty($request->number_of_blogs) ? $request->number_of_blogs : "",
             'salary_amount'             => !empty($request->salary_amount) ? $request->salary_amount : "",
             'status'                    => !empty($request->status) ? $request->status : "",
-
         );
         // dd($data);
         if (empty($request->id)) {
@@ -182,7 +172,6 @@ class SettingController extends Controller
         ];
         return response()->json($response);
     }
-
     public function insertBankMaster(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -347,8 +336,6 @@ class SettingController extends Controller
         ];
         return response()->json($response);
     }
-
-
     public function checkrowsallary($id)
     {
         $id = (int) $id;
@@ -359,8 +346,6 @@ class SettingController extends Controller
         ];
         return response()->json($response, 200);
     }
-
-
     public function checkrowPack($id)
     {
         $id = (int) $id;
@@ -371,9 +356,6 @@ class SettingController extends Controller
         ];
         return response()->json($response, 200);
     }
-
-
-
     public function getEmployeeTypeList(Request $request)
     {
         try {
@@ -422,9 +404,6 @@ class SettingController extends Controller
         }
         return response()->json($response, 200);
     }
-
-
-
     public function getsalary(Request $request)
     {
         try {
@@ -441,8 +420,6 @@ class SettingController extends Controller
         }
         return response()->json($response, 200);
     }
-
-
     public function getPack(Request $request)
     {
         try {
@@ -459,11 +436,6 @@ class SettingController extends Controller
         }
         return response()->json($response, 200);
     }
-
-
-
-
-
     public function getBankMasterlist(Request $request)
     {
         try {
@@ -590,9 +562,6 @@ class SettingController extends Controller
         ];
         return response()->json($response, 200);
     }
-
-
-
     public function checkrowBankMaster($id)
     {
         $id = (int) $id;
@@ -653,17 +622,13 @@ class SettingController extends Controller
         ];
         return response()->json($response, 200);
     }
-
     // brands part start here 
     public function addbrands() {}
     // ads part start here 
-
     public function getbannerTop()
     {
-
         $banner    = topHeaderBanner::first();
         $imagesUrl = !empty($banner->image) ? url($banner->image) : "";
-
         if ($banner->count() > 0) {
             return response()->json([
                 'status' => 200,
@@ -678,7 +643,6 @@ class SettingController extends Controller
     }
     public function updatebannerTop(Request $request)
     {
-
         $messages = [
             'image' => 'Image size must be 640x33 and jpg,png,jpeg,gif',
         ];
@@ -687,38 +651,28 @@ class SettingController extends Controller
             // |dimensions:min_width=640,min_height=33,max_width=640,max_height=33
             'status'    => 'string',
         ], $messages);
-
-
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         } else {
             if ($request->hasFile("image")) {
-
                 $bannerAdd = topHeaderBanner::first();
-
                 $image = $request->image;
                 $imageName = "/bannerImage/" . time() . "." . $image->getClientOriginalExtension();
                 $image->move(public_path("bannerImage"), $imageName);
-
                 if (!empty($bannerAdd->image) && File::exists(public_path($bannerAdd->image))) {
                     File::delete(public_path($bannerAdd->image));
                 }
-
                 // $bannerAdd = topHeaderBanner::create([               
                 $bannerAdd->update([
                     "image" => $imageName,
                     "status" => $request->status,
                 ]);
                 // ]);
-
                 if ($bannerAdd) {
-
                     $images = url($imageName);
-
                     return response()->json([
                         "status" => 200,
                         "images" => $images,
-
                     ], 200);
                 } else {
                     return response()->json([
@@ -729,23 +683,18 @@ class SettingController extends Controller
             }
         }
     }
-
     public function updatedealsbannnerLink(Request $request)
     {
         $dealsBanner = dealsbanner::first();
-
         $dealsBanner->update([
             'imageOneLink' => $request->imageOneLink,
             'imageTwoLink' => $request->imageTwoLink,
         ]);
-
         return response()->json([
             'status' => 200,
             'message' => 'Deals banner links updated successfully.'
         ], 200);
     }
-
-
     public function updatedealsbannner(request $request)
     {
         $messages = [
@@ -756,13 +705,10 @@ class SettingController extends Controller
             'imageOne' => $request->hasFile('imageOne') ? 'mimes:jpg,png,jpeg,gif,webp|dimensions:min_width=572,min_height=250,max_width=572,max_height=250' : '',
             'imageTwo' => $request->hasFile('imageTwo') ? 'mimes:jpg,png,jpeg,gif,webp|dimensions:min_width=572,min_height=250,max_width=572,max_height=250' : '',
         ], $messages);
-
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-
         $dealsBanner = dealsbanner::first();
-
         if ($request->hasFile('imageOne')) {
             $image = $request->imageOne;
             $imageName = "/bannerImage/" . time() . "img." . $image->getClientOriginalExtension();
@@ -771,8 +717,6 @@ class SettingController extends Controller
             if (!empty($dealsBanner->imageOne) && File::exists(public_path($dealsBanner->imageOne))) {
                 File::delete(public_path($dealsBanner->imageOne));
             }
-
-
             if (!$request->hasFile('imageTwo')) {
                 $dealsBanner->update(["imageOne" => $imageName]);
             } else {
@@ -786,7 +730,6 @@ class SettingController extends Controller
                 if (!empty($dealsBanner->imageTwo) && File::exists(public_path($dealsBanner->imageTwo))) {
                     File::delete(public_path($dealsBanner->imageTwo));
                 }
-
                 $dealsBanner->update(["imageOne" => $imageName]);
                 $dealsBanner->update(["imageTwo" => $imageNameTwo]);
             }
@@ -802,7 +745,6 @@ class SettingController extends Controller
                 $dealsBanner->update(["imageTwo" => $imageNameTwo]);
             }
         }
-
         if ($dealsBanner->count() > 0) {
             $imageOne = $dealsBanner->imageOne ? url($dealsBanner->imageOne) : null;
             $imageTwo = $dealsBanner->imageTwo ? url($dealsBanner->imageTwo) : null;
@@ -818,14 +760,11 @@ class SettingController extends Controller
             ], 202);
         }
     }
-
     public function getdealsbanners()
     {
-
         $dealbanner    = dealsbanner::first();
         // $imagesUrlone = !empty($dealbanner->image) ? url($dealbanner->imageOne) : "";
         // $imagesUrltwo = !empty($dealbanner->image) ? url($dealbanner->imageTwo) : "";
-
         if ($dealbanner->count() > 0) {
             return response()->json([
                 'status' => 200,
@@ -841,65 +780,44 @@ class SettingController extends Controller
             ], 202);
         }
     }
-
-    public function savecoupons(request $request)
+    public function savecoupons(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
-            // 'coupon_type'   => "required|string", 
-            'name'                  => "",
-            'promocode'             => "required",
-            'code_type'             => "required",
-            'min_shopping'          => "required|numeric",
-            'd_percent'             => "max:100",
-            'd_fvalue'              => "",
-            'status'                => "required",
+            'name'      => 'required',
+            'promocode' => 'required|unique:coupons,promocode',
+            'd_percent' => 'required|numeric|min:1|max:100',
+            'status'    => 'required',
+        ], [
+            'promocode.unique'   => 'This promo code already exists.',
+            'name.required'      => 'Promo name is required.',
+            'promocode.required' => 'Promo code is required.',
+            'd_percent.required' => 'Discount percentage is required.',
+            'd_percent.numeric'  => 'Discount must be a number.',
+            'd_percent.min'      => 'Discount must be at least 1%.',
+            'd_percent.max'      => 'Discount cannot exceed 100%.',
+            'status.required'    => 'Status is required.',
         ]);
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-
         $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $request->name)));
-
-        // $coupons = coupons::create([
-        //     'name'              => $request->name,
-        //     'slug'              => $slug,
-        //     'promocode'         => $request->promocode,
-        //     'code_type'         => $request->code_type,
-        //     'min_shopping'      => $request->min_shopping,
-        //     'd_percent'         => $request->d_percent,
-        //     'd_fvalue'          => $request->d_fvalue,
-        //     'status'            => $request->status,
-        // ]);
-        $couponsData = [
-            'name'          => $request->name,
-            'slug'          => $slug,
-            'promocode'     => $request->promocode,
-            'code_type'     => $request->code_type,
-            'min_shopping'  => $request->min_shopping,
-            'status'        => $request->status,
-        ];
-
-        if ($request->code_type == 'percentage') {
-            $couponsData['d_percent'] = $request->d_percent;
-        } else {
-            $couponsData['d_fvalue'] = $request->d_fvalue;
-        }
-
-        $coupons = coupons::create($couponsData);
-
-
+        $coupons = coupons::create([
+            'name'      => $request->name,
+            'slug'      => $slug,
+            'promocode' => strtoupper(trim($request->promocode)),
+            'status'    => $request->status,
+            'd_percent' => $request->d_percent,
+        ]);
         if ($coupons) {
             return response()->json([
-                'status'    => true,
-                'data'      => $coupons
-            ], 200);
-        } else {
-            return response()->json([
-                'status'    => true,
-                'data'      => "Coupon Not Create"
-            ], 404);
+                'status' => true,
+                'data'   => $coupons
+            ], 201); // ✅ 201 = Created (more correct than 200)
         }
+        return response()->json([
+            'status'  => false,
+            'message' => 'Coupon could not be created.'
+        ], 500);
     }
     public function couponsList()
     {
@@ -907,8 +825,6 @@ class SettingController extends Controller
         $formatedData = [];
         foreach ($coupons as $Key => $value) {
             $formatedData[] = [
-
-
                 'id'                => $value->id,
                 'name'          => $value->name,
                 'slug'          => $value->slug,
@@ -918,7 +834,6 @@ class SettingController extends Controller
                 'status'        => $value->status,
                 'd_percent'     => $value->d_percent,
                 'd_fvalue'      => $value->d_fvalue,
-
                 // 'role'              => $value->role_id,
                 // 'businessName'      => $value->business_name,
                 // 'slug'      => $value->business_name_slug,
@@ -927,7 +842,6 @@ class SettingController extends Controller
         }
         return response()->json($formatedData, 200);
     }
-
     public function getcoupons($id)
     {
         $id = (int) $id;
@@ -942,67 +856,46 @@ class SettingController extends Controller
     {
         $id = $request->input('id');
         $validator = Validator::make($request->all(), [
-            // 'coupon_type'   => "required|string", 
-            'name'                  => "",
-            'promocode'             => "required",
-            'code_type'             => "required",
-            'min_shopping'          => "required|numeric",
-            'd_percent'             => "",
-            'd_fvalue'              => "",
-            'status'                => "required",
+            'name'       => 'required',
+            'promocode'  => 'required|unique:coupons,promocode,' . $id, // ✅ unique but ignore current row
+            'd_percent'  => 'required|numeric|min:1|max:100',
+            'status'     => 'required',
+        ], [
+            'promocode.unique'    => 'This promo code is already in use.',
+            'name.required'       => 'Promo name is required.',
+            'promocode.required'  => 'Promo code is required.',
+            'd_percent.required'  => 'Discount percentage is required.',
+            'd_percent.numeric'   => 'Discount must be a number.',
+            'd_percent.min'       => 'Discount must be at least 1%.',
+            'd_percent.max'       => 'Discount cannot exceed 100%.',
+            'status.required'     => 'Status is required.',
         ]);
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors(),
-                // 'id' => $id
             ], 422);
         }
-
-        $updateCoupon = coupons::where('id', $id)->first();
-        $updateData = [
-            'name'         => $request->name,
-            'promocode'    => $request->promocode,
-            'code_type'    => $request->code_type,
-            'min_shopping' => $request->min_shopping,
-            'status'       => $request->status
-        ];
-
-        // Check if d_percent is not null or 0
-        if ($request->d_percent !== null && $request->d_percent !== 0) {
-            $updateData['d_percent'] = $request->d_percent;
-        } else {
-            // If d_percent is null or 0, set it to null in the update data
-            $updateData['d_percent'] = null;
-        }
-        // Check if d_percent is not null or 0
-        if ($request->d_fvalue !== null && $request->d_percent !== 0) {
-            $updateData['d_fvalue'] = $request->d_fvalue;
-        } else {
-            // If d_percent is null or 0, set it to null in the update data
-            $updateData['d_fvalue'] = null;
-        }
-
-        $updateCoupon->update($updateData);
+        $updateCoupon = coupons::where('id', $id)->firstOrFail(); // ✅ 404 if not found
+        $updateCoupon->update([
+            'name'      => $request->name,
+            'promocode' => strtoupper(trim($request->promocode)), // ✅ normalize promo code
+            'd_percent' => $request->d_percent,
+            'status'    => $request->status,
+        ]);
+        return response()->json([
+            'message' => 'Coupon updated successfully.',
+        ], 200);
     }
-
-
-
-
     public function updatesliderLeftadsLink(request $request)
     {
         $adsBanner = sliderSideAdsModel::first();
         $adsBanner->update(["adsOneLink" => $request->adsOneLink]);
         $adsBanner->update(["adsTwoLink" => $request->adsTwoLink]);
-
         return response()->json([
             'status' => 202,
             'message' => "Banner add succesfully"
         ], 202);
     }
-
-
-
-
     public function updatesliderLeftads(request $request)
     {
         $messages = [
@@ -1015,28 +908,22 @@ class SettingController extends Controller
             // Check if ads2 has a file
             'ads2' => $request->hasFile('ads2') ? 'required|mimes:jpg,png,jpeg,gif,webp|dimensions:min_width=600,min_height=370,max_width=600,max_height=370' : '',
         ], $messages);
-
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors(),
             ], 422);
         }
-
         $adsBanner = sliderSideAdsModel::first();
-
         // Assuming $adsBanner is your model instance
-
         // Check if ads1 has a file
         if ($request->hasFile('ads1')) {
             $image = $request->ads1;
             $imageName = "/bannerImage/" . time() . "-ads1." . $image->getClientOriginalExtension();
             $image->move(public_path("bannerImage"), $imageName);
-
             // Delete previous image if it exists
             if (!empty($adsBanner->adsOne) && File::exists(public_path($adsBanner->adsOne))) {
                 File::delete(public_path($adsBanner->adsOne));
             }
-
             // Update adsOne only if ads2 is null or empty
             if (!$request->hasFile('ads2') || !$request->ads2) {
                 $adsBanner->update(["adsOne" => $imageName]);
@@ -1044,7 +931,6 @@ class SettingController extends Controller
                 $imageTwo = $request->ads2;
                 $imageNameTwo = "/bannerImage/" . time() . "-ads2." . $imageTwo->getClientOriginalExtension();
                 $imageTwo->move(public_path("bannerImage"), $imageNameTwo);
-
                 // Delete previous image if it exists
                 if (!empty($adsBanner->adsOne) && File::exists(public_path($adsBanner->adsOne))) {
                     File::delete(public_path($adsBanner->adsOne));
@@ -1052,39 +938,31 @@ class SettingController extends Controller
                 if (!empty($adsBanner->adsTwo) && File::exists(public_path($adsBanner->adsTwo))) {
                     File::delete(public_path($adsBanner->adsTwo));
                 }
-
                 // Update adsTwo only if ads1 is null or empty
                 // if (!$request->hasFile('ads1') || !$request->ads1) {
                 $adsBanner->update(["adsOne" => $imageName]);
                 $adsBanner->update(["adsTwo" => $imageNameTwo]);
-
-
                 // }
             }
         }
-
         // Check if ads2 has a file
         else if ($request->hasFile('ads2')) {
             $imageTwo = $request->ads2;
             $imageNameTwo = "/bannerImage/" . time() . "-ads2." . $imageTwo->getClientOriginalExtension();
             $imageTwo->move(public_path("bannerImage"), $imageNameTwo);
-
             // Delete previous image if it exists
             if (!empty($adsBanner->adsTwo) && File::exists(public_path($adsBanner->adsTwo))) {
                 File::delete(public_path($adsBanner->adsTwo));
             }
-
             // Update adsTwo only if ads1 is null or empty
             if (!$request->hasFile('ads1') || !$request->ads1) {
                 $adsBanner->update(["adsTwo" => $imageNameTwo]);
             }
         }
-
         return response()->json([
             'status' => 202,
             'message' => "Banner add succesfully"
         ], 202);
-
         // if ($dealsBanner->count() > 0) {
         //     $imageOne = $dealsBanner->imageOne ? url($dealsBanner->imageOne) : null;
         //     $imageTwo = $dealsBanner->imageTwo ? url($dealsBanner->imageTwo) : null;
@@ -1106,19 +984,14 @@ class SettingController extends Controller
         if ($adsBanner->count() > 0) {
             $adsOne = $adsBanner->adsOne ? url($adsBanner->adsOne) : null;
             $adsTwo = $adsBanner->adsTwo ? url($adsBanner->adsTwo) : null;
-
             $adsOneLink = $adsBanner->adsOneLink ? $adsBanner->adsOneLink : null;
             $adsTwoLink = $adsBanner->adsTwoLink ? $adsBanner->adsTwoLink : null;
-
-
             return response()->json([
                 'status' => 200,
                 'adsOne' => $adsOne,
                 'adsTwo' => $adsTwo,
                 'adsOneLink' => $adsOneLink,
                 'adsTwoLink' => $adsTwoLink,
-
-
             ], 200);
         } else {
             return response()->json([
@@ -1127,7 +1000,6 @@ class SettingController extends Controller
             ], 202);
         }
     }
-
     public function editseller($id)
     {
         $id = (int) $id;
@@ -1140,27 +1012,22 @@ class SettingController extends Controller
     }
     public function updateSeller(request $request)
     {
-
         $id = $request->id;
-
         $validator = Validator::make($request->all(), [
             'name'      => "required",
             'status'             => "required",
-
         ]);
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors(),
             ], 422);
         }
-
         $updateCoupon = User::where('id', $id)->first();
         $updateData = [
             'name'         => $request->name,
             'status'                => $request->status,
         ];
         $sql = $updateCoupon->update($updateData);
-
         if ($sql) {
             return response()->json([
                 'status'    => true,
@@ -1173,7 +1040,6 @@ class SettingController extends Controller
             ]);
         }
     }
-
     public function saveslidersImages(Request $request)
     {
         // dd($request->image);
@@ -1183,13 +1049,10 @@ class SettingController extends Controller
         ], [
             'image.dimensions' => 'The image must be 600x400 pixels.',
         ]);
-
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-
         if ($request->hasFile('image')) {
-
             $image = $request->file('image');
             $imageName = "/backend/slider_images/" . time() . '.' . $image->getClientOriginalExtension();
             $image->move(public_path("/backend/slider_images/"), $imageName);
@@ -1200,7 +1063,6 @@ class SettingController extends Controller
                 'status' => $request->status,
                 'link'   => $request->link,
             ]);
-
             if ($slider) {
                 return response()->json(["message" => "Successfully Added"], 200);
             } else {
@@ -1212,9 +1074,7 @@ class SettingController extends Controller
     {
         $id = $request->id;
         $slider = Sliders::findOrFail($id);
-
         $slider->delete();
-
         return response()->json(['message' => 'Slider image deleted successfully'], 200);
     }
     public function updateCompanyProfile(request $request)
@@ -1234,22 +1094,18 @@ class SettingController extends Controller
         ], [
             'transaction_fee' => 'Cash on delivery fee must be only number',
         ]);
-
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->toArray()], 422);
         }
-
         $companyId = $request->id;
         // dd($companyId);
         // return false;
         $companyProfile = CompanyProfile::find($companyId);
-
         if (!$companyProfile) {
             return response()->json([
                 'error' => 'Company profile not found.'
             ], 404);
         }
-
         $updateData = [
             'company_name' => $request->company_name,
             'address' => $request->address,
@@ -1262,7 +1118,6 @@ class SettingController extends Controller
             'industry' => $request->industry,
             'about' => $request->about,
         ];
-
         // Handle logo file upload if present
         if ($request->hasFile('logo')) {
             $validator = Validator::make($request->all(), [
@@ -1271,16 +1126,13 @@ class SettingController extends Controller
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()->toArray()], 422);
             }
-
             $image = $request->file('logo');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
             $image->move(public_path('/backend/upload/'), $imageName);
             $updateData['logo'] = '/backend/upload/' . $imageName;
         }
-
         // Update the company profile
         $companyProfile->update($updateData);
-
         return response()->json([
             'status' => 'success',
             'message' => 'Company profile settings updated successfully.'
@@ -1292,34 +1144,24 @@ class SettingController extends Controller
         $getData['logo'] = url($getData->logo);
         return response()->json($getData);
     }
-
     public function getcoupos(Request $request)
     {
         $minShop = $request->query('minShop');
         $user_id = $request->query('user_id');
-
-
         $couponList = coupons::where('min_shopping', '<', $minShop)
             ->where('status', 1)
             ->limit(3)
             ->get();
-
-
         foreach ($couponList as $key => $coupon) {
-
             $usageRecord = CouponUseHistory::where('user_id', $user_id)
                 ->where('coupon_id', $coupon->id)
                 ->first();
-
-
             if ($usageRecord) {
                 unset($couponList[$key]);
             }
         }
-
         // dd($couponList);
         // return false;
-
         return response()->json(['couponList' => array_values($couponList->toArray())]);
     }
 }

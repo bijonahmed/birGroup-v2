@@ -11,10 +11,7 @@ class coupons extends Model
     protected $fillable = [
             'name',
             'promocode',
-            'code_type',
-            'min_shopping',
             'd_percent',
-            'd_fvalue',
             'status',
     ];
 }

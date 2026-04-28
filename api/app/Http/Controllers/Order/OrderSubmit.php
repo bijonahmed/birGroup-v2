@@ -85,7 +85,7 @@ class OrderSubmit extends Controller
 
     public function submitOrder(Request $request)
     {
-        //dd($request->all());
+       // dd($request->all());
         // Validate request
         $validator = FacadesValidator::make(
             $request->all(),
@@ -165,6 +165,13 @@ class OrderSubmit extends Controller
             'billing_phone_number'  => $request->Cutomer_phone_number,
             'billing_address'       => $request->billAddress,
             'payment_type'          => $request->payment_staus,
+            'delivery_charge'       => $request->delivery_fee,
+            'delivery_type'         => $request->delivery_type,
+            //apply coupon
+            'coupon_id'             => $request->coupon_id ?? "",
+            'coupon_code'           => $request->coupon_code ?? "",
+            'coupon_discount'       => $request->coupon_discount ?? "",
+
             'customer_id'           => $userId,
             'order_status'          => 1, // Placed
         ]);
@@ -232,6 +239,4 @@ class OrderSubmit extends Controller
             'order_id' => $order->orderId,
         ], 200);
     }
-
-
 }

@@ -199,6 +199,7 @@ class OrderController extends Controller
     public function update_order_status(Request $request)
     {
         $data['order_status'] = $request->orderstatus;
+        $data['delivery_charge'] = $request->delivery_charge;
         Order::where('orderId', $request->orderId)->update($data);
         return response()->json("update successfully", 200);
     }
@@ -275,21 +276,32 @@ class OrderController extends Controller
         $order['orderdata']     = $orders;
         $order['orderrow']      = !empty($findorder->orderstatus) ? $findorder->orderstatus : "";
         $order['order_status']  = !empty($findorder->order_status) ? $findorder->order_status : "";
-        $order['orderstatus_id'] = !empty($findorder->orderstatus_id) ? $findorder->orderstatus_id : "";
-        $order['orderData']     = !empty($findorder) ? $findorder : "";
-        $order['OrderStatus']   = $orderStatus;
-        $order['packed_status'] = !empty($findorder->packed_status) ? $findorder->packed_status : "";
-        $order['dispatched_status'] = !empty($findorder->dispatched_status) ? $findorder->dispatched_status : "";
-        $order['outForDelivery_status'] = !empty($findorder->outForDelivery_status) ? $findorder->outForDelivery_status : "";
-        $order['delivered_status'] = !empty($findorder->delivered_status) ? $findorder->delivered_status : "";
-        $order['cancel_status'] = !empty($findorder->cancel_status) ? $findorder->cancel_status : "";
-        $order['return_status'] = !empty($findorder->return_status) ? $findorder->return_status : "";
-        $order['products'] = !empty($findOrderedProduct) ? $findOrderedProduct : '';
-        $timestamp = strtotime($findorder->created_at);
+        $order['orderstatus_id']            = !empty($findorder->orderstatus_id) ? $findorder->orderstatus_id : "";
+        $order['orderData']                 = !empty($findorder) ? $findorder : "";
+        $order['OrderStatus']               = $orderStatus;
+        $order['packed_status']             = !empty($findorder->packed_status) ? $findorder->packed_status : "";
+        $order['dispatched_status']         = !empty($findorder->dispatched_status) ? $findorder->dispatched_status : "";
+        $order['outForDelivery_status']     = !empty($findorder->outForDelivery_status) ? $findorder->outForDelivery_status : "";
+        $order['delivered_status']          = !empty($findorder->delivered_status) ? $findorder->delivered_status : "";
+        $order['cancel_status']             = !empty($findorder->cancel_status) ? $findorder->cancel_status : "";
+        $order['return_status']             = !empty($findorder->return_status) ? $findorder->return_status : "";
+        $order['products']                  = !empty($findOrderedProduct) ? $findOrderedProduct : '';
+
+        $order['coupon_id']                 =  !empty($findorder->coupon_id) ? $findorder->coupon_id : "";
+        $order['coupon_code']               =  !empty($findorder->coupon_code) ? $findorder->coupon_code : "";
+        $order['coupon_discount']           =  !empty($findorder->coupon_discount) ? $findorder->coupon_discount : "";
+
+        $order['delivery_charge']           =  !empty($findorder->coupon_discount) ? $findorder->delivery_charge : "";
+        $order['delivery_type']             =  !empty($findorder->coupon_discount) ? $findorder->delivery_type : "";
+
+
+        $timestamp                          = strtotime($findorder->created_at);
         $formattedDate = date("jS F, Y", $timestamp);
         $order['create_at'] = !empty($findorder->created_at) ? $formattedDate : "";
         return response()->json($order, 200);
     }
+
+
     public function checkOrders()
     {
         $orders = Order::whereDate('created_at', Carbon::today())->count();
