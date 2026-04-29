@@ -1,95 +1,109 @@
 <template>
 <div>
     <LogoAndPayment />
-    <!-- navbar section start here  -->
     <NavbarSecond/>
-    <!-- Main section start here  -->
-    <section class="main_content ">
+
+    <section class="main_content">
         <div class="container">
             <div class="row">
                 <div class="container mt-5">
-                    <h1 class="mb-4"><center>Refund Policy</center></h1>
+
+                    <h1 class="mb-4 text-center">Refund Policy</h1>
+
                     <div class="card mb-4">
                         <div class="card-body">
-                            <h3 class="card-title">Eligibility for Returns</h3>
-                            <p class="card-text">To be eligible for a return, your item must meet the following criteria:</p>
+                            <h3 class="card-title">1. Eligibility for Returns</h3>
+                            <p class="card-text">
+                                To be eligible for a return, your item must meet the following conditions:
+                            </p>
                             <ul>
-                                <li>It must be in unused and in the same condition that you received it.</li>
-                                <li>It must be in the original packaging.</li>
-                                <li>Returns must be requested within [number of days] days of the purchase date.</li>
+                                <li>The item must be unused and in the same condition as received.</li>
+                                <li>The item must be in its original packaging.</li>
+                                <li>Return request must be made within 7 days of delivery.</li>
                             </ul>
                         </div>
                     </div>
 
                     <div class="card mb-4">
                         <div class="card-body">
-                            <h3 class="card-title">How to Request a Return</h3>
-                            <p class="card-text">If your item meets the eligibility criteria, please follow these steps to request a return:</p>
+                            <h3 class="card-title">2. How to Request a Return</h3>
+                            <p class="card-text">
+                                To initiate a return, please follow these steps:
+                            </p>
                             <ol>
-                                <li>Contact our customer support team at [customer support email or phone number] to initiate the return process.</li>
-                                <li>[Add any other specific instructions or forms required for returns]</li>
+                                <li>Contact our support team or assigned agent.</li>
+                                <li>Provide your order ID and reason for return.</li>
+                                <li>Follow the instructions provided by our agent.</li>
                             </ol>
                         </div>
                     </div>
 
                     <div class="card mb-4">
                         <div class="card-body">
-                            <h3 class="card-title">Refund Process</h3>
-                            <p class="card-text">Once we receive your returned item and inspect it, we will send you an email to notify you of the approval or rejection of your refund. If approved, your refund will be processed, and a credit will automatically be applied to your original payment method within [number of days] days.</p>
+                            <h3 class="card-title">3. Refund Process</h3>
+                            <p class="card-text">
+                                Once we receive and inspect your returned item, we will notify you about the approval or rejection of your refund.
+                                If approved, your refund will be processed within 5–10 business days and automatically applied to your original payment method.
+                            </p>
                         </div>
                     </div>
 
                     <div class="card mb-4">
                         <div class="card-body">
-                            <h3 class="card-title">Return Shipping</h3>
-                            <p class="card-text">The cost of return shipping is the responsibility of the customer, unless the return is due to an error on our part. If the return is due to our error, we will cover the cost of return shipping.</p>
+                            <h3 class="card-title">4. Return Shipping</h3>
+                            <p class="card-text">
+                                Customers are responsible for return shipping costs unless the return is due to our mistake
+                                (wrong item, damaged product, or missing item). In such cases, we will cover the return shipping cost.
+                            </p>
                         </div>
                     </div>
 
                     <div class="card mb-4">
                         <div class="card-body">
-                            <h3 class="card-title">Exceptions</h3>
-                            <p class="card-text">There are certain situations where only partial refunds may be granted:</p>
+                            <h3 class="card-title">5. Non-Refundable Cases</h3>
+                            <p class="card-text">
+                                Refunds may not be granted in the following cases:
+                            </p>
                             <ul>
-                                <li>Items that are returned more than [number of days] days after delivery.</li>
-                                <li>Any item that is not in its original condition, is damaged, or is missing parts for reasons not due to our error.</li>
+                                <li>Request made after 7 days of delivery.</li>
+                                <li>Items damaged due to customer misuse.</li>
+                                <li>Missing original packaging or accessories.</li>
                             </ul>
                         </div>
                     </div>
 
                     <div class="card mb-4">
                         <div class="card-body">
-                            <h3 class="card-title">Contact Us</h3>
-                            <p class="card-text">If you have any questions about our refund policy, please contact us at [customer support email or phone number].</p>
+                            <h3 class="card-title">6. Contact Us</h3>
+                            <p class="card-text">
+                                If you have any questions about our refund policy, please contact our support agent through the
+                                <nuxt-link to="/contactus">Contact Us</nuxt-link> page.
+                            </p>
                         </div>
                     </div>
 
                 </div>
-
             </div>
-
         </div>
     </section>
-    <!-- END Main Section here -->
-    <!-- back to top button  -->
+
     <div class="back_top">
         <a href="#top"><i class="fa-solid fa-angle-up"></i></a>
     </div>
+
     <Footer />
 </div>
 </template>
 
 <script>
-import $ from 'jquery';
 import NavbarSecond from '../components/NavbarSecond.vue';
+
 export default {
-    comments: {
-        
+    components: {
         NavbarSecond,
     },
     head: {
-        title: 'Refund',
-    },
-
+        title: 'Refund Policy',
+    }
 }
 </script>

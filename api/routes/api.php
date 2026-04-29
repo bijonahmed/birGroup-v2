@@ -251,6 +251,7 @@ Route::group([
   //  Route::post('couponDiscount', [CartController::class, 'couponDiscount']);
     Route::post('addToCart', [CartController::class, 'addToCart']);
     Route::get('searchProductCategory', [UnauthenticatedController::class, 'productCategory']);
+     Route::get('settingData', [UnauthenticatedController::class, 'settingData']);
     Route::get('showCategoryTwo', [UnauthenticatedController::class, 'showCategoryTwo']);
     Route::get('showCategoryThree', [UnauthenticatedController::class, 'showCategoryThree']);
     Route::get('slidersImages', [UnauthenticatedController::class, 'slidersImages']);
@@ -346,6 +347,7 @@ Route::group([
     Route::get('bannerTopget', [SettingController::class, 'getbannerTop']);
     Route::post('bannerTop', [SettingController::class, 'updatebannerTop']);
     Route::post('dealsbannner', [SettingController::class, 'updatedealsbannner']);
+    Route::post('updatedvCharge', [SettingController::class, 'updatedvCharge']);
     Route::post('updatedealsbannnerLink', [SettingController::class, 'updatedealsbannnerLink']);
     Route::get('getdealsbanner', [SettingController::class, 'getdealsbanners']);
     Route::post('sliderLeftads', [SettingController::class, 'updatesliderLeftads']);

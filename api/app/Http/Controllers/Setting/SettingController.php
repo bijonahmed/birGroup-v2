@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Http\Controllers\Setting;
+
 use DB;
 use Auth;
 use Helper;
@@ -21,6 +23,7 @@ use App\Models\couponUseHistory;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+
 class SettingController extends Controller
 {
     protected $userid;
@@ -683,6 +686,8 @@ class SettingController extends Controller
             }
         }
     }
+
+
     public function updatedealsbannnerLink(Request $request)
     {
         $dealsBanner = dealsbanner::first();
@@ -695,6 +700,23 @@ class SettingController extends Controller
             'message' => 'Deals banner links updated successfully.'
         ], 200);
     }
+
+
+    public function updatedvCharge(Request $request)
+    {
+        $dealsBanner = dealsbanner::first();
+        $dealsBanner->update([
+            'inside_dv_charge'  => $request->inside_dv_charge,
+            'outside_dv_charge' => $request->outside_dv_charge,
+        ]);
+        return response()->json([
+            'status' => 200,
+            'inside_dv_charge'  => $dealsBanner->inside_dv_charge,
+            'outside_dv_charge' => $dealsBanner->outside_dv_charge
+        ], 200);
+    }
+
+
     public function updatedealsbannner(request $request)
     {
         $messages = [
@@ -772,6 +794,8 @@ class SettingController extends Controller
                 'imagetwo' => url($dealbanner->imageTwo),
                 'imageOneLink' => $dealbanner->imageOneLink,
                 'imageTwoLink' => $dealbanner->imageTwoLink,
+                'inside_dv_charge'  => $dealbanner->inside_dv_charge,
+                'outside_dv_charge' => $dealbanner->outside_dv_charge,
             ], 200);
         } else {
             return response()->json([

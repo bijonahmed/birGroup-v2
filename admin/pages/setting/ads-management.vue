@@ -173,6 +173,44 @@
                     </div>
                 </div>
                 <!--top header banner row-->
+
+
+                <!--top header banner row-->
+                <div class="row">
+                    <div class="col-md-8 m-auto">
+                        <div class="form_container bg-white p-3">
+
+                            <form @submit.prevent="updateDeliveryCharge()" class="forms-sample"
+                                enctype="multipart/form-data">
+                                <div class="form-group mb-2">
+                                    <label for="" class="text-dark fs-3">Delivery Charge</label>
+
+                                    <div class="row dealsBanner">
+                                        <div class="col-md-6">
+                                            <label>Inside Dhaka</label>
+                                            <input type="text" v-model="inside_dv_charge"
+                                                @input="onlyNumber('inside_dv_charge')" @keypress="isNumber($event)"
+                                                class="form-control w-100" />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>Outside Dhaka</label>
+                                            <input type="text" v-model="outside_dv_charge"
+                                                @input="onlyNumber('outside_dv_charge')" @keypress="isNumber($event)"
+                                                class="form-control w-100" />
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="form-group mb-2">
+                                    <button type="submit" class="btn-success w-100 py-1 border-0">
+                                        <i class="bx bx-check-circle mr-1"></i>Submit
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!--top header banner row-->
             </div>
         </div>
         <!--end page wrapper -->
@@ -197,6 +235,9 @@ export default {
             imageOneLink: null,
             imageTwoLink: null,
             previewURL: null,
+            inside_dv_charge: 0,
+            outside_dv_charge: 0,
+
             adsOne: null,
             adsTwo: null,
             adsOneLink: null,
@@ -361,6 +402,9 @@ export default {
                 this.imageOneLink = response.data.imageOneLink;
                 this.imageTwoLink = response.data.imageTwoLink;
 
+                this.inside_dv_charge = response.data.inside_dv_charge;
+                this.outside_dv_charge = response.data.outside_dv_charge;
+
             })
                 .catch(error => {
                     this.error = error.message;
@@ -379,7 +423,19 @@ export default {
                     console.error('Error fetching Deals banner data:', error);
                 });
         },
+        isNumber(evt) {
+            const charCode = evt.which ? evt.which : evt.keyCode;
 
+            // Allow only numbers (0-9)
+            if (charCode < 48 || charCode > 57) {
+                evt.preventDefault();
+            }
+        },
+
+        onlyNumber(field) {
+            // Remove anything that's not a number
+            this[field] = this[field].replace(/[^0-9]/g, '');
+        },
         onLinkChangeDeals(adKey, linkValue) {
             console.log(`Link changed for ${adKey}: ${linkValue}`);
             // Prepare FormData to send current links to backend
@@ -480,6 +536,57 @@ export default {
                 .catch(error => {
                     console.error('Error saving data:', error);
                     if (error.response) {
+                        if (error.response.data && error.response.data.errors.image) {
+                            Lobibox.notify('error', {
+                                pauseDelayOnHover: true,
+                                continueDelayOnInactiveTab: false,
+                                position: 'top right',
+                                icon: 'bx bx-error-circle',
+                                msg: error.response.data.errors.image
+                            });
+                        } else {
+                            Lobibox.notify('error', {
+                                pauseDelayOnHover: true,
+                                continueDelayOnInactiveTab: false,
+                                position: 'top right',
+                                icon: 'bx bx-error-circle',
+                                msg: 'An error occurred while saving data.'
+                            });
+                        }
+                    } else {
+                        Lobibox.notify('error', {
+                            pauseDelayOnHover: true,
+                            continueDelayOnInactiveTab: false,
+                            position: 'top right',
+                            icon: 'bx bx-error-circle',
+                            msg: 'An error occurred while saving data.'
+                        });
+                    }
+                });
+        }, updateDeliveryCharge() {
+            const formData = new FormData();
+            formData.append('inside_dv_charge', this.inside_dv_charge);
+            formData.append('outside_dv_charge', this.outside_dv_charge);
+          
+            this.$axios.post('/setting/updatedvCharge', formData)
+                .then(response => {
+                    this.inside_dv_charge = response.data.inside_dv_charge;
+                    this.outside_dv_charge = response.data.outside_dv_charge;
+                    Lobibox.notify('success', {
+                        pauseDelayOnHover: true,
+                        continueDelayOnInactiveTab: false,
+                        position: 'top right',
+                        icon: 'bx bx-check-circle',
+                        msg: 'Your data has been successfully updated.'
+                    });
+                    // Optionally, you can redirect the user or perform any other action
+                })
+                .catch(error => {
+                    // Handle error
+                    console.error('Error saving data:', error);
+                    // Check if error.response exists
+                    if (error.response) {
+                        // If error.response.data exists, it contains error message from server
                         if (error.response.data && error.response.data.errors.image) {
                             Lobibox.notify('error', {
                                 pauseDelayOnHover: true,

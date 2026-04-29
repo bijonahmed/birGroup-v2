@@ -8,7 +8,9 @@ use Illuminate\Support\Str;
 use App\Models\blogCategory;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\dealsbanner;
 use App\Models\Salary;
+use App\Models\Setting;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Support\Facades\Validator;
 
@@ -54,7 +56,10 @@ class blogController extends Controller
         return response([
             'data' => $data,
         ]);
-    }    public function adminblogcatlist()
+    }
+
+   
+    public function adminblogcatlist()
     {
         $data = blogCategory::all();
         // dd($data);
@@ -143,7 +148,8 @@ class blogController extends Controller
 
         return response()->json($posts);
     }
-    public function blogDetails(request $request, $slug){
+    public function blogDetails(request $request, $slug)
+    {
         // dd($slug);
         $details = BlogModel::where('slug', $slug)->first();
         $details['image'] = url($details->image);
@@ -161,26 +167,26 @@ class blogController extends Controller
             'content' => 'required',
             'status' => 'required',
         ]);
-    
+
         // Check if validation fails
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-    
+
         // Find the blog post by id
         $post = BlogModel::find($request->id);
-    
+
         // Check if post exists
         if (!$post) {
             return response()->json(['message' => 'Blog post not found'], 404);
         }
-    
+
         // Update post details
         $post->title = $request->input('title');
         $post->category = $request->input('category');
         $post->content = $request->input('content');
         $post->status = $request->input('status');
-    
+
         // Handle image upload if a new image is provided
         if ($request->hasFile('image')) {
             $image = $request->file('image');
@@ -188,7 +194,7 @@ class blogController extends Controller
             $image->move(public_path("backend/files"), $imageName);
             $post->image = $imageName;
         }
-    
+
         // Save the updated post
         if ($post->save()) {
             return response()->json(['message' => 'Update successfully'], 200);
@@ -196,8 +202,9 @@ class blogController extends Controller
             return response()->json(['message' => 'Update failed'], 500);
         }
     }
-    
-    public function addSalary(request $request){
+
+    public function addSalary(request $request)
+    {
         $validator = Validator::make($request->all(), [
             'team' => 'required',
             'amount' => 'required',
@@ -213,19 +220,20 @@ class blogController extends Controller
             'status'    => 1,
         ]);
         return response()->json(['message' => 'Salary saved successfully', 'data' => $save], 201);
-
     }
-    public function salarylist(){
-        $data = Salary::where('status',1)->get();
+    public function salarylist()
+    {
+        $data = Salary::where('status', 1)->get();
         return response()->json($data);
     }
-    public function salarydata(Request $request, $id){
-        $data = Salary::where('id', $id)->first();   
+    public function salarydata(Request $request, $id)
+    {
+        $data = Salary::where('id', $id)->first();
         // dd($data);
         return response()->json($data);
-
     }
-    public function updates(Request $request){
+    public function updates(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'team' => 'required',
             'amount' => 'required',
@@ -242,6 +250,6 @@ class blogController extends Controller
             'amount'    => $request->amount,
             'status'    => 1,
         ]);
-        return response()->json(['message' => 'Salary saved successfully', 'data'  ], 201);
+        return response()->json(['message' => 'Salary saved successfully', 'data'], 201);
     }
 }

@@ -83,7 +83,9 @@
                                                 <span v-if="item.free_shopping == 1" class="free_delivery">Free
                                                     Delivery</span>
                                                 <!-- <strong>{{ item.seller_name || 'Admin Seller' }}</strong> -->
-                                                <h1 class="mt-1">{{ item.product_name }}</h1>
+                                                <div class="text-center product-name two-line" style="font-size: 16px;">
+                                                    {{ truncateText(item.product_name, 40) }}
+                                                </div>
                                                 <!-- Price & Discount -->
                                                 <div class="text-center">
                                                     <div class="d-flex justify-content-center align-items-center mb-1"
@@ -140,6 +142,20 @@
         </div>
     </client-only>
 </template>
+<style>
+.two-line {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    line-height: 1.4em;
+    height: calc(1.4em * 2);
+    /* force exactly 2 lines height */
+}
+</style>
 <script>
 export default {
     props: {
@@ -264,7 +280,9 @@ export default {
                 this.loading = false;
             }
         },
-
+        truncateText(text, limit) {
+            return text.length > limit ? text.substring(0, limit) + '...' : text;
+        },
         // Other helper methods
         selectCategory(slug) {
             this.activeSlug = slug;

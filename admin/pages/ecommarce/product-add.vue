@@ -132,7 +132,7 @@
                                     </div>
 
                                     
-                                            <div class="form-group mb-2">
+                                            <div class="form-group mb-2 d-none">
                                                 <label for="input-meta-description-1"
                                                     class="col-sm-2 col-form-label required-label">Categories</label>
                                                 <div>

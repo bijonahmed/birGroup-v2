@@ -12,7 +12,9 @@ class dealsbanner extends Model
         'imageOne',
         'imageTwo',
         'imageOneLink',
-        'imageTwoLink'
+        'imageTwoLink',
+        'inside_dv_charge',
+        'outside_dv_charge',
     ];
 
 }

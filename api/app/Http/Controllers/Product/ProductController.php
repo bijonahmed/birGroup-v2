@@ -127,21 +127,35 @@ class ProductController extends Controller
         $category     = $request->category;
         $dynamicArray = explode(',', $category); // Convert the string to an array
         $results      = Categorys::whereIn('id', $dynamicArray)->get();
-        $formattedResults = [];
+
+        $allPaths      = [];
+        $allCategoryIds = [];
+
         foreach ($results as $result) {
-            $path = [];
+            $path     = [];
             $category = $result;
             while ($category) {
                 array_unshift($path, $category->id);
                 $category = $category->parent;
             }
-            $formattedResults[] = [
-                'product_id'   => $product_id,
-                'category_id'  => $result->id,
-                'parent_id'    => implode(',', $path)
-            ];
+            $allCategoryIds[] = $result->id;
+            $allPaths         = array_merge($allPaths, $path);
         }
-        DB::table('produc_categories')->insert($formattedResults);
+
+        // Remove duplicates and format
+        $uniquePaths      = array_unique($allPaths);
+        $uniqueCategoryIds = array_unique($allCategoryIds);
+
+        $singleRecord = [
+            'product_id'  => $product_id,
+            'category_id' => implode(',', $uniqueCategoryIds),
+            'parent_id'   => implode(',', $uniquePaths),  // e.g. "1,5,6"
+        ];
+
+        // Delete existing records matching product_id before inserting new one
+        DB::table('produc_categories')->where('product_id', $product_id)->delete();
+
+        DB::table('produc_categories')->insert($singleRecord);
         $resdata['product_id'] = $product_id;
         return response()->json($resdata);
         ///return response()->json(['message' => 'Product updated successfully'], 200);
@@ -152,7 +166,7 @@ class ProductController extends Controller
         // return false;
         $validator = Validator::make($request->all(), [
             'name'           => 'required',
-            'category'       => 'required',
+            ///'category'       => 'required',
             'price'          => 'required',
             'sku'            => 'required',
             'stock_qty'      => 'required|integer',
@@ -232,25 +246,33 @@ class ProductController extends Controller
                     DB::table('produc_img_history')->insert($img_data);
                 }
             }
-            //INSERT MULTIPLE CATEGORY
+            //INSERT SINGLE CATEGORY RECORD
             $category     = $request->category;
-            $dynamicArray = explode(',', $category); // Convert the string to an array
+            $dynamicArray = explode(',', $category);
             $results      = Categorys::whereIn('id', $dynamicArray)->get();
-            $formattedResults = [];
+
+            $allPaths       = [];
+            $allCategoryIds = [];
+
             foreach ($results as $result) {
-                $path = [];
+                $path     = [];
                 $category = $result;
                 while ($category) {
                     array_unshift($path, $category->id);
                     $category = $category->parent;
                 }
-                $formattedResults[] = [
-                    'product_id'   => $product_id,
-                    'category_id'  => $result->id,
-                    'parent_id'    => implode(',', $path)
-                ];
+                $allCategoryIds[] = $result->id;
+                $allPaths         = array_merge($allPaths, $path);
             }
-            DB::table('produc_categories')->insert($formattedResults);
+
+            $singleRecord = [
+                'product_id'  => $product_id,
+                'category_id' => implode(',', array_unique($allCategoryIds)),
+                'parent_id'   => implode(',', array_unique($allPaths)),
+            ];
+
+            DB::table('produc_categories')->where('product_id', $product_id)->delete();
+            DB::table('produc_categories')->insert($singleRecord);
             $resdata['product_id'] = $product_id;
             return response()->json($resdata);
         } else {

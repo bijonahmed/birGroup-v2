@@ -219,6 +219,16 @@ class UnauthenticatedController extends Controller
         }
         return response()->json($result, 200);
     }
+
+    public function settingData()
+    {
+        $data = dealsbanner::first();
+        return response([
+            'data' => $data,
+        ]);
+    }
+
+
     public function productCategory(Request $request)
     {
         $catIds = HomeAroductSliderCategory::where('status', 1)->pluck('category_id')->toArray();

@@ -13,29 +13,24 @@
                 <div class="checkout-billing">
                   <h6 class="section-title">Billing Details</h6>
                   <div class="row g-3 mb-4">
-
                     <div class="col-md-12">
                       <label class="form-label" style="font-size:12px;">Full Name</label>
                       <input type="text" class="form-control custom-input" v-model="insertdata.name"
                         placeholder="Enter your full name">
                     </div>
-
                     <div class="col-md-6">
                       <label class="form-label" style="font-size:12px;">Email</label>
                       <input type="email" class="form-control custom-input" v-model="insertdata.email"
                         placeholder="Enter your email">
                     </div>
-
                     <div class="col-md-6">
                       <label class="form-label" style="font-size:12px;">Phone Number</label>
                       <input type="text" class="form-control custom-input" maxlength="11"
                         v-model="insertdata.phone_number" placeholder="Enter your phone number" @input="onlyNumber">
                     </div>
-
                   </div>
                   <h6 class="section-title">Shipping Address</h6>
                   <div class="row g-3">
-
                     <div class="col-md-6">
                       <label class="form-label" style="font-size:12px;">
                         Shipping Address
@@ -43,7 +38,6 @@
                       <input type="text" class="form-control custom-input" v-model="shipp_address"
                         placeholder="Enter your shipping address">
                     </div>
-
                     <div class="col-md-6">
                       <label class="form-label" style="font-size:12px;">
                         Shipping Phone Number
@@ -51,7 +45,6 @@
                       <input type="text" class="form-control custom-input" maxlength="11" v-model="shipp_phoneNumber"
                         placeholder="Enter your shipping phone number" @input="onlyNumbership">
                     </div>
-
                   </div>
                 </div>
               </div>
@@ -149,7 +142,6 @@
                         <td><strong>Delivery Fee </strong></td>
                         <td class="text-end">BDT {{ sumOfFlatRatePrices.toFixed(2) }}</td>
                       </tr>
-
                       <!-- ✅ Coupon Discount Row — shown only if a coupon is applied from sessionStorage -->
                       <tr v-if="appliedCoupon && appliedCoupon.couponDiscount">
                         <td>
@@ -162,7 +154,6 @@
                           - BDT {{ parseFloat(appliedCoupon.couponDiscount).toFixed(2) }}
                         </td>
                       </tr>
-
                       <!-- ✅ Old coupon discount row (manual coupon entry) — kept for backward compat -->
                       <tr id="discount" v-if="!appliedCoupon && discount">
                         <td><strong class="text-success">Coupon Discount</strong></td>
@@ -170,7 +161,6 @@
                           - BDT {{ typeof discount === 'number' ? discount.toFixed(2) : '' }}
                         </td>
                       </tr>
-
                       <tr>
                         <td><strong>Total Payment</strong></td>
                         <!-- ✅ Shows subtotal (after coupon) if coupon applied, else totalSum -->
@@ -180,7 +170,6 @@
                           </strong>
                         </td>
                       </tr>
-
                       <tr class="border-0" id="#Paymethod" v-if="this.selectedPayment == 'COD'">
                         <td class="border-0"><strong>Payment method</strong></td>
                         <td class="text-end border-0">
@@ -196,13 +185,11 @@
                       </tr>
                     </tbody>
                   </table>
-
                   <div class="cart_summary">
                     <div class="side_title">
                       <h5>Payment method</h5>
                     </div>
                     <div class="payment-buttons d-flex flex-wrap gap-3 mb-3" style="justify-content:flex-start;">
-
                       <!-- Cash on Delivery (only option shown) -->
                       <div class="payment-option-inline" :class="{ active: paymentMethod === 'cod' }"
                         @click="selectPayment('cod')"
@@ -211,20 +198,14 @@
                           src="https://t3.ftcdn.net/jpg/06/04/86/68/360_F_604866832_5i9b2mnlQV1Ocgn6OQes0NsANhEEGW95.jpg"
                           style="width:60px;height:60px;object-fit:contain;" alt="Cash">
                         <span style="margin-top:8px; font-size:14px; font-weight:500;">Cash on Delivery</span>
-
                         <!-- Check mark -->
                         <span v-if="paymentMethod === 'cod'"
                           style="position:absolute; top:5px; right:5px; color:#0C356A; font-size:20px;">✔</span>
                       </div>
-
                     </div>
-
                     <!-- Hidden input to capture value if needed -->
                     <input type="hidden" v-model="paymentMethod">
                   </div>
-
-
-
                   <span v-if="cart.length > 0">
                     <button type="submit" class="btn_cart text-center" style="
                         visibility: unset;
@@ -254,7 +235,6 @@
     <Footer />
   </div>
 </template>
-
 <script>
 import $ from "jquery";
 import axios from "axios";
@@ -263,7 +243,6 @@ import Common_MiniTabNavbar from "~/components/Common_MiniTabNavbar.vue";
 import Common_MobileSearchProduct from "~/components/Common_MobileSearchProduct.vue";
 import RecentView from "~/components/RecentView.vue";
 import NavbarSecond from "../components/NavbarSecond.vue";
-
 export default {
   components: {
     NavbarSecond,
@@ -283,10 +262,10 @@ export default {
         card_number: '',
         expiry_date: '',
       },
-      selectedShipping: 60,
+      selectedShipping: null,
       shippingOptions: [
-        { id: 1, name: "Inside Dhaka", price: 60 },
-        { id: 2, name: "Outside Dhaka", price: 130 }
+        { id: 1, name: "Inside Dhaka", price: 0 },
+        { id: 2, name: "Outside Dhaka", price: 0 }
       ],
       billAddress: "",
       shipp_address: "",
@@ -366,12 +345,10 @@ export default {
       Dcouponlist: '',
       couponModal: '',
       address: [],
-
-      // ✅ NEW: holds the coupon applied from sessionStorage
+      //  NEW: holds the coupon applied from sessionStorage
       appliedCoupon: null,
     };
   },
-
   computed: {
     loggedIn() {
       if (!$auth.loggedIn) {
@@ -382,9 +359,6 @@ export default {
       return this.$auth.loggedIn;
     },
 
-    // ✅ NEW computed: returns the correct final total to display
-    // If a coupon from sessionStorage is applied, use its subtotal + delivery fee
-    // Otherwise fall back to the regular totalSum
     finalTotalPayment() {
       if (this.appliedCoupon && this.appliedCoupon.subtotal) {
         const couponSubtotal = parseFloat(this.appliedCoupon.subtotal);
@@ -395,7 +369,6 @@ export default {
       return this.totalSum;
     },
   },
-
   watch: {
     selectedShipping(newVal) {
       this.calculateSumOfLastPrices();
@@ -404,16 +377,14 @@ export default {
       this.calculateSumOfLastPrices();
     },
   },
-
   mounted() {
+    this.getSettingData();
     this.openPromo();
     this.cart.forEach((item) => {
       item.shippingDate = this.calculateShippingDate(item.product.shipping_days);
     });
-
-    // ✅ Load applied coupon from sessionStorage on mount
+    //  Load applied coupon from sessionStorage on mount
     this.loadAppliedCoupon();
-
     if (process.client) {
       this.addCard();
       this.defaultLoadingData();
@@ -433,9 +404,25 @@ export default {
     this.openModal();
     this.calculateSumOfLastPrices();
   },
-
   methods: {
-    // ✅ NEW: load appliedCoupon from sessionStorage
+
+    getSettingData() {
+      this.$axios.get("/unauthenticate/settingData")
+        .then(response => {
+          this.settingData = response.data;
+          //console.log("Response Data: " + response.data.data.inside_dv_charge);
+          // Update shippingOptions prices from settingData
+          this.shippingOptions = [
+            { id: 1, name: "Inside Dhaka", price: response.data.data.inside_dv_charge },
+            { id: 2, name: "Outside Dhaka", price: response.data.data.outside_dv_charge }
+          ];
+
+          // Set default selected shipping price
+          this.selectedShipping = response.data.data.inside_dv_charge;
+        })
+    },
+
+    //  NEW: load appliedCoupon from sessionStorage
     loadAppliedCoupon() {
       try {
         const raw = sessionStorage.getItem('appliedCoupon');
@@ -448,15 +435,12 @@ export default {
         this.appliedCoupon = null;
       }
     },
-
     onlyNumber(e) {
       this.insertdata.phone_number = e.target.value.replace(/[^0-9]/g, '')
     },
-
     onlyNumbership(e) {
       this.shipp_phoneNumber = e.target.value.replace(/[^0-9]/g, '')
     },
-
     selectPayment(method) {
       this.paymentMethod = method;
     },
@@ -564,7 +548,6 @@ export default {
         const cart = JSON.parse(cartData);
         let sumOfLastPrices = 0;
         let totalPrice = 0;
-
         cart.forEach((item) => {
           if (item.product.warrantyamt) {
             totalPrice += parseFloat(item.product.last_price) * item.quantity;
@@ -573,17 +556,14 @@ export default {
             sumOfLastPrices += parseFloat(item.product.last_price) * item.quantity;
           }
         });
-
         let sumOfFlatRatePrices = parseFloat(this.selectedShipping || 0);
         let subsum = sumOfLastPrices + sumOfFlatRatePrices;
-
         let allsum;
         if (selectedPayment === "COD") {
           allsum = parseFloat(subsum) + parseFloat(COD_fee);
         } else {
           allsum = subsum;
         }
-
         this.coupons.price = allsum;
         this.sumOfLastPrices = sumOfLastPrices;
         this.sumOfFlatRatePrices = sumOfFlatRatePrices;
@@ -712,57 +692,43 @@ export default {
         this.loading = false;
       }, 2000);
     },
-
-
     placeOrder() {
       if (!this.paymentMethod) {
         Swal.fire({ icon: "error", title: "Please select a payment method." });
         return;
       }
-
       if (!this.insertdata.name || !this.insertdata.email || !this.insertdata.phone_number) {
         Swal.fire({ icon: "error", title: "Please fill in all billing details." });
         return;
       }
-
       if (!this.shipp_phoneNumber || !this.shipp_address) {
         Swal.fire({ icon: "error", title: "Please fill in all shipping details." });
         return;
       }
-
       this.selectedPayment = this.paymentMethod;
-
       const formData = new FormData();
       formData.append("cart", JSON.stringify(this.cart));
-
       // Send the coupon-adjusted total as subTotal if coupon is applied
       formData.append("subTotal", this.finalTotalPayment.toFixed(2));
       formData.append("item_total", this.sumOfLastPrices);
       formData.append("delivery_fee", this.sumOfFlatRatePrices);
-
-
       // ✅ Find the selected shipping option and append its name
       const selectedOption = this.shippingOptions.find(
         option => option.price === this.selectedShipping
       );
       formData.append("delivery_type", selectedOption ? selectedOption.name : '');
-
-
-
       // Send coupon info if present
       if (this.appliedCoupon) {
         formData.append("coupon_id", this.appliedCoupon.coupon_id);
         formData.append("coupon_code", this.appliedCoupon.couponCode);
         formData.append("coupon_discount", this.appliedCoupon.couponDiscount);
       }
-
       formData.append("shipp_phoneNumber", this.shipp_phoneNumber);
       formData.append("shipp_address", this.shipp_address);
       formData.append("Cutomer_name", this.insertdata.name);
       formData.append("Cutomer_email", this.insertdata.email);
       formData.append("Cutomer_phone_number", this.insertdata.phone_number);
       formData.append("payment_staus", this.selectedPayment);
-
       const headers = { "Content-Type": "multipart/form-data" };
       this.$axios
         .post("/order/submitOrder", formData, { headers })
@@ -785,10 +751,8 @@ export default {
             date: new Date().toLocaleDateString('en-GB'),
           };
           sessionStorage.setItem('lastOrderData', JSON.stringify(orderConfirmData));
-
           // ✅ Clear the applied coupon after order is placed
           sessionStorage.removeItem('appliedCoupon');
-
           Swal.fire({
             icon: "success",
             title: "Order submitted successfully!",
@@ -892,7 +856,7 @@ export default {
         if (!isNaN(item.quantity) && !isNaN(priceAsNumber)) {
           subtotal += item.quantity * priceAsNumber;
         } else {
-          console.error("Invalid quantity or price:", item.quantity, product.price);
+        //  console.error("Invalid quantity or price:", item.quantity, product.price);
         }
       });
       return (this.subtotal = subtotal);
@@ -912,7 +876,6 @@ export default {
   },
 };
 </script>
-
 <style>
 .btn-check:checked+.btn,
 .btn.active,

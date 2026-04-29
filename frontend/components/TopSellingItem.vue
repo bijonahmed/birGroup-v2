@@ -26,8 +26,8 @@
                                     <nuxt-link :to="`/product-details/${item.slug}`">
                                         <img :src="item.thumnail_img" class="img-fluid" loading="lazy">
                                         <span v-if="item.free_shopping == 1">Free Delivery</span>
-                                        <p class="text-center product-name" style="font-size: 16px;">
-                                            {{ truncateText(item.name, 16) }}
+                                        <p class="text-center product-name two-line" style="font-size: 16px;">
+                                            {{ truncateText(item.name, 40) }}
                                         </p>
 
                                         <div v-if="item.discount_status == 1"
@@ -79,6 +79,18 @@
     </div>
 </template>
 
+<style>
+.two-line {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.4em;
+    height: calc(1.4em * 2);
+    /* force exactly 2 lines height */
+}
+</style>
 <script>
 import Swal from 'sweetalert2'
 export default {
@@ -150,7 +162,7 @@ export default {
                 itemCount += item.quantity;
             });
             this.itemCount = itemCount;
-            console.log('Emitting cartItemCountUpdated event with itemCount:', this.itemCount);
+         //   console.log('Emitting cartItemCountUpdated event with itemCount:', this.itemCount);
             this.$eventBus.$emit('cartItemCountUpdated', this.itemCount);
 
         },
@@ -226,9 +238,9 @@ export default {
                 this.cartItemCount();
             }
         },
-         truncateText(text, limit) {
-    return text.length > limit ? text.substring(0, limit) + '...' : text;
-  },
+        truncateText(text, limit) {
+            return text.length > limit ? text.substring(0, limit) + '...' : text;
+        },
         loadCart() {
             const savedCart = localStorage.getItem('cart');
 

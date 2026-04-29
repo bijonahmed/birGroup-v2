@@ -273,7 +273,20 @@
         </div>
     </div>
 </template>
+<style>
+.two-line {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    line-height: 1.4em;
+    height: calc(1.4em * 2);
+    /* force exactly 2 lines height */
+}
+</style>
 <script>
 export default {
     props: ['category_slug'],
@@ -343,7 +356,9 @@ export default {
                 this.cart = [];
             }
         },
-
+   truncateText(text, limit) {
+            return text.length > limit ? text.substring(0, limit) + '...' : text;
+        },
         saveCart() {
             this.loading = true;
             try {
