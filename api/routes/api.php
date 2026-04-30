@@ -14,6 +14,7 @@ use App\Http\Controllers\Circumstances\CircumstancesController;
 use App\Http\Controllers\Recruitment\RecruitmentController;
 use App\Http\Controllers\Organogram\OrganogramController;
 use App\Http\Controllers\Setting\SettingController;
+use App\Http\Controllers\Patho\GatewayController;
 use App\Http\Controllers\UnauthenticatedController;
 use App\Http\Controllers\Leave\LeaveController;
 use App\Http\Controllers\Manufacturer\ManufacturesController;
@@ -33,6 +34,16 @@ use App\Http\Controllers\Chat\ChatController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
+Route::prefix('deliveryAssign')->group(function () {
+    Route::post('/checkInitialized', [GatewayController::class, 'checkInitialized']);
+    Route::post('/checkZone', [GatewayController::class, 'checkZone']);
+    Route::post('/checkZoneWiseArea', [GatewayController::class, 'checkZoneWiseArea']);
+     Route::post('/checkPricingPlanAreaWise', [GatewayController::class, 'checkPricingPlanAreaWise']);
+    Route::post('/sendToPathao', [GatewayController::class, 'sendToPathao']);
+    Route::get('/checkPathaoResponseOrder', [GatewayController::class, 'checkPathaoResponseOrder']);
+});
+
 
 Route::post('messages', [ChatController::class, 'message']);
 Route::post('customerSendMessages', [ChatController::class, 'customerSendMessages']);
@@ -248,10 +259,10 @@ Route::group([
     //Add to cart 
     Route::get('cart', [CartController::class, 'index']);
     Route::get('getCartData', [CartController::class, 'getCartData']);
-  //  Route::post('couponDiscount', [CartController::class, 'couponDiscount']);
+    //  Route::post('couponDiscount', [CartController::class, 'couponDiscount']);
     Route::post('addToCart', [CartController::class, 'addToCart']);
     Route::get('searchProductCategory', [UnauthenticatedController::class, 'productCategory']);
-     Route::get('settingData', [UnauthenticatedController::class, 'settingData']);
+    Route::get('settingData', [UnauthenticatedController::class, 'settingData']);
     Route::get('showCategoryTwo', [UnauthenticatedController::class, 'showCategoryTwo']);
     Route::get('showCategoryThree', [UnauthenticatedController::class, 'showCategoryThree']);
     Route::get('slidersImages', [UnauthenticatedController::class, 'slidersImages']);
@@ -296,6 +307,10 @@ Route::group([
     Route::get('getsalaryuser', [UnauthenticatedController::class, 'getsalaryuser']);
     Route::get('getsPackUser', [UnauthenticatedController::class, 'getsPackUser']);
 });
+
+
+
+
 Route::group([
     'middleware' => 'api',
     'prefix' => 'setting'

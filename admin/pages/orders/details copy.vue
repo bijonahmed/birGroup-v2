@@ -1,294 +1,214 @@
 <template>
-    <div>
-        <!--start page wrapper -->
-        <div class="page-wrapper">
-            <div class="page-content">
-                <!--breadcrumb-->
-                <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                    <div class="ps-3">
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb mb-0 p-0">
-                                <li class="breadcrumb-item">
-                                    <router-link to="/" href="javascript:;"><i class="bx bx-home-alt"></i></router-link>
-                                </li>
-                                <li class="breadcrumb-item" aria-current="page">
-                                    <router-link to="/orders/order-list">Orders</router-link>
-                                </li>
-                                <li class="breadcrumb-item active" aria-current="page">Order details</li>
-                            </ol>
-                        </nav>
-                    </div>
-                </div>
-                <!--end breadcrumb-->
 
-                <!--end row-->
-                <div class="row">
-                    <div class="col-xl-12 mx-auto">
-                        <div class="card border-top border-0 border-4 border-info">
-                            <div class="card-body">
-                                <div class="border p-4 rounded">
+    <div class="page-wrapper">
+        <div class="page-content">
+            <!--breadcrumb-->
 
-                                    <div class="row">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb" class="mb-3 mt-3">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <router-link to="/">Home</router-link>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <router-link to="/orders/order-list">Orders</router-link>
+                    </li>
+                    <li class="breadcrumb-item active">Order Details</li>
+                </ol>
+            </nav>
 
-                                        <div class="col">
-                                            <h4>Orders Details(Order id: {{ orderid }}) </h4>
-                                            <b>Name:</b> {{ customername }}, <b> Phone:</b> {{ customerphone }},
-                                            <b>Email:</b> {{ customeremail }}
-                                        </div>
+            <!-- HEADER -->
+            <div class="card bg-primary text-white mb-3 shadow-sm">
+                <div class="card-body d-flex justify-content-between flex-wrap align-items-center">
 
-                                        <div class="col">
-                                            <strong style="color:green; text-align: right;">
-                                                <h4>Order Status: {{ orderstatus }}</h4>
-                                            </strong>
-                                        </div>
-
-                                    </div>
-
-                                    <table width="100%" border="0" class="table table-bordered hover">
-                                        <tr>
-                                            <td width="22">#</td>
-                                            <td>Images</td>
-                                            <td width="916">Item Description </td>
-                                            <td width="63">
-                                                <div align="center">Qty</div>
-                                            </td>
-                                            <td width="80">
-                                                <div align="center">Price</div>
-                                            </td>
-                                            <td width="80">
-                                                <div align="center">Total</div>
-                                            </td>
-                                        </tr>
-
-                                        <!-- <pre>==={{ orders }}==</pre> -->
-
-                                        <tr v-for="(order, index) in orders" :key="index">
-                                            <td>{{ index + 1 }}</td>
-                                            <td>
-                                                <img :src="order.thumbnail_img" alt="Thumbnail Image"
-                                                    style="height:50px;width:50px;" />
-                                            </td>
-                                            <td>{{ order.product_name }}</td>
-                                            <td>
-                                                <div align="center">{{ order.quantity }}</div>
-                                            </td>
-                                            <td>
-                                                <div align="center">{{ order.price }}</div>
-                                            </td>
-                                            <td>
-                                                <div align="center">{{ order.total }}</div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>&nbsp;</td>
-                                            <td>&nbsp;</td>
-                                            <td>
-                                                <div align="right">Total</div>
-                                            </td>
-                                            <td>
-                                                <div align="center">{{ totalQuantity }}</div>
-                                            </td>
-                                            <td>
-                                                <div align="center">{{ totalAmount }}----</div>
-                                            </td>
-                                            <td>
-                                                <div align="center">{{ totalAmount }}</div>
-                                            </td>
-                                        </tr>
-                                    </table>
-
-                                    Delivery Charnge :
-
-
-                                    <hr />
-                                    <form @submit.prevent="saveData()" id="formrest" class="forms-sample"
-                                        enctype="multipart/form-data">
-                                        <div class="row mb-3">
-                                            <label for="inputEnterYourName" class="col-sm-3 col-form-label">Order
-                                                Status</label>
-                                            <div class="col-sm-9">
-                                                <select name="status" v-model="insertdata.orderstatus"
-                                                    class="form-select orderstatus">
-                                                    <option v-for="(option, index) in order_status" :key="index"
-                                                        :value="option.id">
-                                                        {{ option.name }}
-                                                    </option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <label class="col-sm-3 col-form-label"></label>
-                                            <div class="col-sm-9">
-                                                <button type="submit" class="btn btn-success px-5 w-100"><i
-                                                        class="bx bx-check-circle mr-1"></i> Submit</button>
-                                            </div>
-                                        </div>
-                                    </form>
-
-                                </div>
-                            </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bg-white text-primary rounded p-2">
+                            <i class="bx bx-receipt fs-4"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-0 fw-bold">INVOICE</h5>
+                            <small>Order Summary</small>
                         </div>
                     </div>
-                </div>
-                <!--end row-->
-                <!-- ========{{ordersData}} -->
-                <div class="card d-none">
-                    <div class="card-body">
-                        <div class="container mt-5">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h5>Add Tracking Event</h5>
-                                    <form id="trackingForm" @submit.prevent="adddTrackingStatus()">
-                                        <div class="mb-3">
-                                            <label for="orderId" hidden class="form-label">Order ID</label>
-                                            <input type="text" disabled class="form-control" v-model="orderid"
-                                                name="orderId" required>
-                                        </div>
-                                        <!-- <div class="mb-3 d-none">
-                                            <label for="eventDescription" class="form-label">Event Description</label>
-                                            <input type="text" class="form-control" v-model="tracking.description" id="eventDescription"
-                                                name="eventDescription" required>
-                                        </div> -->
-                                        <div class="mb-3">
-                                            <label for="eventStatus" class="form-label">Event Status</label>
-                                            <div class="form-group">
-                                                <input type="checkbox" v-model="trackStatus.packed"
-                                                    :checked="trackStatus.packed == 1" id="packed">
-                                                <label for="packed">Packed</label>
-                                            </div>
-                                            <div class="form-group">
-                                                <input type="checkbox" v-model="trackStatus.dispatched"
-                                                    :checked="trackStatus.dispatched == 1" id="Dispatched">
-                                                <label for="Dispatched">Dispatched</label>
-                                            </div>
-                                            <div class="form-group">
-                                                <input type="checkbox" v-model="trackStatus.outForDelivery"
-                                                    :checked="trackStatus.outForDelivery == 1" id="Out">
-                                                <label for="Out">Out for delivery</label>
-                                            </div>
-                                            <div class="form-group">
-                                                <input type="checkbox"
-                                                    :disabled="trackStatus.returned == 1 || trackStatus.canceled == 1"
-                                                    v-model="trackStatus.deliverd" :checked="trackStatus.deliverd == 1"
-                                                    id="Delivered">
-                                                <label for="Delivered">Delivered</label>
-                                            </div>
-                                            <div class="form-group">
-                                                <input type="checkbox"
-                                                    :disabled="trackStatus.deliverd == 1 || trackStatus.returned == 1"
-                                                    v-model="trackStatus.canceled" :checked="trackStatus.canceled == 1"
-                                                    id="Canceled">
-                                                <label for="Canceled">Canceled</label>
-                                            </div>
-                                            <div class="form-group">
-                                                <input type="checkbox"
-                                                    :disabled="trackStatus.deliverd == 1 || trackStatus.canceled == 1"
-                                                    v-model="trackStatus.returned" :checked="trackStatus.returned == 1"
-                                                    id="Return">
-                                                <label for="Return">Return</label>
-                                            </div>
-                                        </div>
-                                        <button type="submit" class="btn bg-success-light">Submit</button>
-                                    </form>
-                                </div>
-                                <div class="col-md-6">
-                                    <h5>Tracking Events</h5>
-                                    <div class="order-track">
-                                        <div class="order-track-step active">
-                                            <div class="order-track-status">
-                                                <span class="order-track-status-dot"></span>
-                                                <span class="order-track-status-line"></span>
-                                            </div>
-                                            <div class="order-track-text">
-                                                <p class="order-track-text-stat">Order Confirmed</p>
-                                                <span class="order-track-text-sub">{{ orderDate }}</span>
-                                            </div>
-                                        </div>
-                                        <div class="order-track-step" :class="{ active: trackStatus.packed == 1 }">
-                                            <div class="order-track-status">
-                                                <span class="order-track-status-dot"></span>
-                                                <span class="order-track-status-line"></span>
-                                            </div>
-                                            <div class="order-track-text">
-                                                <p class="order-track-text-stat">Packed</p>
-                                                <span class="order-track-text-sub">Your order items packed and ready for
-                                                    delivery.</span>
-                                            </div>
-                                        </div>
-                                        <div class="order-track-step" :class="{ active: trackStatus.dispatched == 1 }">
-                                            <div class="order-track-status">
-                                                <span class="order-track-status-dot"></span>
-                                                <span class="order-track-status-line"></span>
-                                            </div>
-                                            <div class="order-track-text">
-                                                <p class="order-track-text-stat">Order Dispatched</p>
-                                                <span class="order-track-text-sub">Your shipment has been dispatched to
-                                                    the
-                                                    final hub.</span>
-                                            </div>
-                                        </div>
-                                        <div class="order-track-step"
-                                            :class="{ active: trackStatus.outForDelivery == 1 }">
-                                            <div class="order-track-status">
-                                                <span class="order-track-status-dot"></span>
-                                                <span class="order-track-status-line"></span>
-                                            </div>
-                                            <div class="order-track-text">
-                                                <p class="order-track-text-stat">Out for delivery</p>
-                                                <span class="order-track-text-sub">Your order is ready for
-                                                    delivery</span>
-                                            </div>
-                                        </div>
-                                        <div class="order-track-step "
-                                            v-if="trackStatus.canceled == 0 || trackStatus.canceled == ''"
-                                            :class="{ active: trackStatus.deliverd == 1 }">
-                                            <div class="order-track-status">
-                                                <span class="order-track-status-dot"></span>
-                                                <span class="order-track-status-line"></span>
-                                            </div>
-                                            <div class="order-track-text">
-                                                <p class="order-track-text-stat">Order Delivered</p>
-                                                <span class="order-track-text-sub">Your order has been delivered.</span>
-                                            </div>
-                                        </div>
-                                        <div class="order-track-step " v-if="trackStatus.canceled == 1">
-                                            <div class="order-track-status">
-                                                <span class="order-track-status-dot bg-danger"></span>
-                                                <span class="order-track-status-line"></span>
-                                            </div>
-                                            <div class="order-track-text">
-                                                <p class="order-track-text-stat text-danger">Order Canceled</p>
-                                                <span class="order-track-text-sub text-danger">Your order has been
-                                                    Canceled.</span>
-                                            </div>
-                                        </div>
-                                        <div class="order-track-step " v-if="trackStatus.returned == 1">
-                                            <div class="order-track-status">
-                                                <span class="order-track-status-dot bg-danger"></span>
-                                                <span class="order-track-status-line"></span>
-                                            </div>
-                                            <div class="order-track-text">
-                                                <p class="order-track-text-stat text-danger">Order Returned</p>
-                                                <span class="order-track-text-sub text-danger">Your order has been
-                                                    Returned.</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
+                    <div class="text-end">
+                        <h5 class="mb-0 text-white">#{{ orderid }}</h5>
+                        <small>{{ orderDate }}</small>
                     </div>
+
                 </div>
             </div>
+
+            <!-- STATUS -->
+            <div class="card mb-3 shadow-sm">
+                <div class="card-body d-flex justify-content-between align-items-center flex-wrap">
+
+                    <div>
+                        <span class="text-muted small">Order Status:</span>
+                        <span class="badge ms-2" :class="statusClass">
+                            {{ orderstatus }}
+                        </span>
+                    </div>
+
+                    <!-- <button class="btn btn-outline-dark btn-sm" @click="printInvoice">
+                            <i class="bx bx-printer"></i> Print Invoice
+                        </button> -->
+
+                </div>
+            </div>
+
+            <!-- CUSTOMER -->
+            <div class="card mb-3 shadow-sm">
+                <div class="card-body d-flex flex-wrap gap-2">
+
+                    <span class="badge bg-primary p-2">
+                        <i class="bx bx-user"></i>Customer Name: {{ customername }}
+                    </span>
+
+                    <span class="badge bg-success p-2">
+                        <i class="bx bx-phone"></i> Customer Phone: {{ customerphone }}
+                    </span>
+
+                    <span class="badge bg-warning text-dark p-2">
+                        <i class="bx bx-envelope"></i> Customer Email:{{ customeremail }}
+                    </span>
+
+                </div>
+            </div>
+
+            <!-- TABLE -->
+            <div class="card mb-3 shadow-sm">
+                <div class="card-header fw-bold">
+                    <i class="bx bx-package"></i> Order Items
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle text-center mb-0">
+
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Image</th>
+                                <th class="text-start">Product</th>
+                                <th>Qty</th>
+                                <th>Unit Price</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr v-for="(order, index) in orders" :key="index">
+                                <td>{{ index + 1 }}</td>
+
+                                <td>
+                                    <img :src="order.thumbnail_img" class="rounded" width="50">
+                                </td>
+
+                                <td class="text-start fw-semibold">
+                                    {{ order.product_name }}
+                                </td>
+
+                                <td>
+                                    <span class="badge bg-secondary">
+                                        {{ order.quantity }}
+                                    </span>
+                                </td>
+
+                                <td>{{ formatCurrency(order.price) }}</td>
+
+                                <td class="fw-bold text-primary">
+                                    {{ formatCurrency(order.total) }}
+                                </td>
+                            </tr>
+                        </tbody>
+
+                        <tfoot>
+
+                            <tr>
+                                <td colspan="4" class="text-end fw-bold">Subtotal</td>
+                                <td colspan="2">{{ formatCurrency(subtotalAmount) }}</td>
+                            </tr>
+
+                            <tr v-if="coupon_code">
+                                <td colspan="4" class="text-end">
+                                    Discount ({{ coupon_code }})
+                                </td>
+                                <td colspan="2" class="text-danger">
+                                    - {{ formatCurrency(coupon_discount) }}
+                                </td>
+                            </tr>
+
+                            <tr v-if="delivery_type">
+                                <td colspan="4" class="text-end">
+                                    Delivery ({{ delivery_type }})
+                                </td>
+                                <td colspan="2">
+                                    {{ formatCurrency(delivery_charge) }}
+                                </td>
+                            </tr>
+
+                            <tr class="table-primary">
+                                <td colspan="4" class="text-end fw-bold">
+                                    Grand Total
+                                </td>
+                                <td colspan="2" class="fw-bold">
+                                    {{ formatCurrency(grandTotal) }}
+                                </td>
+                            </tr>
+
+                        </tfoot>
+
+                    </table>
+                </div>
+            </div>
+
+            <!-- UPDATE FORM -->
+            <div class="card shadow-sm">
+                <div class="card-header fw-bold">
+                    <i class="bx bx-edit"></i> Update Order
+                </div>
+
+                <div class="card-body">
+                    <form @submit.prevent="saveData">
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Delivery Charge</label>
+                                <input type="number" class="form-control" v-model="delivery_charge">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Order Status</label>
+                                <select v-model="insertdata.orderstatus" class="form-select">
+                                    <option v-for="(option, index) in order_status" :key="index" :value="option.id">
+                                        {{ option.name }}
+                                    </option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <button class="btn btn-success">
+                            <i class="bx bx-check"></i> Update Order
+                        </button>
+
+                    </form>
+                </div>
+            </div>
+
+            <!-- PRINT AREA (UNCHANGED LOGIC) -->
+            <div id="invoice-print" style="display:none">
+                <!-- KEEP YOUR ORIGINAL PRINT DESIGN HERE -->
+            </div>
         </div>
-        <!--end page wrapper -->
     </div>
+
+
 </template>
 
 <script>
 export default {
-
     data() {
         return {
             orderstatus: '',
@@ -296,196 +216,110 @@ export default {
             customername: '',
             customeremail: '',
             customerphone: '',
-
-
-            coupon_discount: '',
+            coupon_discount: 0,
             coupon_code: '',
-            delivery_charge: '',
+            delivery_charge: 0,
             delivery_type: '',
-
-
             insertdata: {
-                orderId: this.$route.query.orderId,
+                orderId: this.$route?.query?.orderId || '',
                 orderstatus: '',
-            },
-            tracking: {
-                status: '',
-                description: '',
             },
             orders: [],
             order_status: [],
-            notifmsg: '',
             errors: {},
             orderDate: '',
-            trackStatus: {
-                packed: '',
-                dispatched: '',
-                outForDelivery: '',
-                deliverd: '',
-                canceled: '',
-                returned: '',
-            },
-            orderTruckDate: '',
             ordersData: '',
-        }
-    },
-    async mounted() {
-        this.defaultLoading();
-        // this.getTrackstatus();
-    },
-    computed: {
-        pageTitle() {
-            return this.orderid ? 'Order Details ' + this.orderid : 'Order Details';
-        },
-        totalQuantity() {
-            // Calculate total quantity
-            return this.orders.reduce((total, order) => total + order.quantity, 0);
-        },
-        totalAmount() {
-            // Calculate total amount
-            return this.orders.reduce((total, order) => total + order.total, 0);
-        },
-    },
-    head() {
-        return {
-            title: this.pageTitle
         };
     },
+
+    async mounted() {
+        this.defaultLoading();
+    },
+
+    computed: {
+        totalQuantity() {
+            return this.orders.reduce((t, o) => t + Number(o.quantity), 0);
+        },
+        subtotalAmount() {
+            return this.orders.reduce((t, o) => t + Number(o.total), 0);
+        },
+        grandTotal() {
+            return (
+                this.subtotalAmount -
+                Number(this.coupon_discount || 0) +
+                Number(this.delivery_charge || 0)
+            );
+        },
+        statusClass() {
+            const s = (this.orderstatus || '').toLowerCase();
+            if (s.includes('deliver')) return 'bg-success';
+            if (s.includes('cancel')) return 'bg-danger';
+            if (s.includes('dispatch')) return 'bg-info text-dark';
+            if (s.includes('packed')) return 'bg-warning text-dark';
+            return 'bg-secondary';
+        },
+    },
+
     methods: {
-        adddTrackingStatus() {
-            const formData = new FormData();
-            formData.append('packed', this.trackStatus.packed);
-            formData.append('dispatched', this.trackStatus.dispatched);
-            formData.append('outForDelivery', this.trackStatus.outForDelivery);
-            formData.append('deliverd', this.trackStatus.deliverd);
-            formData.append('canceled', this.trackStatus.canceled);
-            formData.append('returned', this.trackStatus.returned);
-            formData.append('order_id', this.orderid);
-            // formData.append('status', this.tracking.status);
-            // formData.append('description', this.tracking.description);
-            // console.log(formData);
-            this.$axios.post('/order/orderTrack', formData)
-                // .then(response => {
-                //     // Handle successful response
-                //     console.log('Success:', response.data);
-                // })
-                .then(response => {
-                    console.log('Success:', response.data);
-                    Lobibox.notify('success', {
-                        pauseDelayOnHover: true,
-                        continueDelayOnInactiveTab: false,
-                        position: 'top right',
-                        icon: 'bx bx-check-circle',
-                        msg: 'Order has been successfully updated'
-                    });
-                })
-                .catch(error => {
-                    // Handle error
-                    console.error('Error:', error);
-                    let errorMessage = 'An error occurred while updating the order. Please try again later.';
-
-                    if (error.response && error.response.status === 422) {
-                        const validationErrors = error.response.data.errors;
-                        errorMessage = Object.keys(validationErrors)
-                            .map(field => `${field}: ${validationErrors[field].join(', ')}`)
-                            .join('\n');
-                    } else if (error.response && error.response.data && error.response.data.message) {
-                        errorMessage = error.response.data.message;
-                    }
-
-                    Lobibox.notify('error', {
-                        pauseDelayOnHover: true,
-                        continueDelayOnInactiveTab: false,
-                        position: 'top right',
-                        icon: 'bx bx-error-circle',
-                        msg: errorMessage
-                    });
-
-                });
+        formatCurrency(val) {
+            return '৳ ' + (Number(val) || 0).toFixed(2);
         },
 
-        /*
-        getTrackstatus() {
-            const orderId = this.$route.query.orderId;
-            this.$axios.get(`/order/orderTrackList/${orderId}`)
-                .then(response => {
-                    this.trackData = response.data;
-                    console.log(response.data);
-                });
-        },*/
+        printInvoice() {
+            window.print();
+        },
 
         saveData() {
+
+            // ✅ Clean numeric validation
+            const charge = Number(this.delivery_charge);
+
+            if (!charge || charge <= 0) {
+                alert("Delivery charge must be greater than 0");
+                return; 
+            }
+
+            // Optional: prevent double click
+            if (this.loading) return;
+            this.loading = true;
+
             const formData = new FormData();
             formData.append('orderId', this.insertdata.orderId);
             formData.append('orderstatus', this.insertdata.orderstatus);
-            const headers = {
-                'Content-Type': 'multipart/form-data'
-            };
-            this.$axios.post('/order/update_order_status',
-                formData, {
-                headers
-            }).then((res) => {
-                $('#formrest')[0].reset();
-                this.success_noti();
-                this.$router.push('/orders/order-list');
+            formData.append('delivery_charge', charge);
 
-            }).catch(error => {
-                if (error.response.status === 422) {
-                    this.errors = error.response.data.errors;
-                }
-            });
-        },
-        async defaultLoading() {
-            const orderId = this.$route.query.orderId;
-            this.orderid = orderId;
-            await this.$axios.get(`/order/orderDetails/${orderId}`).then(response => {
-                this.ordersData = response.data;
-                this.orders = response.data.orderdata;
-                this.orderstatus = response.data.orderrow;
-                this.customername = response.data.customername;
-                this.customeremail = response.data.customeremail;
-                this.customerphone = response.data.customerphone;
-                this.order_status = response.data.OrderStatus;
-                this.orderDate = response.data.create_at;
-
-                this.coupon_discount = response.data.coupon_discount;
-                this.coupon_code = response.data.coupon_code;
-                this.delivery_charge = response.data.delivery_charge;
-                this.delivery_type = response.data.delivery_type;
-
-
-                this.insertdata.orderstatus = response.data.orderstatus_id;
-
-
-
-
-                this.trackStatus.packed = response.data.packed_status;
-                this.trackStatus.dispatched = response.data.dispatched_status;
-                this.trackStatus.outForDelivery = response.data.outForDelivery_status;
-                this.trackStatus.deliverd = response.data.delivered_status;
-                this.trackStatus.canceled = response.data.cancel_status;
-                this.trackStatus.returned = response.data.return_status;
-                // this.trackStatus = response.data;
-                // $(".orderstatus").html(1);
-            })
-                .catch(error => {
-                    // Handle error
+            this.$axios.post('/order/update_order_status', formData)
+                .then(() => {
+                    this.success_noti && this.success_noti();
+                    this.$router.push('/orders/order-list');
+                })
+                .catch((error) => {
+                    console.error(error);
+                    alert("Something went wrong! Please try again.");
                 })
                 .finally(() => {
-                    this.loading = false; // Hide loader after response
+                    this.loading = false;
                 });
-
         },
-        success_noti() {
-            Lobibox.notify('success', {
-                pauseDelayOnHover: true,
-                continueDelayOnInactiveTab: false,
-                position: 'top right',
-                icon: 'bx bx-check-circle',
-                msg: 'Has been successfully update order'
-            });
-        },
+        async defaultLoading() {
+            const orderId = this.$route?.query?.orderId;
+            this.orderid = orderId;
 
+            const res = await this.$axios.get(`/order/orderDetails/${orderId}`);
+
+            this.orders = res.data.orderdata;
+            this.orderstatus = res.data.orderrow;
+            this.customername = res.data.customername;
+            this.customeremail = res.data.customeremail;
+            this.customerphone = res.data.customerphone;
+            this.order_status = res.data.OrderStatus;
+            this.orderDate = res.data.create_at;
+            this.coupon_discount = res.data.coupon_discount || 0;
+            this.coupon_code = res.data.coupon_code;
+            this.delivery_charge = res.data.delivery_charge || 0;
+            this.delivery_type = res.data.delivery_type;
+            this.insertdata.orderstatus = res.data.orderstatus_id;
+        },
     },
-}
+};
 </script>
