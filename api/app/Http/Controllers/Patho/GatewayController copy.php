@@ -25,7 +25,7 @@ class GatewayController extends Controller
             'success'      => true,
             'responseData' => [
                 'store' => $stores['data']['data'] ?? [],
-                'city' => $cities['data']['data'] ?? [],
+            'city'  => $cities['data']['data'] ?? [],
             ],
         ]);
     }

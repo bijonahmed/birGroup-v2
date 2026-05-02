@@ -124,7 +124,7 @@
                                         <div class="order-totals__row">
                                             <span>Delivery Charge
                                                 <span v-if="orderData.delivery_type">({{ orderData.delivery_type
-                                                }})</span>
+                                                    }})</span>
 
                                             </span>
                                             <span>BDT {{ orderData.deliveryFee }}</span>

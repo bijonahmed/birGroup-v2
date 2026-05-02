@@ -153,32 +153,38 @@
             <div id="invoice-print" style="display:none"></div>
         </div>
         <!-- PATHAO MODAL -->
-        <div v-if="showModal" class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+       <div v-if="showModal" class="modal fade show d-flex align-items-center justify-content-center"
+     tabindex="-1"
+     style="background: rgba(0,0,0,0.5); height: 100vh;">
             <div class="modal-dialog modal-xl modal-fullscreen-lg-down" style="max-width: 95%;">
                 <div class="modal-content rounded-4 border-0 shadow">
                     <div class="modal-header">
                         <h5 class="modal-title">
-                            <i class="bx bx-truck me-2"></i>Pathao Delivery Setup
+                            <i class="bx bx-truck me-2"></i>Send Request Pathao
                         </h5>
                         <button class="btn-close" @click="showModal = false"></button>
                     </div>
                     <div class="modal-body">
+
                         <!-- Summary -->
                         <div class="mb-4 d-flex flex-wrap gap-3">
-                            <span class="badge bg-light text-dark border p-2">
+                            <!-- <span class="badge bg-light text-dark border p-2">
                                 <strong>Receipt Address:</strong> {{ receiptAddress }}
+                            </span> -->
+                            <span class="badge bg-light text-dark border p-2" style="font-size:14px;">
+                                Store: {{ selectedStoreId || 'Not selected' }}
                             </span>
-                            <span class="badge bg-light text-dark border p-2">
-                                <strong>Store:</strong> {{ selectedStoreId || 'Not selected' }}
+
+                            <span class="badge bg-light text-dark border p-2" style="font-size:14px;">
+                                City: {{ selectedCity || 'Not selected' }}
                             </span>
-                            <span class="badge bg-light text-dark border p-2">
-                                <strong>City:</strong> {{ selectedCity || 'Not selected' }}
+
+                            <span class="badge bg-light text-dark border p-2" style="font-size:14px;">
+                                Zone: {{ selectedZoneId || 'Not selected' }}
                             </span>
-                            <span class="badge bg-light text-dark border p-2">
-                                <strong>Zone:</strong> {{ selectedZoneId || 'Not selected' }}
-                            </span>
-                            <span class="badge bg-light text-dark border p-2">
-                                <strong>Area:</strong> {{ selectedAreaId || 'Not selected' }}
+
+                            <span class="badge bg-light text-dark border p-2" style="font-size:14px;">
+                                Area: {{ selectedAreaId || 'Not selected' }}
                             </span>
                         </div>
                         <div class="d-flex gap-3 flex-wrap">
@@ -213,10 +219,37 @@
                                                     </tbody>
                                                 </table>
                                             </div>
+
+                                            <div v-if="pricePlanLoading" class="d-inline-flex align-items-center ms-2">
+                                                <div class="spinner-border spinner-border-sm text-primary"
+                                                    role="status"></div>
+                                            </div>
+
+                                            <div v-if="pricePlan && !pricePlanLoading"
+                                                class="mt-2 p-2 d-flex flex-wrap gap-2 align-items-center rounded-3"
+                                                style="font-size:13px; background: linear-gradient(135deg, #f8f9ff 0%, #eef1ff 100%); border: 1px solid #d0d7ff;">
+                                                <span class="text-muted">Price: <strong style="color:#4f46e5;">৳{{
+                                                    pricePlan.price }}</strong></span>
+                                                <span class="text-muted border-start ps-2">Discount: <strong
+                                                        style="color:#16a34a;">৳{{ pricePlan.discount }}</strong></span>
+                                                <span class="text-muted border-start ps-2">Promo: <strong
+                                                        style="color:#d97706;">৳{{ pricePlan.promo_discount
+                                                        }}</strong></span>
+                                                <span class="text-muted border-start ps-2">Extra: <strong
+                                                        style="color:#dc2626;">৳{{ pricePlan.additional_charge
+                                                        }}</strong></span>
+                                                <span class="text-muted border-start ps-2">COD: <strong
+                                                        style="color:#0891b2;">{{ (pricePlan.cod_percentage *
+                                                            100).toFixed(1) }}%</strong></span>
+                                                <span class="border-start ps-2 fw-bold"
+                                                    style="color:#fff; background: linear-gradient(135deg, #4f46e5, #7c3aed); padding: 3px 10px; border-radius: 20px;">৳{{
+                                                        pricePlan.final_price }}</span>
+                                            </div>
+
+
                                         </div>
                                         <div class="col-6">
                                             <!-- City List -->
-
                                             <label for="citySelect" class="form-label fw-bold">Select
                                                 City</label>
                                             <select id="citySelect" class="form-select" v-model="selectedCity"
@@ -245,10 +278,10 @@
                                                 </option>
                                             </select>
                                             <hr />
-                                            <div class="mb-3">
+                                            <!-- <div class="mb-3">
                                                 <input type="text" class="form-control w-auto"
                                                     placeholder="Search Area..." v-model="areaSearch" />
-                                            </div>
+                                            </div> -->
 
                                             <label for="citySelect" class="form-label fw-bold">Select
                                                 Area</label>
@@ -277,8 +310,10 @@
                                     <!-- Zone -->
                                     <div class="col-6">
                                         <div class="mt-3">
-                                            <label class="form-label">Delivery Charge</label>
-                                            <input type="text" class="form-control" v-model="modalDeliveryCharge" />
+                                            <label class="form-label">Pathao Delivery Charge</label>
+                                            <input type="text" class="form-control" name="pathao_delivery_fee"
+                                                v-model="pricePlan.price"
+                                                @input="pricePlan.price = pricePlan.price.replace(/[^0-9]/g, '')" />
                                         </div>
                                     </div>
                                     <!-- Area -->
@@ -302,6 +337,9 @@
         </div>
     </div>
 </template>
+
+
+<style></style>
 
 <script>
 export default {
@@ -327,6 +365,8 @@ export default {
             orderDate: '',
             ordersData: '',
             loading: false,
+            pricePlan: null,
+            pricePlanLoading: "",
             // Pathao modal state
             showModal: false,
             pathaoLoading: false,
@@ -446,8 +486,8 @@ export default {
                 const token = this.$store?.getters?.token || localStorage.getItem('token');
                 const res = await this.$axios.post('/deliveryAssign/checkInitialized', {});
                 const data = res.data;
-                this.storeList = data.responseData?.store?.data || [];
-                this.cityList = data.responseData?.city?.data || [];
+                this.storeList = data.responseData?.store || [];
+                this.cityList = data.responseData?.city || [];
                 // Reset previous selections
                 this.selectedStoreId = null;
                 this.selectedCity = '';
@@ -475,7 +515,7 @@ export default {
                 const res = await this.$axios.post('/deliveryAssign/checkZone', {
                     cityId: cityId
                 });
-                this.zoneList = res.data?.responseData?.zone?.data || [];
+                this.zoneList = res.data?.responseData?.zone || [];
             } catch (error) {
                 console.error('Failed to load zones:', error);
                 alert("Failed to load zones. Please try again.");
@@ -491,7 +531,7 @@ export default {
                 const res = await this.$axios.post('/deliveryAssign/checkZoneWiseArea', {
                     zoneId: zoneId
                 });
-                this.areaList = res.data?.responseData?.area?.data || [];
+                this.areaList = res.data?.responseData?.area || [];
             } catch (error) {
                 console.error('Failed to load areas:', error);
                 alert("Failed to load areas. Please try again.");
@@ -500,18 +540,11 @@ export default {
 
 
         async handleAreaClick(areaId) {
-
             const store_id = this.selectedStoreId;
             const area_id = this.selectedAreaId;
             const zone_id = this.selectedZoneId;
             const city_id = this.selectedCity;
-            console.log(
-                `Store ID: ${store_id}, Area ID: ${area_id}, Zone ID: ${zone_id}, City ID: ${city_id}`
-            );
-            //  console.log("Selected zone : " + zoneId);
-           // return false;
-           // this.selectedAreaId = '';
-          //  this.areaList = [];
+            //console.log(`Store ID: ${store_id}, Area ID: ${area_id}, Zone ID: ${zone_id}, City ID: ${city_id}`);
             try {
                 const res = await this.$axios.post('/deliveryAssign/checkPricingPlanAreaWise', {
                     store_id: store_id,
@@ -520,16 +553,14 @@ export default {
                     city_id: city_id,
 
                 });
-
-                console.log("respone:" + res);
-                //this.areaList = res.data?.responseData?.area?.data || [];
+                //console.log("respone:" + res);
+                this.pricePlan = res.data.pricePlan;
+                //this.areapriceing = res.data?.responseData?.area?.data || [];
             } catch (error) {
                 console.error('Failed to load areas:', error);
                 alert("Failed to load areas. Please try again.");
             }
         },
-
-
 
         // ─── Pathao: Send to Merchant ───────────────────────────────
         async sendToPathaoMerchant() {

@@ -7,13 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class PathaoToken extends Model
 {
     protected $fillable = [
+        'environment',
         'access_token',
         'refresh_token',
         'expires_in',
-        'expires_at'
+        'expires_at',
     ];
 
     protected $casts = [
-        'expires_at' => 'datetime'
+        'expires_at' => 'datetime',
     ];
 }
