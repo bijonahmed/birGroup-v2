@@ -1,7 +1,7 @@
 <template>
     <div id="_top">
         <body class="bgBackground mainContent">
-            <TopBannarDesktopView />
+            <!-- <TopBannarDesktopView /> -->
             <LogoAndPayment />
             <Navbar />
             <!-- Main section start here  -->

@@ -1,18 +1,8 @@
 <template>
     <div>
-        <div class="page-content container">
+        <div class="page-content container mt-5">
             <!-- Breadcrumb -->
-            <nav aria-label="breadcrumb" class="mb-3 mt-3">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
-                        <router-link to="/">Home</router-link>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <router-link to="/orders/order-list">Orders</router-link>
-                    </li>
-                    <li class="breadcrumb-item active">Order Details</li>
-                </ol>
-            </nav>
+           
             <!-- HEADER -->
             <div class="card bg-primary text-white mb-3 shadow-sm">
                 <div class="card-body d-flex justify-content-between flex-wrap align-items-center">
@@ -21,7 +11,7 @@
                             <i class="bx bx-receipt fs-4"></i>
                         </div>
                         <div>
-                            <h5 class="mb-0 fw-bold">INVOICE</h5>
+                            <h5 class="mb-0 fw-bold text-white">INVOICE</h5>
                             <small>Order Summary</small>
                         </div>
                     </div>
@@ -31,6 +21,7 @@
                     </div>
                 </div>
             </div>
+             
             <!-- STATUS -->
             <div class="card mb-3 shadow-sm">
                 <div class="card-body d-flex justify-content-between align-items-center flex-wrap">
@@ -43,19 +34,32 @@
                 </div>
             </div>
             <!-- CUSTOMER -->
-            <div class="card mb-3 shadow-sm">
-                <div>
-                    <span class="p-2">
-                        <i class="bx bx-user"></i> Customer Name: {{ customername }}
-                    </span>
-                    <span class="p-2">
-                        <i class="bx bx-phone"></i> Customer Phone: {{ customerphone }}
-                    </span>
-                    <span class="p-2">
-                        <i class="bx bx-envelope"></i> Customer Email: {{ customeremail }}
-                    </span>
-                </div>
-            </div>
+           <div class="card mb-3 shadow-sm">
+    <div class="d-flex flex-wrap align-items-center gap-3 p-3">
+
+        <span class="d-flex align-items-center gap-1">
+            <i class="bx bx-user"></i>
+            <strong>Customer:</strong> {{ customername }}
+        </span>
+
+        <span class="d-flex align-items-center gap-1">
+            <i class="bx bx-phone"></i>
+            <strong>Phone:</strong> {{ customerphone }}
+        </span>
+
+        <span class="d-flex align-items-center gap-1">
+            <i class="bx bx-envelope"></i>
+            <strong>Email:</strong> {{ customeremail }}
+        </span>
+
+        <span class="ms-auto">
+            <router-link to="/orders/order-list" class="btn btn-sm btn-primary">
+                ← Back to Orders
+            </router-link>
+        </span>
+
+    </div>
+</div>
             <!-- TABLE -->
             <div class="card mb-3 shadow-sm">
                 <div class="card-header fw-bold">
@@ -111,11 +115,23 @@
             <!-- UPDATE FORM -->
             <div class="card shadow-sm mb-3">
                 <div class="card-header fw-bold">
-                    <i class="bx bx-edit"></i> Update Order
+                    <i class="bx bx-edit"></i> Order Info
                 </div>
                 <div class="card-body">
                     <form @submit.prevent="saveData">
                         <div class="row">
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Recipient Phone </label>
+                                <input type="number" class="form-control" v-model="insertdata.shipper_phone_number">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Recipient Address </label>
+                                <input type="text" class="form-control" v-model="insertdata.shipper_address">
+                            </div>
+
+
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Delivery Charge</label>
                                 <input type="number" class="form-control" v-model="delivery_charge">
@@ -153,9 +169,8 @@
             <div id="invoice-print" style="display:none"></div>
         </div>
         <!-- PATHAO MODAL -->
-       <div v-if="showModal" class="modal fade show d-flex align-items-center justify-content-center"
-     tabindex="-1"
-     style="background: rgba(0,0,0,0.5); height: 100vh;">
+        <div v-if="showModal" class="modal fade show d-flex align-items-center justify-content-center" tabindex="-1"
+            style="background: rgba(0,0,0,0.5); height: 100vh;">
             <div class="modal-dialog modal-xl modal-fullscreen-lg-down" style="max-width: 95%;">
                 <div class="modal-content rounded-4 border-0 shadow">
                     <div class="modal-header">
@@ -192,6 +207,13 @@
                             <div class="card shadow-sm mb-3 flex-fill">
                                 <div class="card-body">
                                     <div class="row">
+                                        <div v-if="errorMessage" class="alert alert-danger">
+                                            <ul>
+                                                <li v-for="(line, i) in errorMessage.split('\n')" :key="i">
+                                                    {{ line }}
+                                                </li>
+                                            </ul>
+                                        </div>
                                         <div class="col-6">
                                             <h5 class="fw-bold mb-3">Store List</h5>
                                             <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
@@ -225,25 +247,40 @@
                                                     role="status"></div>
                                             </div>
 
-                                            <div v-if="pricePlan && !pricePlanLoading"
+                                            <div v-if="!pricePlanLoading && pricePlan"
                                                 class="mt-2 p-2 d-flex flex-wrap gap-2 align-items-center rounded-3"
                                                 style="font-size:13px; background: linear-gradient(135deg, #f8f9ff 0%, #eef1ff 100%); border: 1px solid #d0d7ff;">
-                                                <span class="text-muted">Price: <strong style="color:#4f46e5;">৳{{
-                                                    pricePlan.price }}</strong></span>
-                                                <span class="text-muted border-start ps-2">Discount: <strong
-                                                        style="color:#16a34a;">৳{{ pricePlan.discount }}</strong></span>
-                                                <span class="text-muted border-start ps-2">Promo: <strong
-                                                        style="color:#d97706;">৳{{ pricePlan.promo_discount
-                                                        }}</strong></span>
-                                                <span class="text-muted border-start ps-2">Extra: <strong
-                                                        style="color:#dc2626;">৳{{ pricePlan.additional_charge
-                                                        }}</strong></span>
-                                                <span class="text-muted border-start ps-2">COD: <strong
-                                                        style="color:#0891b2;">{{ (pricePlan.cod_percentage *
-                                                            100).toFixed(1) }}%</strong></span>
+
+                                                <span class="text-muted">
+                                                    Price: <strong style="color:#4f46e5;">৳{{ pricePlan?.price ?? 0
+                                                    }}</strong>
+                                                </span>
+
+                                                <span class="text-muted border-start ps-2">
+                                                    Discount: <strong style="color:#16a34a;">৳{{ pricePlan?.discount ??
+                                                        0 }}</strong>
+                                                </span>
+
+                                                <span class="text-muted border-start ps-2">
+                                                    Promo: <strong style="color:#d97706;">৳{{ pricePlan?.promo_discount
+                                                        ?? 0 }}</strong>
+                                                </span>
+
+                                                <span class="text-muted border-start ps-2">
+                                                    Extra: <strong style="color:#dc2626;">৳{{
+                                                        pricePlan?.additional_charge ?? 0 }}</strong>
+                                                </span>
+
+                                                <span class="text-muted border-start ps-2">
+                                                    COD: <strong style="color:#0891b2;">
+                                                        {{ ((pricePlan?.cod_percentage ?? 0) * 100).toFixed(1) }}%
+                                                    </strong>
+                                                </span>
+
                                                 <span class="border-start ps-2 fw-bold"
-                                                    style="color:#fff; background: linear-gradient(135deg, #4f46e5, #7c3aed); padding: 3px 10px; border-radius: 20px;">৳{{
-                                                        pricePlan.final_price }}</span>
+                                                    style="color:#fff; background: linear-gradient(135deg, #4f46e5, #7c3aed); padding: 3px 10px; border-radius: 20px;">
+                                                    ৳{{ pricePlan?.final_price ?? 0 }}
+                                                </span>
                                             </div>
 
 
@@ -354,10 +391,13 @@ export default {
             coupon_discount: 0,
             coupon_code: '',
             delivery_charge: 0,
+            errorMessage: "",
             delivery_type: '',
             insertdata: {
                 orderId: this.$route?.query?.orderId || '',
                 orderstatus: '',
+                shipper_phone_number: '',
+                shipper_address: '',
             },
             orders: [],
             order_status: [],
@@ -365,8 +405,17 @@ export default {
             orderDate: '',
             ordersData: '',
             loading: false,
-            pricePlan: null,
-            pricePlanLoading: "",
+            pricePlan: {
+                price: 0,
+                discount: 0,
+                promo_discount: 0,
+                additional_charge: 0,
+                cod_percentage: 0,
+                final_price: 0
+            },
+            pricePlanLoading: false,
+            shipper_phone_number: '',
+            shipper_address: '',
             // Pathao modal state
             showModal: false,
             pathaoLoading: false,
@@ -430,25 +479,48 @@ export default {
         // ─── Update Order ───────────────────────────────────────────
         saveData() {
             const charge = Number(this.delivery_charge);
+
             if (!charge || charge <= 0) {
                 alert("Delivery charge must be greater than 0");
                 return;
             }
+
             if (this.loading) return;
             this.loading = true;
+
             const formData = new FormData();
             formData.append('orderId', this.insertdata.orderId);
             formData.append('orderstatus', this.insertdata.orderstatus);
+            formData.append('shipper_phone_number', this.insertdata.shipper_phone_number);
+            formData.append('shipper_address', this.insertdata.shipper_address);
             formData.append('delivery_charge', charge);
+
             this.$axios.post('/order/update_order_status', formData)
-                .then(() => {
+
+                .then((res) => {
                     this.success_noti && this.success_noti();
-                    this.$router.push('/orders/order-list');
+                    window.location.reload();
+                    //this.$router.push('/orders/order-list');
                 })
+
                 .catch((error) => {
-                    console.error(error);
-                    alert("Something went wrong! Please try again.");
+                    console.error("FULL ERROR:", error);
+                    let message = "Something went wrong!";
+                    if (error.response && error.response.data) {
+                        const res = error.response.data;
+                        if (res.errors) {
+                            message = Object.values(res.errors)
+                                .flat()
+                                .join('\n');
+                        }
+                        else if (res.message) {
+                            message = res.message;
+                        }
+                    }
+
+                    alert(message); // 👉 এখন real error দেখাবে
                 })
+
                 .finally(() => {
                     this.loading = false;
                 });
@@ -463,6 +535,10 @@ export default {
             this.customername = res.data.customername;
             this.customeremail = res.data.customeremail;
             this.customerphone = res.data.customerphone;
+            //shipper phone & address
+            this.insertdata.shipper_phone_number = res.data.shipper_phone_number;
+            this.insertdata.shipper_address = res.data.shipper_address;
+            //end
             this.order_status = res.data.OrderStatus;
             this.orderDate = res.data.create_at;
             this.coupon_discount = res.data.coupon_discount || 0;
@@ -564,12 +640,15 @@ export default {
 
         // ─── Pathao: Send to Merchant ───────────────────────────────
         async sendToPathaoMerchant() {
+
+            this.errorMessage = ""; // reset আগে
+
             if (!this.selectedStoreId || !this.selectedCity || !this.selectedAreaId) {
                 alert("Please select store, city, and area before proceeding.");
                 return;
             }
+
             try {
-                //insertdata.orderstatus
                 const payload = {
                     orderId: this.insertdata.orderId,
                     order_status: Number(this.insertdata.orderstatus),
@@ -577,17 +656,46 @@ export default {
                     city_id: this.selectedCity,
                     zone_id: this.selectedZoneId,
                     area_id: this.selectedAreaId,
-                    delivery_charge: this.modalDeliveryCharge,
+                    delivery_charge: this.pricePlan?.price ?? 0,
                 };
+
                 await this.$axios.post('/deliveryAssign/sendToPathao', payload);
+
                 alert("Order successfully sent to Pathao!");
                 this.showModal = false;
                 this.$router.push('/orders/order-list');
+
             } catch (error) {
-                console.error(error);
-                alert("Failed to send to Pathao. Please try again.");
+                let message = "Failed to send to Pathao.";
+
+                if (error.response?.data) {
+                    const res = error.response.data;
+
+                    if (res.error) {
+                        try {
+                            // 👉 "Pathao create order failed (422): {...}" থেকে JSON part আলাদা করা
+                            const jsonStart = res.error.indexOf('{');
+                            const jsonString = res.error.substring(jsonStart);
+
+                            const parsed = JSON.parse(jsonString);
+
+                            if (parsed.errors) {
+                                message = Object.values(parsed.errors)
+                                    .flat()
+                                    .join('\n');
+                            } else {
+                                message = parsed.message || message;
+                            }
+
+                        } catch (e) {
+                            message = res.error;
+                        }
+                    }
+                }
+
+                this.errorMessage = message;
             }
-        },
+        }
     },
 };
 </script>

@@ -8,6 +8,7 @@ use App\Services\PathaoService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class GatewayController extends Controller
 {
@@ -99,6 +100,7 @@ class GatewayController extends Controller
      */
     public function checkPathaoResponseOrder(Request $request)
     {
+
         $request->validate([
             'id' => 'required|integer',
         ]);
@@ -115,8 +117,20 @@ class GatewayController extends Controller
         $response           = $this->pathao->getOrderInfo($order->pathao_consignment_id);
         $pathaoOrderStatus  = $response['data']['order_status_slug'] ?? '';
 
+
+
+        $order_status = 1;
+        if ($pathaoOrderStatus == "Pickup_Cancelled") {
+            $order_status = 12; //Pickup cancelled.
+        }
+
+        if ($pathaoOrderStatus == "pending") {
+            $order_status = 13; //Pickup cancelled.
+        }
+
         $order->update([
             'pathao_order_status' => $pathaoOrderStatus,
+            'order_status' => $order_status,
         ]);
 
         return response()->json([
@@ -135,64 +149,75 @@ class GatewayController extends Controller
      */
     public function sendToPathao(Request $request)
     {
+
+        //dd($request->all());
         try {
+            // dd($request->all());
+            $validator = Validator::make($request->all(), [
+                'orderId'         => 'required',
+                'order_status'    => 'required',
+                'store_id'        => 'required|integer',
+                'city_id'         => 'required|integer',
+                'zone_id'         => 'required|integer',
+                'area_id'         => 'required|integer',
+                'delivery_charge' => 'required|numeric',
+            ], [
+                'orderId.required'         => 'Order ID is required.',
+                'order_status.required'    => 'Status is required.',
+                'store_id.required'        => 'Store is required.',
+                'store_id.integer'         => 'Store must be an integer.',
+                'city_id.required'         => 'City is required.',
+                'city_id.integer'          => 'City must be an integer.',
+                'zone_id.required'         => 'Zone is required.',
+                'zone_id.integer'          => 'Zone must be an integer.',
+                'area_id.required'         => 'Area is required.',
+                'area_id.integer'          => 'Area must be an integer.',
+                'delivery_charge.required' => 'Delivery charge is required.',
+                'delivery_charge.numeric'  => 'Delivery charge must be a number.',
+            ]);
 
-       // dd($request->all());
-            // ✅ Validation
-            // $validated = $request->validate([
-            //     'orderId'         => 'required',
-            //     'order_status'    => 'required',
-            //     'store_id'        => 'required|integer',
-            //     'city_id'         => 'required|integer',
-            //     'zone_id'         => 'required|integer',
-            //     'area_id'         => 'required|integer',
-            //     'delivery_charge' => 'required|numeric',
-            // ], [
-            //     'orderId.required'         => 'Order ID is required.',
-            //     'order_status.required'    => 'Status is required.',
-            //     'store_id.required'        => 'Store is required.',
-            //     'store_id.integer'         => 'Store must be an integer.',
-            //     'city_id.required'         => 'City is required.',
-            //     'city_id.integer'          => 'City must be an integer.',
-            //     'zone_id.required'         => 'Zone is required.',
-            //     'zone_id.integer'          => 'Zone must be an integer.',
-            //     'area_id.required'         => 'Area is required.',
-            //     'area_id.integer'          => 'Area must be an integer.',
-            //     'delivery_charge.required' => 'Delivery charge is required.',
-            //     'delivery_charge.numeric'  => 'Delivery charge must be a number.',
-            // ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation Error',
+                    'errors'  => $validator->errors()
+                ], 422);
+            }
 
-            // ✅ Get Order
-         
+            // $validated = $validator->validated();
+            // Get Order
             $order = Order::where('orderId', $request->orderId)->firstOrFail();
+            //dd($order);
 
-            // ✅ Update order before sending
-            $order->update([
+            // Update order before sending
+            Order::where('orderId', $request->orderId)->update([
                 'order_status'    => 10,
                 'orderUpdateDate' => now()->toDateString(),
                 'orderUpdateby'   => Auth::id() ?? 1,
             ]);
 
-            // ✅ Call Pathao API
+            //exit;
+
+            // Call Pathao API
             $pathaoResponse = $this->pathao->createOrder([
-                'store_id'            => "391862",//$validated['store_id'],
+                'store_id'            => $request->store_id, //"391862", //$validated['store_id'],
                 'merchant_order_id'   => $order->orderId,
                 'recipient_name'      => $order->shipper_name,
                 'recipient_phone'     => $order->shipper_phone_number,
                 'recipient_address'   => $order->shipper_address,
-                'recipient_city'      => 1,//$validated['city_id'],
-                'recipient_zone'      => 24, //$validated['zone_id'],
-                'recipient_area'      => 4,//$validated['area_id'],
+                'recipient_city'      => $request->city_id,
+                'recipient_zone'      => $request->zone_id,
+                'recipient_area'      => $request->area_id,
                 'delivery_type'       => 48,
                 'item_type'           => 2,
                 'special_instruction' => '',
                 'item_quantity'       => 1,
                 'item_weight'         => 0.5,
-                'amount_to_collect'   => 120,//$validated['delivery_charge'],
+                'amount_to_collect'   => $request->delivery_charge, //$validated['delivery_charge'],
                 'item_description'    => 'No details',
             ]);
 
-            // ✅ Check Pathao API success
+            // Check Pathao API success
             if (!isset($pathaoResponse['data'])) {
                 return response()->json([
                     'success' => false,
@@ -204,11 +229,11 @@ class GatewayController extends Controller
             $data = $pathaoResponse['data'];
 
             // ✅ Save Pathao response
-            $order->update([
-                'pathao_consignment_id'    => $data['consignment_id']    ?? null,
+            Order::where('orderId', $request->orderId)->update([
+                'pathao_consignment_id'    => $data['consignment_id'] ?? null,
                 'pathao_merchant_order_id' => $data['merchant_order_id'] ?? null,
-                'pathao_order_status'      => $data['order_status']      ?? null,
-                'pathao_delivery_fee'      => $data['delivery_fee']      ?? null,
+                'pathao_order_status'      => $data['order_status'] ?? null,
+                'pathao_delivery_fee'      => $data['delivery_fee'] ?? null,
             ]);
 
             // ✅ Final success response

@@ -198,10 +198,63 @@ class OrderController extends Controller
     }
     public function update_order_status(Request $request)
     {
-        $data['order_status'] = $request->orderstatus;
-        $data['delivery_charge'] = $request->delivery_charge;
-        Order::where('orderId', $request->orderId)->update($data);
-        return response()->json("update successfully", 200);
+        //dd($request->all());
+
+        $validator = Validator::make($request->all(), [
+            'orderId'               => 'required',
+            'orderstatus'           => 'required',
+            'delivery_charge'       => 'required|numeric',
+            'shipper_phone_number'  => 'required',
+            'shipper_address'       => 'required|string|min:10',
+        ], [
+            'orderId.required' => 'Order ID is required.',
+            'orderstatus.required' => 'Order status is required.',
+
+            'delivery_charge.required' => 'Delivery charge is required.',
+            'delivery_charge.numeric'  => 'Delivery charge must be a valid number.',
+
+            'shipper_phone_number.required' => 'Shipper phone number is required.',
+            'shipper_phone_number.regex'    => 'Phone number must be a valid Bangladeshi number (01XXXXXXXXX).',
+
+            'shipper_address.required' => 'Shipper address is required.',
+            'shipper_address.min'      => 'Shipper address must be at least 10 characters.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+                'errors'  => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            $data = [
+                'order_status'         => $request->orderstatus,
+                'delivery_charge'      => $request->delivery_charge,
+                'shipper_phone_number' => $request->shipper_phone_number,
+                'shipper_address'      => $request->shipper_address,
+            ];
+
+            $updated = Order::where('orderId', $request->orderId)->update($data);
+
+            if (!$updated) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Order not found or not updated.'
+                ], 404);
+            }
+            return response()->json([
+                'success' => true,
+                'message' => 'Order updated successfully.'
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong.',
+                'error'   => $e->getMessage() // debug mode হলে useful
+            ], 500);
+        }
     }
     public function updateOrderStatus(Request $request)
     {
@@ -217,13 +270,19 @@ class OrderController extends Controller
         $findorder       = Order::join('order_status', 'order_status.id', '=', 'orders.order_status')
             ->select('orders.*', 'order_status.name as orderstatus', 'order_status.id as orderstatus_id')
             ->where('orderId', $order_id)->first();
+
+
         $data['orders']  = OrderHistory::join('product', 'product.id', '=', 'order_history.product_id')
             ->select('product.name as product_name', 'product.thumnail_img', 'product.discount_status', 'product.discount', 'product.vat_status', 'product.vat', 'order_history.*')
             ->where('order_id', $findorder->id)->get();
+
+
         $findOrderedProduct = ordersProduct::where('order_id', $order_id)
             ->join('product', 'product.id', '=', 'orders_product.product_id')
             ->select('product.name as pro_name', 'product.slug as pro_slug', 'product.thumnail_img as pro_image', 'orders_product.*')
             ->get();
+
+
         foreach ($findOrderedProduct as $item) {
             $item->pro_img = url($item->pro_image);
         }
@@ -291,8 +350,11 @@ class OrderController extends Controller
         $order['coupon_code']               =  !empty($findorder->coupon_code) ? $findorder->coupon_code : "";
         $order['coupon_discount']           =  !empty($findorder->coupon_discount) ? $findorder->coupon_discount : "";
 
-        $order['delivery_charge']           =  !empty($findorder->coupon_discount) ? $findorder->delivery_charge : "";
-        $order['delivery_type']             =  !empty($findorder->coupon_discount) ? $findorder->delivery_type : "";
+        $order['delivery_charge']           =  !empty($findorder->delivery_charge) ? $findorder->delivery_charge : "";
+        $order['delivery_type']             =  !empty($findorder->delivery_type) ? $findorder->delivery_type : "";
+
+        $order['shipper_phone_number']      =  !empty($findorder->shipper_phone_number) ? $findorder->shipper_phone_number : "";
+        $order['shipper_address']           =  !empty($findorder->shipper_address) ? $findorder->shipper_address : "";
 
 
         $timestamp                          = strtotime($findorder->created_at);
@@ -396,26 +458,40 @@ class OrderController extends Controller
     }
     public function allOrdersAdmin()
     {
-        $data['orders'] = Order::join('order_status', 'orders.order_status', '=', 'order_status.id')
-            ->select('orders.*', 'order_status.name')
+
+
+        $orderStatus = OrderStatus::all();
+
+        $orders = Order::join('order_status', 'orders.order_status', '=', 'order_status.id')
+            ->select('orders.*', 'order_status.name as status_name')
             ->get();
-        $orders = [];
-        foreach ($data['orders'] as $v) {
+
+        $orderData = [];
+
+        foreach ($orders as $v) {
+
             $productNames = OrderHistory::where('order_id', $v->id)
                 ->leftJoin('product', 'product.id', '=', 'order_history.product_id')
                 ->pluck('product.name')
-                ->implode(', '); // combine names
-            $orders[] = [
-                'id'          => $v->id,
-                'name'        => $v->name,
-                'productName' => $productNames,
-                'orderId'     => $v->orderId,
-                'placeOn'     => date('d M Y', strtotime($v->created_at)),
-                'total'       => number_format($v->total, 2),
+                ->implode(', ');
+
+            $orderData[] = [
+                'id'                    => $v->id,
+                'name'                  => $v->status_name, // FIXED (was ambiguous)
+                'productName'           => $productNames,
+                'order_status'          => $v->order_status,
+                'pathao_consignment_id' => $v->pathao_consignment_id,
+                'pathao_order_status'   => $v->pathao_order_status,
+                'orderId'               => $v->orderId,
+                'placeOn'               => date('d M Y', strtotime($v->created_at)),
+                'total'                 => number_format($v->total, 2),
             ];
         }
-        $order['orderdata'] = $orders;
-        return response()->json($order, 200);
+
+        return response()->json([
+            'OrderStatus' => $orderStatus,
+            'orderdata'   => $orderData
+        ], 200);
     }
     public function submitOrder(Request $request)
     {

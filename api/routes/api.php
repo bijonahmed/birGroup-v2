@@ -39,7 +39,7 @@ Route::prefix('deliveryAssign')->group(function () {
     Route::post('/checkInitialized', [GatewayController::class, 'checkInitialized']);
     Route::post('/checkZone', [GatewayController::class, 'checkZone']);
     Route::post('/checkZoneWiseArea', [GatewayController::class, 'checkZoneWiseArea']);
-     Route::post('/checkPricingPlanAreaWise', [GatewayController::class, 'checkPricingPlanAreaWise']);
+    Route::post('/checkPricingPlanAreaWise', [GatewayController::class, 'checkPricingPlanAreaWise']);
     Route::post('/sendToPathao', [GatewayController::class, 'sendToPathao']);
     Route::get('/checkPathaoResponseOrder', [GatewayController::class, 'checkPathaoResponseOrder']);
 });
@@ -68,8 +68,8 @@ Route::group([
     Route::post('updateBusinessprofile', [AuthController::class, 'updateBusinessprofile']);
     Route::post('updatePassword', [AuthController::class, 'changesPassword']);
     Route::get('showProfileData', [AuthController::class, 'showProfileData']);
-    Route::post('password/email', [ForgotPasswordController::class, 'sendPasswordResetEmail']);
-    Route::post('password/reset', [ResetPasswordController::class, 'updatePassword']);
+   // Route::post('password/email', [ForgotPasswordController::class, 'sendPasswordResetEmail']);
+    //Route::post('password/reset', [ResetPasswordController::class, 'updatePassword']);
 });
 Route::group([
     'middleware' => 'api',

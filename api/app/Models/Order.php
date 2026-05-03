@@ -13,6 +13,7 @@ class Order extends Model
         'orderId',
         'total',
         'subtotal',
+
         'order_status',
         'coupon_id',
         'coupon_code',
