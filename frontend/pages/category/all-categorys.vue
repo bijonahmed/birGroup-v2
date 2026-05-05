@@ -50,7 +50,7 @@ import Common_MiniTabNavbar from '~/components/Common_MiniTabNavbar.vue';
 import Common_MobileSearchProduct from '~/components/Common_MobileSearchProduct.vue';
 import CategoryProductFilter from '~/components/CategoryProductFilter.vue';
 import ExtraDiscount from '~/components/ExtraDiscount.vue';
-import CategoryMultipleProduct from '~/components/CategoryMultipleProduct.vue';
+
 
 export default {
     components: {
@@ -60,7 +60,6 @@ export default {
         Common_MobileSearchProduct,
         CategoryProductFilter,
         ExtraDiscount,
-        CategoryMultipleProduct
     },
     head: {
         title: 'All Categorys',

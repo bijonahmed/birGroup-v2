@@ -163,23 +163,22 @@
                                 <p>No order information found.</p>
                             </div>
 
-                            <center>
+                            <!-- <center>
                                 <h5 style="
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: #ffffff;
-    padding: 12px 24px;
-    border-radius: 25px;
-    display: inline-block;
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 0.3px;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-    border-left: 4px solid #f093fb;
-    margin: 10px 0;
-  ">
+                                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                                    color: #ffffff;
+                                    padding: 12px 24px;
+                                    border-radius: 25px;
+                                    display: inline-block;
+                                    font-size: 14px;
+                                    font-weight: 600;
+                                    letter-spacing: 0.3px;
+                                    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+                                    border-left: 4px solid #f093fb;
+                                    margin: 10px 0; ">
                                     🚚 Note: The final delivery charge will be confirmed by our call center agent.
                                 </h5>
-                            </center>
+                            </center> -->
                             <!-- Footer CTA -->
                             <div class="success-card__footer">
                                 <nuxt-link to="/" class="btn-continue">

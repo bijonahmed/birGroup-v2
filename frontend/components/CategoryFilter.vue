@@ -141,15 +141,16 @@
 </template>
 <style>
 .two-line {
- display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 
-  overflow: hidden;
-  text-overflow: ellipsis;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
-  line-height: 1.4em;
-  height: calc(1.4em * 2); /* force exactly 2 lines height */
+    line-height: 1.4em;
+    height: calc(1.4em * 2);
+    /* force exactly 2 lines height */
 }
 </style>
 <script>
@@ -263,6 +264,7 @@ export default {
         },
         // Fetch sidebar categories
         async fetchDataCategory() {
+
             this.loading = true;
             try {
                 const response = await this.$axios.get(`/unauthenticate/getCategoryList`);

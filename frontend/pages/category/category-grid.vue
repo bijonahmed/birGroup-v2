@@ -25,7 +25,6 @@ import Common_MiniTabNavbar from '~/components/Common_MiniTabNavbar.vue';
 import Common_MobileSearchProduct from '~/components/Common_MobileSearchProduct.vue';
 import CategoryProductFilter from '~/components/CategoryProductFilterGrid.vue';
 import ExtraDiscount from '~/components/ExtraDiscount.vue';
-import CategoryMultipleProduct from '~/components/CategoryMultipleProduct.vue';
 import NavbarSecond from '../../components/NavbarSecond.vue';
 
 export default {
@@ -36,7 +35,6 @@ export default {
         Common_MobileSearchProduct,
         CategoryProductFilter,
         ExtraDiscount,
-        CategoryMultipleProduct
     },
     head: {
         title: 'Category Grid View',

@@ -35,13 +35,6 @@
     "_name": "_a8460b6a"
   },
   {
-    "name": "cart copy",
-    "path": "/cart%20copy",
-    "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\cart copy.vue",
-    "chunkName": "pages/cart copy",
-    "_name": "_f853e04c"
-  },
-  {
     "name": "changepassword",
     "path": "/changepassword",
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\changepassword.vue",
@@ -61,13 +54,6 @@
     "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\checkout.vue",
     "chunkName": "pages/checkout",
     "_name": "_4631c7f1"
-  },
-  {
-    "name": "checkout copy",
-    "path": "/checkout%20copy",
-    "component": "D:\\\\server\\\\htdocs\\\\birGroup-v2\\\\frontend\\\\pages\\\\checkout copy.vue",
-    "chunkName": "pages/checkout copy",
-    "_name": "_2abdd9f4"
   },
   {
     "name": "contactus",

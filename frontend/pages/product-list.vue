@@ -27,7 +27,6 @@ import Common_MiniTabNavbar from '~/components/Common_MiniTabNavbar.vue';
 import Common_MobileSearchProduct from '~/components/Common_MobileSearchProduct.vue';
 import CategoryProductFilter from '~/components/CategoryProductFilter.vue';
 import ExtraDiscount from '~/components/ExtraDiscount.vue';
-import CategoryMultipleProduct from '~/components/CategoryMultipleProduct.vue';
 import RecentView from '~/components/RecentView.vue';
 import OfficialStoreProductList from '~/components/OfficialStoreProductList.vue';
 import ProductListFilterList from '~/components/ProductListFilterList.vue';
@@ -40,7 +39,6 @@ export default {
         Common_MobileSearchProduct,
         CategoryProductFilter,
         ExtraDiscount,
-        CategoryMultipleProduct,
         RecentView,
         OfficialStoreProductList,
         ProductListFilterList
