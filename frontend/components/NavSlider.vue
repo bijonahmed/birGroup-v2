@@ -30,9 +30,10 @@
 
                                             <ul v-if="childCategory.children && childCategory.children.length > 0">
                                                 <li v-for="inSubCategory in childCategory.children"
-                                                    :key="inSubCategory.id"><a href="#"
-                                                        @click="redirectCategory(inSubCategory.slug)">{{
-                                                            inSubCategory.name }}</a></li>
+                                                    :key="inSubCategory.id">
+                                                    <a :href="`/category/category-grid?sub_slug=${inSubCategory.slug}`">{{ inSubCategory.name
+                                                        }}</a>
+                                                </li>
 
                                             </ul>
                                         </div>

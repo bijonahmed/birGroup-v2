@@ -12,35 +12,37 @@
                                 <Nuxt-link to="/category/all-categorys">
                                     <div class="circle"></div>
                                     <i class="fa-solid fa-table-cells-large"></i>
-                                    <p>Category</p>
+                                    <!-- <p>Category</p> -->
                                 </Nuxt-link>
                             </li>
                             <li>
                                 <Nuxt-link to="/user/user-whichlist">
                                     <div class="circle"></div>
                                     <i class="fa-solid fa-heart"></i>
-                                    <p>Wishlist</p>
+                                    <!-- <p>Wishlist</p> -->
                                 </Nuxt-link>
                             </li>
                             <li class="active">
                                 <Nuxt-link to="/">
                                     <div class="circle"></div>
                                     <i class="fa-solid fa-house"></i>
-                                    <p>Home</p>
+                                    <!-- <p>Home</p> -->
                                 </Nuxt-link>
                             </li>
                             <li>
                                 <Nuxt-link to="/cart">
                                     <div class="circle"></div>
                                     <i class="fa-solid fa-cart-shopping"></i>
-                                    <p>Cart</p>
+                                    <span v-if="itemCount > 0" class="badge rounded-pill bg-danger">{{ itemCount
+                                        }}</span>
+                                    <!-- <p>Cart</p> -->
                                 </Nuxt-link>
                             </li>
                             <li>
                                 <Nuxt-link to="/user/user-profile">
                                     <div class="circle"></div>
                                     <i class="fa-solid fa-user"></i>
-                                    <p>User</p>
+                                    <!-- <p>Users</p> -->
                                 </Nuxt-link>
                             </li>
                         </ul>
@@ -181,7 +183,7 @@
                                 </div>
                                 <div class="feature-content">
                                     <h5>Customer Support</h5>
-                                    <p>We’re here 24/7 to help you</p>
+                                    <p>We're here 24/7 to help you</p>
                                 </div>
                             </div>
                         </div>
@@ -190,15 +192,7 @@
                 </div>
             </section>
 
-            <!-- END -->
             <div class="container">
-
-                <!-- Start -->
-                <!-- Site Features Section -->
-                <!-- Site Features Section -->
-
-
-
                 <div class="row" style="margin-top: 70px;">
                     <div class="col-md-6 col-6">
                         <h4>Contact us</h4>
@@ -221,8 +215,6 @@
                             <li>
                                 <Nuxt-link to="/contactus">Contact Us</Nuxt-link>
                             </li>
-
-
                         </ul>
                     </div>
 
@@ -244,22 +236,15 @@
                                 <Nuxt-link to="/brand-product/brand-grid?slug=kgi-hardware">KGI Hardware</Nuxt-link>
                             </li>
 
-
                             <li>
                                 <Nuxt-link to="/brand-product/brand-grid?slug=vtech">VTech</Nuxt-link>
                             </li>
 
-
                             <li>
                                 <Nuxt-link to="/brand-product/brand-grid?slug=memoir">Memoir</Nuxt-link>
                             </li>
-
-
-
                         </ul>
                     </div>
-
-
                 </div>
 
                 <!-- social links  -->
@@ -283,16 +268,55 @@
                             </ul>
                         </div>
                     </div>
-
                 </div>
             </div>
-
         </div>
         <!-- footer others web links  -->
     </footer>
     <!-- </div> -->
-
 </template>
+
+<script>
+export default {
+    data() {
+        return {
+            limit: 12,
+            cart: [],
+            id: '',
+            categories: [],
+            itemCount: 0,
+            searchloop: [],
+        };
+    },
+
+    mounted() {
+        this.$eventBus.$on('cartItemCountUpdated', this.handleCartItemCountUpdated);
+        this.loadCart();
+    },
+
+    beforeDestroy() {
+        this.$eventBus.$off('cartItemCountUpdated', this.handleCartItemCountUpdated);
+    },
+
+    methods: {
+        loadCart() {
+            const savedCart = localStorage.getItem('cart');
+            if (savedCart) {
+                this.cart = JSON.parse(savedCart);
+            }
+            let itemCount = 0;
+            this.cart.forEach((item) => {
+                itemCount += parseInt(item.quantity);
+            });
+            this.itemCount = itemCount;
+        },
+        handleCartItemCountUpdated(itemCount) {
+            this.itemCount = itemCount;
+        },
+    },
+};
+</script>
+
 <style>
 .feature-card {
     background: #ffffff;
@@ -341,8 +365,6 @@
     font-size: 14px;
     margin-bottom: 0;
 }
-
-
 
 .row .col-md-4 ul li a {
     color: #222 !important;

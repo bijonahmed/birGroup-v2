@@ -28,7 +28,7 @@
                                         </h6>
                                         <ul v-if="childCategory.children && childCategory.children.length > 0">
                                             <li v-for="inSubCategory in childCategory.children" :key="inSubCategory.id">
-                                                <a href="#" @click.prevent="redirectCategory(inSubCategory.slug)"
+                                                <a :href="`/category/category-grid?sub_slug=${inSubCategory.slug}`" 
                                                     :class="{ active_item: selectedCategory === inSubCategory.id }">
                                                     {{ inSubCategory.name }}
                                                 </a>

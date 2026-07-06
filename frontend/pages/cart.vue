@@ -46,9 +46,11 @@
                                                             Out of stock
                                                         </span>
                                                         <p class="mt-0 freeBadge" v-if="item.product.freeshopping == 1">
-                                                            Free Shipping
+                                                            <!-- Free Shipping -->
                                                         </p>
-                                                        <p class="mt-0 freeBadge" v-else>Free Shipping</p>
+                                                        <p class="mt-0 freeBadge" v-else>
+                                                            <!-- Free Shipping -->
+                                                        </p>
                                                     </div>
                                                 </div>
                                             </div>
