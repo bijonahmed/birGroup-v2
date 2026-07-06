@@ -129,8 +129,8 @@
                                             <p v-if="pro_row.free_shopping == 1" class="m-0">Free Delivery by <strong>{{
                                                 futureDate }}</strong></p>
                                         </div>
-                                        <div class="shortDescPro">
-                                        </div>
+                                        <span class="shortDescPro"></span>
+                                       <span class="product_details"></span>
                                         <div class="promotion d-none">
                                             <h4>Promotions</h4>
                                             <ul>
@@ -594,6 +594,11 @@ export default {
 </script>
 
 <style scoped>
+.product_details p {
+  margin: 0px 0px;
+  padding: 0px 0px;
+  font-size: 15px;
+}
 /* Featured main image border */
 .Slider-featuredImage {
     border: 3px solid var(--color_Primary);

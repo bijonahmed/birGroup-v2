@@ -132,80 +132,85 @@ class UnauthenticatedController extends Controller
         //         'slug'     => $v->slug,
         //     ];
         // }
-        $topSellingProducts = OrderHistory::selectRaw('product_id, SUM(quantity) as total_quantity')
-            ->groupBy('product_id')
-            ->orderBy('total_quantity', 'desc')
-            ->limit(20)
-            ->get();
-        foreach ($topSellingProducts as $product) {
-            $productDetails = Product::select(
-                'product.id',
-                'product.name',
-                'product.slug',
-                'product.thumnail_img',
-                'product.price',
-                'product.discount',
-                'product.discount_status',
-                'product.vat_status',
-                'product.vat',
-                'product.flat_rate_price',
-                'product.free_shopping',
-                'product.stock_qty',
-                'product.stock_status',
-                'brands.name as brand_name'
-            )
-                ->leftJoin('brands', 'product.brand', '=', 'brands.id')
-                ->where('product.id', $product->product_id)
-                ->first();
-            if (!$productDetails) {
-                // Skip if product does not exist
-                continue;
-            }
-            $arrData = ProductVarrientHistory::where('product_id', $product->product_id)->get();
-            $groupData = ProductVarrientHistory::where('product_id', $product->product_id)
-                ->select('id', 'color')
-                ->groupBy('color')
-                ->get();
-            $processedColors = '';
-            $processedSizes = '';
-            if ($arrData->isNotEmpty()) {
-                // Just take the first variant's color/size
-                $processedColors = $arrData[0]->color ?? '';
-                $processedSizes = $arrData[0]->size ?? '';
-            }
-            $vat = $productDetails->vat ?? 0;
-            $price = $productDetails->price ?? 0;
-            $percent_discount = $price - ($price * ($productDetails->discount ?? 0)) / 100;
-            $fixed_discount = $price - ($productDetails->discount ?? 0);
-            if (($productDetails->discount_status ?? 0) == 1) {
-                $last_price = $percent_discount;
-            } elseif (($productDetails->discount_status ?? 0) == 2) {
-                $last_price = $fixed_discount;
-            } else {
-                $last_price = $price;
-            }
-            // Assign safely to $product object
-            $product->id = $productDetails->id;
-            $product->name = $productDetails->name ?? '';
-            $product->slug = $productDetails->slug ?? '';
-            $product->thumnail_img = $productDetails->thumnail_img ? url($productDetails->thumnail_img) : '';
-            $product->price = $price;
-            $product->discount = $productDetails->discount ?? 0;
-            $product->discount_status = $productDetails->discount_status ?? 0;
-            $product->percent_discount = $percent_discount;
-            $product->fixed_discount = $fixed_discount;
-            $product->free_shopping = $productDetails->free_shopping ?? 0;
-            $product->flat_rate_price = $productDetails->flat_rate_price ?? 0;
-            $product->vat_status = $productDetails->vat_status ?? 0;
-            $product->vat = $vat;
-            $product->brand_name = $productDetails->brand_name ?? '';
-            $product->last_price = $last_price;
-            $product->stock_qty = $productDetails->stock_qty ?? 0;
-            $product->stock_status = $productDetails->stock_status ?? 0;
-            $product->color = $processedColors;
-            $product->size = $processedSizes;
-        }
-        return response()->json($topSellingProducts, 200);
+ 
+
+         $topSellingProducts = OrderHistory::selectRaw('order_history.product_id, SUM(order_history.quantity) as total_quantity')
+        ->join('product', 'product.id', '=', 'order_history.product_id')
+        ->where('product.status', 1) // only active products
+        ->groupBy('order_history.product_id')
+        ->orderBy('total_quantity', 'desc')
+        ->limit(20)
+        ->get();
+
+foreach ($topSellingProducts as $product) {
+    $productDetails = Product::select(
+        'product.id',
+        'product.name',
+        'product.slug',
+        'product.thumnail_img',
+        'product.price',
+        'product.discount',
+        'product.discount_status',
+        'product.vat_status',
+        'product.vat',
+        'product.flat_rate_price',
+        'product.free_shopping',
+        'product.stock_qty',
+        'product.stock_status',
+        'brands.name as brand_name'
+    )
+        ->leftJoin('brands', 'product.brand', '=', 'brands.id')
+        ->where('product.id', $product->product_id)
+        ->first();
+
+    if (!$productDetails) {
+        continue;
+    }
+
+    $arrData = ProductVarrientHistory::where('product_id', $product->product_id)->get();
+
+    $processedColors = '';
+    $processedSizes = '';
+    if ($arrData->isNotEmpty()) {
+        $processedColors = $arrData[0]->color ?? '';
+        $processedSizes = $arrData[0]->size ?? '';
+    }
+
+    $vat = $productDetails->vat ?? 0;
+    $price = $productDetails->price ?? 0;
+    $percent_discount = $price - ($price * ($productDetails->discount ?? 0)) / 100;
+    $fixed_discount = $price - ($productDetails->discount ?? 0);
+
+    if (($productDetails->discount_status ?? 0) == 1) {
+        $last_price = $percent_discount;
+    } elseif (($productDetails->discount_status ?? 0) == 2) {
+        $last_price = $fixed_discount;
+    } else {
+        $last_price = $price;
+    }
+
+    $product->id = $productDetails->id;
+    $product->name = $productDetails->name ?? '';
+    $product->slug = $productDetails->slug ?? '';
+    $product->thumnail_img = $productDetails->thumnail_img ? url($productDetails->thumnail_img) : '';
+    $product->price = $price;
+    $product->discount = $productDetails->discount ?? 0;
+    $product->discount_status = $productDetails->discount_status ?? 0;
+    $product->percent_discount = $percent_discount;
+    $product->fixed_discount = $fixed_discount;
+    $product->free_shopping = $productDetails->free_shopping ?? 0;
+    $product->flat_rate_price = $productDetails->flat_rate_price ?? 0;
+    $product->vat_status = $productDetails->vat_status ?? 0;
+    $product->vat = $vat;
+    $product->brand_name = $productDetails->brand_name ?? '';
+    $product->last_price = $last_price;
+    $product->stock_qty = $productDetails->stock_qty ?? 0;
+    $product->stock_status = $productDetails->stock_status ?? 0;
+    $product->color = $processedColors;
+    $product->size = $processedSizes;
+}
+
+return response()->json($topSellingProducts, 200);
     }
     public function slidersImages()
     {

@@ -697,11 +697,12 @@ export default {
         Swal.fire({ icon: "error", title: "Please select a payment method." });
         return;
       }
-      if (!this.insertdata.name || !this.insertdata.email || !this.insertdata.phone_number) {
+      if (!this.insertdata.name) {
+        // || !this.insertdata.email || !this.insertdata.phone_number
         Swal.fire({ icon: "error", title: "Please fill in all billing details." });
         return;
       }
-      if (!this.shipp_phoneNumber || !this.shipp_address) {
+      if (!this.shipp_address) {
         Swal.fire({ icon: "error", title: "Please fill in all shipping details." });
         return;
       }
