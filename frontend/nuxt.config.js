@@ -61,6 +61,12 @@ export default {
       {
         src: "https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js",
       },
+      {
+        src: "https://connect.facebook.net/en_US/fbevents.js",
+        async: true,
+        defer: true,
+        hid: "fb-pixel",
+      },
       { src: "/js/star-rating.js" },
       { src: "/js/search_modal.js" },
       { src: "/js/login_popup.js" },
@@ -83,6 +89,7 @@ export default {
     { src: "~plugins/jquery.js", ssr: false }, // Import jQuery
     { src: "~plugins/vue-owl-carousel.js", ssr: false },
     { src: "~/plugins/scroll-top.js", mode: "client" },
+    { src: "~/plugins/fb-pixel.js", mode: "client" },
   ],
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
