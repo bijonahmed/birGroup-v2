@@ -75,6 +75,7 @@
                                 <th>Qty</th>
                                 <th>Unit Price</th>
                                 <th>Total</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -83,29 +84,39 @@
                                 <td>
                                     <img :src="order.thumbnail_img" class="rounded" width="50">
                                 </td>
-                                <td class="text-start fw-semibold">{{ order.product_name }}</td>
+                                <td class="text-start">{{ order.product_name }}</td>
                                 <td>
                                     <span class="badge bg-secondary">{{ order.quantity }}</span>
                                 </td>
                                 <td>{{ formatCurrency(order.price) }}</td>
                                 <td class="fw-bold text-primary">{{ formatCurrency(order.total) }}</td>
+                                <td>
+                                    <button v-if="!order.cancel_status" class="btn btn-danger btn-sm"
+                                        @click="cancelItem(order)">
+                                        <i class="bx bx-x"></i> Cancel
+                                    </button>
+                                    <button v-else class="btn btn-warning btn-sm"
+                                        @click="undoCancelItem(order)">
+                                        <i class="bx bx-undo"></i> Undo
+                                    </button>
+                                </td>
                             </tr>
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="4" class="text-end fw-bold">Subtotal</td>
+                                <td colspan="5" class="text-end fw-bold">Subtotal</td>
                                 <td colspan="2">{{ formatCurrency(subtotalAmount) }}</td>
                             </tr>
                             <tr v-if="coupon_code">
-                                <td colspan="4" class="text-end">Discount ({{ coupon_code }})</td>
+                                <td colspan="5" class="text-end">Discount ({{ coupon_code }})</td>
                                 <td colspan="2" class="text-danger">- {{ formatCurrency(coupon_discount) }}</td>
                             </tr>
                             <tr v-if="delivery_type">
-                                <td colspan="4" class="text-end">Delivery ({{ delivery_type }})</td>
+                                <td colspan="5" class="text-end">Delivery ({{ delivery_type }})</td>
                                 <td colspan="2">{{ formatCurrency(delivery_charge) }}</td>
                             </tr>
                             <tr class="table-primary">
-                                <td colspan="4" class="text-end fw-bold">Grand Total</td>
+                                <td colspan="5" class="text-end fw-bold">Grand Total</td>
                                 <td colspan="2" class="fw-bold">{{ formatCurrency(grandTotal) }}</td>
                             </tr>
                         </tfoot>
@@ -183,9 +194,6 @@
 
                         <!-- Summary -->
                         <div class="mb-4 d-flex flex-wrap gap-3">
-                            <!-- <span class="badge bg-light text-dark border p-2">
-                                <strong>Receipt Address:</strong> {{ receiptAddress }}
-                            </span> -->
                             <span class="badge bg-light text-dark border p-2" style="font-size:14px;">
                                 Store: {{ selectedStoreId || 'Not selected' }}
                             </span>
@@ -201,6 +209,33 @@
                             <span class="badge bg-light text-dark border p-2" style="font-size:14px;">
                                 Area: {{ selectedAreaId || 'Not selected' }}
                             </span>
+                        </div>
+
+                        <!-- Customer Info -->
+                        <div class="card shadow-sm mb-3 border-primary">
+                            <div class="card-header bg-primary text-white fw-bold">
+                                <i class="bx bx-user me-1"></i> Customer Information
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <small class="text-muted">Name</small>
+                                        <div >{{ customername }}</div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <small class="text-muted">Phone</small>
+                                        <div>{{ customerphone }}</div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <small class="text-muted">Email</small>
+                                        <div>{{ customeremail }}</div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <small class="text-muted">Address</small>
+                                        <div>{{ insertdata.shipper_address || 'N/A' }}</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="d-flex gap-3 flex-wrap">
                             <!-- Store List -->
@@ -437,10 +472,10 @@ export default {
     },
     computed: {
         totalQuantity() {
-            return this.orders.reduce((t, o) => t + Number(o.quantity), 0);
+            return this.orders.filter(o => !o.cancel_status).reduce((t, o) => t + Number(o.quantity), 0);
         },
         subtotalAmount() {
-            return this.orders.reduce((t, o) => t + Number(o.total), 0);
+            return this.orders.filter(o => !o.cancel_status).reduce((t, o) => t + Number(o.total), 0);
         },
         grandTotal() {
             return (
@@ -472,6 +507,40 @@ export default {
     methods: {
         formatCurrency(val) {
             return '৳ ' + (Number(val) || 0).toFixed(2);
+        },
+        // ─── Cancel Order Item ────────────────────────────────────
+        async cancelItem(order) {
+            if (!confirm('Are you sure you want to cancel this item?')) return;
+
+            try {
+                const payload = {
+                    order_id: order.order_id,
+                    product_id: order.product_id,
+                };
+                await this.$axios.post('/order/cancelOrderItem', payload);
+                alert('Item cancelled successfully!');
+                this.defaultLoading();
+            } catch (error) {
+                console.error(error);
+                alert('Failed to cancel item. Please try again.');
+            }
+        },
+        // ─── Undo Cancel Order Item ─────────────────────────────
+        async undoCancelItem(order) {
+            if (!confirm('Are you sure you want to restore this item?')) return;
+
+            try {
+                const payload = {
+                    order_id: order.order_id,
+                    product_id: order.product_id,
+                };
+                await this.$axios.post('/order/undoCancelOrderItem', payload);
+                alert('Item restored successfully!');
+                this.defaultLoading();
+            } catch (error) {
+                console.error(error);
+                alert('Failed to restore item. Please try again.');
+            }
         },
         printInvoice() {
             window.print();

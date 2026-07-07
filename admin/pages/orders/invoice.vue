@@ -150,7 +150,8 @@
                                     </thead>
 
                                     <tbody>
-                                        <tr v-for="(order, index) in orders" :key="index">
+                                        <tr v-for="(order, index) in orders" :key="index"
+                                            :class="{ 'text-decoration-line-through text-muted': order.cancel_status }">
                                             <td class="text-center">{{ index + 1 }}</td>
                                             <td>
                                                 <strong>{{ order.product_name }}</strong>
@@ -164,6 +165,7 @@
                                             </td>
                                             <td class="text-center">Pcs</td>
                                             <td class="text-end mono fw-semibold">
+                                                <span v-if="order.cancel_status" class="badge bg-danger me-1" style="font-size:10px;">Cancelled</span>
                                                 {{ formatAmount(order.total) }}
                                             </td>
                                         </tr>
@@ -183,21 +185,20 @@
                                     <div class="col-7">
                                         <div class="label">Amount in Words</div>
                                         <div class="fw-bold fst-italic">
-                                            Taka {{ numberToWords(Number(orderData.total || totalAmount)) }} Only
+                                            Taka {{ numberToWords(Number(totalAmount)) }} Only
                                         </div>
                                     </div>
 
                                     <div class="col-5 text-end">
                                         <div class="d-flex justify-content-between">
                                             <span>Bill:</span>
-                                            <span class="fw-bold">Tk {{ formatAmount(orderData.total || totalAmount)
-                                                }}</span>
+                                            <span class="fw-bold">Tk {{ formatAmount(totalAmount) }}</span>
                                         </div>
 
                                         <div class="d-flex justify-content-between border-top pt-1 mt-1">
                                             <span>Net Payable:</span>
                                             <span class="fw-bold text-dark fs-6">
-                                                Tk {{ formatAmount(orderData.total || totalAmount) }}
+                                                Tk {{ formatAmount(totalAmount) }}
                                             </span>
                                         </div>
                                     </div>
@@ -274,10 +275,10 @@ export default {
 
     computed: {
         totalQuantity() {
-            return this.orders.reduce((sum, o) => sum + Number(o.quantity || 0), 0)
+            return this.orders.filter(o => !o.cancel_status).reduce((sum, o) => sum + Number(o.quantity || 0), 0)
         },
         totalAmount() {
-            return this.orders.reduce((sum, o) => sum + Number(o.total || 0), 0)
+            return this.orders.filter(o => !o.cancel_status).reduce((sum, o) => sum + Number(o.total || 0), 0)
         },
         fillerRowCount() {
             const needed = this.MIN_ROWS - this.orders.length
@@ -527,5 +528,9 @@ export default {
 
 .balance-row {
     background: #f9f9f9;
+}
+
+.text-decoration-line-through {
+    text-decoration: line-through;
 }
 </style>

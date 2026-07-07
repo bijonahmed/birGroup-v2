@@ -320,6 +320,7 @@ class OrderController extends Controller
                 'last_price'        => $last_price,
                 'price'           => $v->price,
                 'total'           => $v->quantity * $v->price,
+                'cancel_status'   => $v->cancel_status ?? 0,
             ];
         }
         $devlDate = OrderHistory::join('product', 'product.id', '=', 'order_history.product_id')
@@ -361,6 +362,52 @@ class OrderController extends Controller
         $formattedDate = date("jS F, Y", $timestamp);
         $order['create_at'] = !empty($findorder->created_at) ? $formattedDate : "";
         return response()->json($order, 200);
+    }
+
+    // ─── Cancel Order Item ────────────────────────────────────────
+    public function cancelOrderItem(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'order_id'   => 'required|integer',
+            'product_id' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $updated = OrderHistory::where('order_id', $request->order_id)
+            ->where('product_id', $request->product_id)
+            ->update(['cancel_status' => 1]);
+
+        if ($updated) {
+            return response()->json(['message' => 'Item cancelled successfully'], 200);
+        }
+
+        return response()->json(['message' => 'Item not found or already cancelled'], 404);
+    }
+
+    // ─── Undo Cancel Order Item ──────────────────────────────────
+    public function undoCancelOrderItem(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'order_id'   => 'required|integer',
+            'product_id' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $updated = OrderHistory::where('order_id', $request->order_id)
+            ->where('product_id', $request->product_id)
+            ->update(['cancel_status' => 0]);
+
+        if ($updated) {
+            return response()->json(['message' => 'Item restored successfully'], 200);
+        }
+
+        return response()->json(['message' => 'Item not found'], 404);
     }
 
 
