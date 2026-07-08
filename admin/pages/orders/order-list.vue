@@ -76,7 +76,7 @@
                                     <tr v-for="(item, index) in paginatedData" :key="item.id || item.orderId"
                                         :class="item.order_status == 1 ? 'table-success bg-opacity-10' : ''">
                                         <td>{{ (currentPage - 1) * perPage + index + 1 }}</td>
-                                        <td>{{ item.orderId }}</td>
+                                        <td @click="edit(item.orderId)">{{ item.orderId }}</td>
                                         <td> <span v-if="item.pathao_consignment_id" class="text-success fw-semibold">
                                                 {{ item.pathao_consignment_id }}
                                                 <span v-if="item.pathao_order_status" style="color:#2563eb;">({{ item.pathao_order_status }})</span>
