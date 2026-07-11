@@ -510,7 +510,8 @@ class OrderController extends Controller
         $orderStatus = OrderStatus::all();
 
         $orders = Order::join('order_status', 'orders.order_status', '=', 'order_status.id')
-            ->select('orders.*', 'order_status.name as status_name')
+            ->leftJoin('users', 'users.id', '=', 'orders.customer_id')
+            ->select('orders.*', 'order_status.name as status_name', 'users.name as cust_name', 'users.phone_number as cust_phone')
             ->get();
 
         $orderData = [];
@@ -524,7 +525,7 @@ class OrderController extends Controller
 
             $orderData[] = [
                 'id'                    => $v->id,
-                'name'                  => $v->status_name, // FIXED (was ambiguous)
+                'name'                  => $v->status_name,
                 'productName'           => $productNames,
                 'order_status'          => $v->order_status,
                 'pathao_consignment_id' => $v->pathao_consignment_id,
@@ -532,6 +533,8 @@ class OrderController extends Controller
                 'orderId'               => $v->orderId,
                 'placeOn'               => date('d M Y', strtotime($v->created_at)),
                 'total'                 => number_format($v->total, 2),
+                'customer_name'         => !empty($v->cust_name) ? $v->cust_name : $v->billing_name,
+                'customer_phone'        => !empty($v->cust_phone) ? $v->cust_phone : $v->billing_phone_number,
             ];
         }
 

@@ -12,11 +12,9 @@
                     </div>
                     <div class="product_section">
                         <div class="row px-2">
-                            <div class="col-md-3 mt-3">
+                            <div class="col-md-3 mt-3 d-none d-md-block">
                                 <div class="category-menu">
-
                                     <ul class="list-group">
-
                                         <!-- Root -->
                                         <li v-if="categoryname"
                                             class="list-group-item list-group-item-primary text-center root-category">
@@ -24,10 +22,7 @@
                                                 style="cursor:pointer">
                                                 {{ categoryname }}
                                             </span>
-
                                         </li>
-
-
                                         <!-- Child -->
                                         <div class="mt-2">
                                             <div class="category-wrapper" v-for="category in categories"

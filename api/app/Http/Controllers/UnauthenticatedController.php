@@ -952,6 +952,7 @@ return response()->json($topSellingProducts, 200);
                 'brands.name as brand_name',
                 'users.name as seller_name'
             )
+            ->where('product.status',1)
             ->get();
         //   dd($proCategorys);
         // return false;

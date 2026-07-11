@@ -103,47 +103,5 @@
   },
   "UserSidebar": {
     "description": "Auto imported from components/userSidebar.vue"
-  },
-  "AddNewCard": {
-    "description": "Auto imported from components/___addNewCard.vue"
-  },
-  "BestPrice": {
-    "description": "Auto imported from components/___BestPrice.vue"
-  },
-  "CategoryFive": {
-    "description": "Auto imported from components/___CategoryFive.vue"
-  },
-  "CategoryFour": {
-    "description": "Auto imported from components/___CategoryFour.vue"
-  },
-  "CategoryMultipleProduct": {
-    "description": "Auto imported from components/___CategoryMultipleProduct.vue"
-  },
-  "CategoryOne": {
-    "description": "Auto imported from components/___CategoryOne.vue"
-  },
-  "CategoryPart": {
-    "description": "Auto imported from components/___CategoryPart.vue"
-  },
-  "DelasForYour": {
-    "description": "Auto imported from components/___DelasForYour.vue"
-  },
-  "FlashSaleFilter": {
-    "description": "Auto imported from components/___FlashSaleFilter.vue"
-  },
-  "CategoryThree": {
-    "description": "Auto imported from components/____CategoryThree.vue"
-  },
-  "CategoryTwo": {
-    "description": "Auto imported from components/____CategoryTwo.vue"
-  },
-  "FlashSelling": {
-    "description": "Auto imported from components/____FlashSelling.vue"
-  },
-  "MoreCollection": {
-    "description": "Auto imported from components/____MoreCollection.vue"
-  },
-  "LimitedStokDetails": {
-    "description": "Auto imported from components/_____LimitedStokDetails.vue"
   }
 }

@@ -6,7 +6,7 @@
                     <div class="product_section">
                         <div class="row px-2">
                             <!-- ── Sidebar (unchanged) ── -->
-                            <div class="col-md-3 mt-3">
+                            <div class="col-md-3 mt-3 d-none d-md-block">
                                 <div class="category-menu">
                                     <ul class="list-group">
                                         <li v-if="activeCategory"
