@@ -478,6 +478,7 @@ class ProductController extends Controller
         $data = Product::orderBy('product.id', 'desc')
             ->leftJoin('brands', 'brands.id', '=', 'product.brand')  // join brand
             ->select('product.*', 'brands.name AS brand_name')       // select all product columns + brand name
+            ->where('product.status', 1)
             ->get();
         $collection = collect($data);
         $modifiedCollection = $collection->map(function ($item) {

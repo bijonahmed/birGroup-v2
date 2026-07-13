@@ -16,6 +16,16 @@
                     </div>
                 </div>
 
+               
+
+                <!-- Dark Loader Overlay -->
+                <div v-if="tabLoading" class="dark-loader-overlay">
+                    <div class="dark-loader-content">
+                        <div class="dark-spinner"></div>
+                        <span>Loading...</span>
+                    </div>
+                </div>
+
                 <!-- Filters -->
                 <div class="card mb-3 shadow-sm">
                     <div class="card-body">
@@ -54,7 +64,25 @@
                         <span class="visually-hidden">Loading...</span>
                     </div>
                 </div>
-
+ <!-- Status Tabs -->
+                <div class="status-tabs-wrapper mb-3">
+                    <div class="d-flex align-items-center gap-2 flex-nowrap overflow-auto pb-1">
+                        <button class="status-tab"
+                            :class="{ 'active': searchQuery.status === '' }"
+                            @click="setStatusFilter('')">
+                            <span class="tab-label">All</span>
+                            <span class="tab-count">{{ data.length }}</span>
+                        </button>
+                        <div class="tab-divider"></div>
+                        <button v-for="(option, index) in order_status" :key="index" class="status-tab"
+                            :class="{ 'active': searchQuery.status === option.id }"
+                            @click="setStatusFilter(option.id)">
+                            <span class="tab-dot" :style="{ background: getStatusColor(option.name) }"></span>
+                            <span class="tab-label">{{ option.name }}</span>
+                            <span class="tab-count">{{ getStatusCount(option.id) }}</span>
+                        </button>
+                    </div>
+                </div>
                 <!-- Orders Table -->
                 <div class="card shadow-sm" v-if="!loading">
                     <div class="card-body p-0">
@@ -80,9 +108,10 @@
                                             No orders found.
                                         </td>
                                     </tr>
-                                    <template v-for="(item, index) in paginatedData">
+                                </tbody>
+                                <tbody v-for="(item, index) in paginatedData" :key="item.id || item.orderId">
                                         <!-- Main Row -->
-                                        <tr :key="item.id || item.orderId" :class="{
+                                        <tr :class="{
                                             'table-success bg-opacity-10': item.order_status == 1,
                                             'table-active': expandedOrderId === item.orderId
                                         }" style="cursor: pointer;" @click="togglePreview(item)">
@@ -132,7 +161,7 @@
                                                     </svg>
                                                     Invoice
                                                 </button>
-                                                <!-- D-NOTE -->
+                                                 <!-- D-NOTE -->
                                                 <button type="button" class="btn btn-sm"
                                                     style="background: linear-gradient(135deg,#22c55e,#16a34a); color:white;"
                                                     @click="makedeliveryNote(item.orderId)">
@@ -144,11 +173,17 @@
                                                     </svg>
                                                     D-Note
                                                 </button>
+                                                <!-- DELETE (admin only) -->
+                                                <button v-if="role_id == 1" type="button"
+                                                    class="btn btn-sm btn-danger ms-1"
+                                                    @click="deleteOrder(item.orderId)" title="Delete Order">
+                                                    <i class="bx bx-trash"></i>
+                                                </button>
                                             </td>
                                         </tr>
 
                                         <!-- Inline Preview Panel -->
-                                        <tr :key="'preview-' + item.orderId" v-if="expandedOrderId === item.orderId">
+                                        <tr v-if="expandedOrderId === item.orderId">
                                             <td colspan="9" class="p-0">
                                                 <div class="order-preview-panel">
                                                     <!-- Loading -->
@@ -170,7 +205,7 @@
                                                                         <p><strong>Name:</strong> {{ previewData.customername }}</p>
                                                                         <p><strong>Phone:</strong> {{ previewData.customerphone }}</p>
                                                                         <p><strong>Email:</strong> {{ previewData.customeremail }}</p>
-                                                                        <p><strong>Address:</strong> {{ previewData.shipper_address || 'N/A' }}</p>
+                                                                        <p><strong>Address:</strong> <span style="word-break: break-word; white-space: normal; display: inline;">{{ previewData.shipper_address || 'N/A' }}</span></p>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -268,30 +303,38 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                    </template>
-                                </tbody>
+                                    </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
 
                 <!-- Pagination -->
-                <div class="d-flex justify-content-between align-items-center mt-3" v-if="!loading">
+                <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2" v-if="!loading">
                     <small class="text-muted">
                         Showing {{ paginationFrom }}–{{ paginationTo }} of {{ filteredData.length }} orders
                     </small>
-                    <div>
+                    <div class="d-flex align-items-center gap-1">
                         <button @click="previousPage" :disabled="currentPage === 1"
-                            class="btn btn-primary btn-sm me-1">
+                            class="btn btn-outline-secondary btn-sm">
                             &laquo;
                         </button>
-                        <span class="mx-2 fw-semibold">Page {{ currentPage }} of {{ totalPages }}</span>
+                        <template v-for="(page, pIdx) in visiblePages">
+                            <span v-if="page === '...'" :key="'dot-'+pIdx" class="mx-1 text-muted">...</span>
+                            <button v-else :key="'page-'+page"
+                                class="btn btn-sm"
+                                :class="currentPage === page ? 'btn-primary' : 'btn-outline-secondary'"
+                                @click="goToPage(page)">
+                                {{ page }}
+                            </button>
+                        </template>
                         <button @click="nextPage" :disabled="currentPage === totalPages"
-                            class="btn btn-primary btn-sm ms-1">
+                            class="btn btn-outline-secondary btn-sm">
                             &raquo;
                         </button>
                     </div>
                 </div>
+                <br/><br/>
             </div>
         </div>
 
@@ -400,10 +443,138 @@
 
 .preview-card-body p {
     margin-bottom: 6px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+    max-width: 100%;
 }
 
 .table-active {
     background-color: rgba(79, 70, 229, 0.08) !important;
+}
+
+/* Status Tabs - Lightweight Design */
+.status-tabs-wrapper {
+    background: #fff;
+    border-radius: 10px;
+    padding: 8px 14px;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.status-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid #e9ecef;
+    background: #f8f9fa;
+    color: #6c757d;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.status-tab:hover {
+    background: #e9ecef;
+    border-color: #dee2e6;
+}
+
+.status-tab.active {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 2px 6px rgba(79, 70, 229, 0.3);
+}
+
+.status-tab .tab-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.status-tab.active .tab-dot {
+    background: #fff !important;
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.3);
+}
+
+.status-tab .tab-label {
+    line-height: 1;
+}
+
+.status-tab .tab-count {
+    background: rgba(0,0,0,0.08);
+    padding: 1px 6px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.status-tab.active .tab-count {
+    background: rgba(255,255,255,0.25);
+    color: #fff;
+}
+
+.tab-divider {
+    width: 1px;
+    height: 20px;
+    background: #dee2e6;
+    flex-shrink: 0;
+}
+
+@media (max-width: 575.98px) {
+    .status-tabs-wrapper {
+        padding: 6px 10px;
+    }
+    .status-tab {
+        padding: 5px 10px;
+        font-size: 0.75rem;
+    }
+}
+
+/* Dark Loader Overlay */
+.dark-loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 15, 25, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    backdrop-filter: blur(4px);
+}
+
+.dark-loader-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.dark-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255, 255, 255, 0.15);
+    border-top-color: #8b5cf6;
+    border-radius: 50%;
+    animation: darkSpin 0.8s linear infinite;
+}
+
+@keyframes darkSpin {
+    to { transform: rotate(360deg); }
 }
 </style>
 
@@ -426,17 +597,20 @@ export default {
                 status: ''
             },
             currentPage: 1,
-            perPage: 20,
+            perPage: 15,
             showPathaoModal: false,
             pathaoData: {},
+            tabLoading: false,
             // Preview
             expandedOrderId: null,
             previewLoading: false,
             previewData: null,
+            role_id: '',
         };
     },
     async mounted() {
         this.loadSavedStatus();
+        this.fetchUserRole();
         await this.fetchData();
     },
     computed: {
@@ -468,6 +642,22 @@ export default {
         paginationTo() {
             return Math.min(this.currentPage * this.perPage, this.filteredData.length);
         },
+        visiblePages() {
+            const total = this.totalPages;
+            const current = this.currentPage;
+            if (total <= 7) {
+                return Array.from({ length: total }, (_, i) => i + 1);
+            }
+            const pages = [];
+            pages.push(1);
+            if (current > 3) pages.push('...');
+            const start = Math.max(2, current - 1);
+            const end = Math.min(total - 1, current + 1);
+            for (let i = start; i <= end; i++) pages.push(i);
+            if (current < total - 2) pages.push('...');
+            pages.push(total);
+            return pages;
+        },
     },
     watch: {
         'searchQuery.orderId'() { this.currentPage = 1; },
@@ -476,6 +666,43 @@ export default {
     methods: {
         formatCurrency(val) {
             return (Number(val) || 0).toFixed(2);
+        },
+        fetchUserRole() {
+            this.$axios.get('/auth/showProfileData').then(response => {
+                this.role_id = response.data.data.role_id;
+            });
+        },
+        async deleteOrder(orderId) {
+            if (!confirm('Are you sure you want to delete this order?')) return;
+            try {
+                await this.$axios.post('/order/deleteOrder', { order_id: orderId });
+                alert('Order deleted successfully!');
+                this.fetchData();
+            } catch (error) {
+                console.error(error);
+                alert('Failed to delete order. Please try again.');
+            }
+        },
+        setStatusFilter(statusId) {
+            this.tabLoading = true;
+            this.searchQuery.status = statusId;
+            this.saveStatusToStorage(statusId);
+            this.currentPage = 1;
+            setTimeout(() => {
+                this.tabLoading = false;
+            }, 400);
+        },
+        getStatusColor(statusName) {
+            const s = (statusName || '').toLowerCase();
+            if (s.includes('deliver')) return '#22c55e';
+            if (s.includes('cancel')) return '#ef4444';
+            if (s.includes('dispatch')) return '#3b82f6';
+            if (s.includes('packed')) return '#f59e0b';
+            if (s.includes('new')) return '#8b5cf6';
+            return '#6c757d';
+        },
+        getStatusCount(statusId) {
+            return this.data.filter(item => Number(item.order_status) === Number(statusId)).length;
         },
         getStatusClass(status) {
             const s = (status || '').toLowerCase();
@@ -590,6 +817,11 @@ export default {
         },
         nextPage() {
             if (this.currentPage < this.totalPages) this.currentPage++;
+        },
+        goToPage(page) {
+            if (page >= 1 && page <= this.totalPages) {
+                this.currentPage = page;
+            }
         },
         edit(orderId) {
             this.$router.push({ path: '/orders/details', query: { orderId } });

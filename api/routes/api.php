@@ -253,6 +253,9 @@ Route::group([
     Route::post('undoCancelOrderItem', [OrderController::class, 'undoCancelOrderItem']);
     Route::post('orderTrack', [OrderController::class, 'orderTrackadd']);
     Route::get('orderTrackList/{orderid}', [OrderController::class, 'orderTrackaddList']);
+    Route::get('searchProducts', [OrderController::class, 'searchProducts']);
+    Route::post('addOrderItem', [OrderController::class, 'addOrderItem']);
+    Route::post('deleteOrder', [OrderController::class, 'deleteOrder']);
 });
 Route::group([
     //'middleware' => 'api',

@@ -19,7 +19,7 @@
                     <div class="menu-title">Dashboard</div>
                 </Nuxt-link>
             </li>
-            <span v-if="user.role_id == 1">
+            <span>
                 <li class="mb-1">
                     <a class="btn has-arrow align-items-center rounded collapsed  dropdown-toggle"
                         data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
@@ -224,25 +224,7 @@
                     </div>
                 </li>
             </span>
-            <span v-else-if="user.role_id == 2">
-                <li>
-                    <a href="#" class="has-arrow nav-link dropdown-toggle" id="submenuDropdown_35" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bx bx-category"></i>
-                        <div class="menu-title">Employee Access Value</div>
-                    </a>
-                    <ul class="menu dropdown-menu" aria-labelledby="submenuDropdown_35" style="width:100%;">
-                        <li>
-                            <Nuxt-link to="/profile"><i class="bx bx-right-arrow-alt"></i>View Profile</Nuxt-link>
-                        </li>
-                        <li>
-                            <Nuxt-link to="/employee/leave-approval-list"><i class="bx bx-right-arrow-alt"></i>Leave
-                                Approval List</Nuxt-link>
-                        </li>
-
-                    </ul>
-                </li>
-            </span>
+            
         </ul>
 
         <!--end navigation-->

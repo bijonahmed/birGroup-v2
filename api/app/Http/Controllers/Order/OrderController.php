@@ -512,6 +512,7 @@ class OrderController extends Controller
         $orders = Order::join('order_status', 'orders.order_status', '=', 'order_status.id')
             ->leftJoin('users', 'users.id', '=', 'orders.customer_id')
             ->select('orders.*', 'order_status.name as status_name', 'users.name as cust_name', 'users.phone_number as cust_phone')
+            ->where('orders.order_status', '!=', 15)
             ->get();
 
         $orderData = [];
@@ -706,5 +707,120 @@ class OrderController extends Controller
         } else {
             return response()->json(['error' => 'Order not found'], 404);
         }
+    }
+
+    public function searchProducts(Request $request)
+    {
+        $query = $request->input('q', '');
+        if (strlen($query) < 2) {
+            return response()->json(['products' => []], 200);
+        }
+        $data = Product::where('status', 1)
+            ->where('name', 'like', '%' . $query . '%')
+            ->orderBy('id', 'desc')
+            ->limit(20)
+            ->get();
+        $modifiedCollection = $data->map(function ($item) {
+            return [
+                'id'    => $item['id'],
+                'name'  => mb_convert_encoding($item['name'], 'UTF-8', 'UTF-8'),
+                'price' => $item['price'],
+                'image' => url($item['thumnail_img']),
+            ];
+        });
+        return response()->json(['products' => $modifiedCollection], 200);
+    }
+
+    public function addOrderItem(Request $request)
+    {
+        $validator = \Validator::make($request->all(), [
+            'order_id'   => 'required',
+            'product_id' => 'required|integer',
+            'quantity'   => 'required|integer|min:1',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $order = Order::where('orderId', $request->order_id)->first();
+        if (!$order) {
+            return response()->json(['message' => 'Order not found'], 404);
+        }
+
+        $product = Product::where('id', $request->product_id)->where('status', 1)->first();
+        if (!$product) {
+            return response()->json(['message' => 'Product not found'], 404);
+        }
+
+        $qty           = $request->quantity;
+        $price         = str_replace(',', '', $product->price);
+        $price         = floatval($price);
+        $discount      = $product->discount ?? 0;
+        $discount_status = $product->discount_status ?? 0;
+        $last_price    = $product->last_price ?? $price;
+        $vat           = $product->vat ?? 0;
+        $vat_status    = $product->vat_status ?? 0;
+
+        // 1) Insert into orders_product
+        ordersProduct::create([
+            'order_id'        => $order->orderId,
+            'product_id'      => $product->id,
+            'price'           => $price,
+            'discount'        => $discount,
+            'discount_status' => $discount_status,
+            'last_price'      => $last_price,
+            'qty'             => $qty,
+            'color'           => $product->color ?? '',
+            'size'            => $product->size ?? '',
+            'vat'             => $vat,
+            'vat_status'      => $vat_status,
+        ]);
+
+        // 2) Insert into order_history (so orderDetails shows the item)
+        $seller_id = !empty($product->seller_id) ? $product->seller_id : 1;
+
+        // Get current cumulative total before inserting
+        $lastHistory = OrderHistory::where('order_id', $order->id)->orderBy('id', 'desc')->first();
+        $prevTotal = !empty($lastHistory) ? $lastHistory->total : 0;
+        $newTotal  = $prevTotal + ($price * $qty);
+
+        OrderHistory::create([
+            'order_id'   => $order->id,
+            'seller_id'  => $seller_id,
+            'product_id' => $product->id,
+            'quantity'   => $qty,
+            'price'      => $price,
+            'total'      => $newTotal,
+        ]);
+
+        // 3) Recalculate order total from all order_history items
+        $allItems   = OrderHistory::where('order_id', $order->id)->get();
+        $orderTotal = 0;
+        foreach ($allItems as $item) {
+            $itemTotal = $item->price * $item->quantity;
+            $orderTotal += $itemTotal;
+        }
+        $order->update(['total' => $orderTotal]);
+
+        return response()->json(['message' => 'Product added to order successfully'], 200);
+    }
+
+    public function deleteOrder(Request $request)
+    {
+        $validator = \Validator::make($request->all(), [
+            'order_id' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $order = Order::where('orderId', $request->order_id)->first();
+        if (!$order) {
+            return response()->json(['message' => 'Order not found'], 404);
+        }
+
+        $order->update(['order_status' => 15]);
+
+        return response()->json(['message' => 'Order deleted successfully'], 200);
     }
 }
