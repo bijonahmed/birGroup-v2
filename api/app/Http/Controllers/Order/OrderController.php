@@ -204,8 +204,8 @@ class OrderController extends Controller
             'orderId'               => 'required',
             'orderstatus'           => 'required',
             'delivery_charge'       => 'required|numeric',
-            'shipper_phone_number'  => 'required',
-            'shipper_address'       => 'required|string|min:10',
+         //   'shipper_phone_number'  => 'required',
+         //   'shipper_address'       => 'required|string|min:10',
         ], [
             'orderId.required' => 'Order ID is required.',
             'orderstatus.required' => 'Order status is required.',
@@ -216,8 +216,8 @@ class OrderController extends Controller
             'shipper_phone_number.required' => 'Shipper phone number is required.',
             'shipper_phone_number.regex'    => 'Phone number must be a valid Bangladeshi number (01XXXXXXXXX).',
 
-            'shipper_address.required' => 'Shipper address is required.',
-            'shipper_address.min'      => 'Shipper address must be at least 10 characters.',
+          //  'shipper_address.required' => 'Shipper address is required.',
+          //  'shipper_address.min'      => 'Shipper address must be at least 10 characters.',
         ]);
 
         if ($validator->fails()) {

@@ -204,9 +204,20 @@
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
+                                    <label class="form-label fw-semibold">Delivery Type</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bx bx-map"></i></span>
+                                        <select v-model="delivery_area" class="form-select" @change="onDeliveryAreaChange">
+                                            <option value="">-- Select Area --</option>
+                                            <option value="inside">Inside Dhaka (70 Tk)</option>
+                                            <option value="outside">Outside Dhaka (120 Tk)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6" v-if="delivery_area">
                                     <label class="form-label fw-semibold">Delivery Charge</label>
                                     <div class="input-group">
-                                        <span class="input-group-text"><i class="bx bx-dollar"></i></span>
+                                        <span class="input-group-text">Tk.</span>
                                         <input type="number" class="form-control" v-model="delivery_charge">
                                     </div>
                                 </div>
@@ -667,6 +678,7 @@ export default {
             coupon_discount: 0,
             coupon_code: '',
             delivery_charge: 0,
+            delivery_area: '',
             errorMessage: "",
             delivery_type: '',
             insertdata: {
@@ -756,6 +768,15 @@ export default {
         formatCurrency(val) {
             return '৳ ' + (Number(val) || 0).toFixed(2);
         },
+        onDeliveryAreaChange() {
+            if (this.delivery_area === 'inside') {
+                this.delivery_charge = 70;
+            } else if (this.delivery_area === 'outside') {
+                this.delivery_charge = 120;
+            } else {
+                this.delivery_charge = 0;
+            }
+        },
         fetchUserRole() {
             this.$axios.get('/auth/showProfileData').then(response => {
                 this.role_id = response.data.data.role_id;
@@ -819,6 +840,7 @@ export default {
             formData.append('shipper_phone_number', this.insertdata.shipper_phone_number);
             formData.append('shipper_address', this.insertdata.shipper_address);
             formData.append('delivery_charge', charge);
+            formData.append('delivery_type', this.delivery_area === 'inside' ? 'Inside Dhaka' : 'Outside Dhaka');
             this.$axios.post('/order/update_order_status', formData)
                 .then((res) => {
                     this.success_noti && this.success_noti();
@@ -858,6 +880,8 @@ export default {
             this.coupon_code = res.data.coupon_code;
             this.delivery_charge = res.data.delivery_charge || 0;
             this.delivery_type = res.data.delivery_type;
+            const charge = Number(this.delivery_charge);
+            this.delivery_area = charge === 70 ? 'inside' : charge === 120 ? 'outside' : '';
             this.insertdata.orderstatus = res.data.orderstatus_id;
             this.modalDeliveryCharge = res.data.delivery_charge || 0;
             this.receiptAddress = res.data.address || '';
