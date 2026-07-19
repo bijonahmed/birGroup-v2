@@ -21,6 +21,9 @@
                     <button class="btn btn-outline-secondary btn-sm me-2" @click="printInvoice" :disabled="loading">
                         <i class="bx bx-printer me-1"></i> Print
                     </button>
+                    <button class="btn btn-outline-success btn-sm me-2" @click="exportToPDF" :disabled="loading">
+                        <i class="bx bx-file me-1"></i> Export to PDF
+                    </button>
                     <router-link to="/orders/order-list" class="btn btn-outline-dark btn-sm">
                         <i class="bx bx-arrow-back me-1"></i> Back
                     </router-link>
@@ -192,7 +195,7 @@
                                     <div class="col-7">
                                         <div class="label">Amount in Words</div>
                                         <div class="fw-bold fst-italic">
-                                            Taka {{ numberToWords(Number(totalAmount)) }} Only
+                                            Taka {{ numberToWords(Number(grandTotal)) }} Only
                                         </div>
                                     </div>
 
@@ -425,6 +428,62 @@ export default {
 </html>`)
 
             printWindow.document.close()
+        },
+
+        /* ── Export to PDF ─────────────────────────────────────────────────────── */
+        async exportToPDF() {
+            const invoiceEl = document.getElementById('invoice-print-area')
+            if (!invoiceEl) return
+
+            if (typeof window.html2pdf === 'undefined') {
+                await new Promise((resolve, reject) => {
+                    const script = document.createElement('script')
+                    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js'
+                    script.onload = resolve
+                    script.onerror = reject
+                    document.head.appendChild(script)
+                })
+            }
+
+            const styles = Array.from(
+                document.querySelectorAll('link[rel="stylesheet"], style')
+            ).map(el => el.outerHTML).join('\n')
+
+            const clone = invoiceEl.cloneNode(true)
+            const wrapper = document.createElement('div')
+            wrapper.innerHTML = styles + `
+                <style>
+                    body { font-family: 'Segoe UI', Arial, sans-serif; background: #fff; margin: 0; padding: 16px; }
+                    .invoice-wrapper { font-size: 12.5px; color: #000; background: #fff; max-width: 900px; margin: auto; }
+                    .inv-watermark { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%) rotate(-25deg); font-size: 90px; color: rgba(0,0,0,0.05); font-weight: bold; pointer-events: none; user-select: none; }
+                    .letter-spacing-wide { letter-spacing: 3px; }
+                    .meta-table td { font-size: 12px; }
+                    .label { font-size: 10px; color: #666; }
+                    .invoice-items th { background: #111 !important; color: #fff !important; font-size: 11px; }
+                    .invoice-items td { font-size: 12.5px; padding: 6px; }
+                    .invoice-items tbody tr:nth-child(even) { background: #fafafa; }
+                    .mono { font-family: 'Courier New', monospace; }
+                    .total-row { background: #f5f5f5; }
+                    .balance-row { background: #f9f9f9; }
+                    .table { width: 100%; border-collapse: collapse; }
+                    .table th, .table td { border: 1px solid #000; padding: 6px; }
+                    .text-end { text-align: right !important; }
+                    .text-center { text-align: center !important; }
+                </style>
+            `
+            wrapper.appendChild(clone)
+            document.body.appendChild(wrapper)
+
+            const opt = {
+                margin: 10,
+                filename: `Invoice-${this.orderid || 'download'}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+            }
+
+            await window.html2pdf().set(opt).from(wrapper).save()
+            document.body.removeChild(wrapper)
         },
 
         /* ── Formatting helpers ─────────────────────────────────────────────── */
