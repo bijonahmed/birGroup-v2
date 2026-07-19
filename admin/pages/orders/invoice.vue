@@ -177,6 +177,13 @@
                                             <td colspan="2" class="text-end">Total</td>
                                             <td class="text-end">Tk {{ formatAmount(totalAmount) }}</td>
                                         </tr>
+
+                                        <!-- Delivery Charge -->
+                                        <tr v-if="delivery_charge > 0" class="total-row fw-bold">
+                                            <td colspan="4"></td>
+                                            <td class="text-end">Delivery Charge</td>
+                                            <td class="text-end">Tk {{ formatAmount(delivery_charge) }}</td>
+                                        </tr>
                                     </tbody>
                                 </table>
 
@@ -195,10 +202,15 @@
                                             <span class="fw-bold">Tk {{ formatAmount(totalAmount) }}</span>
                                         </div>
 
+                                        <div v-if="delivery_charge > 0" class="d-flex justify-content-between">
+                                            <span>Delivery Charge:</span>
+                                            <span class="fw-bold">Tk {{ formatAmount(delivery_charge) }}</span>
+                                        </div>
+
                                         <div class="d-flex justify-content-between border-top pt-1 mt-1">
                                             <span>Net Payable:</span>
                                             <span class="fw-bold text-dark fs-6">
-                                                Tk {{ formatAmount(totalAmount) }}
+                                                Tk {{ formatAmount(grandTotal) }}
                                             </span>
                                         </div>
                                     </div>
@@ -254,6 +266,7 @@ export default {
 
             orders: [],
             orderData: {},
+            delivery_charge: 0,
             order_status: [],
 
             trackStatus: {
@@ -284,6 +297,9 @@ export default {
             const needed = this.MIN_ROWS - this.orders.length
             return needed > 0 ? needed : 0
         },
+        grandTotal() {
+            return this.totalAmount + Number(this.delivery_charge || 0)
+        },
     },
 
     methods: {
@@ -309,6 +325,7 @@ export default {
                 this.orders = data.orderdata || []
                 this.orderData = data.orderData || {}
                 this.order_status = data.OrderStatus || []
+                this.delivery_charge = data.delivery_charge || 0
 
                 this.trackStatus.packed = data.packed_status || ''
                 this.trackStatus.dispatched = data.dispatched_status || ''
